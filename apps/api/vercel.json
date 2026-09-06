@@ -7,14 +7,11 @@
     "api/index.ts": {
       "includeFiles": "{prisma/**,public/**,../../node_modules/.prisma/client/**,../../packages/shared/**}"
     },
+    "api/[...path].ts": {
+      "includeFiles": "{prisma/**,public/**,../../node_modules/.prisma/client/**,../../packages/shared/**}"
+    },
     "src/app.ts": {
       "includeFiles": "{prisma/**,public/**,../../node_modules/.prisma/client/**,../../packages/shared/**}"
     }
-  },
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "/api" },
-    { "source": "/api", "destination": "/api" },
-    { "source": "/health", "destination": "/api" },
-    { "source": "/((?!assets/).*)", "destination": "/index.html" }
-  ]
+  }
 }

@@ -19,3 +19,4 @@ export const GET_METHOD = "GET";
 export const HEAD_METHOD = "HEAD";
 export const API_MOUNT = "/api";
 export const HEALTH_PATH = "/health";
+export const API_HEALTH_PATH = "/api/health";
