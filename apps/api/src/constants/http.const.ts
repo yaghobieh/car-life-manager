@@ -15,5 +15,7 @@ export const CORS_ALLOW_CREDENTIALS = "true";
 export const CORS_ALLOW_HEADERS = "Content-Type, Authorization";
 export const CORS_ALLOW_METHODS = "GET,POST,PUT,PATCH,DELETE,OPTIONS";
 export const OPTIONS_METHOD = "OPTIONS";
+export const GET_METHOD = "GET";
+export const HEAD_METHOD = "HEAD";
 export const API_MOUNT = "/api";
 export const HEALTH_PATH = "/health";

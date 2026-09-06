@@ -10,5 +10,6 @@ apps/api/dev.db
 apps/api/dev.db-journal
 apps/api/prisma/dev.db
 apps/web/dist
+apps/api/public
 .turbo
 .vite

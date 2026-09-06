@@ -1,16 +1,20 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "bash ../../scripts/vercel-install.sh",
-  "buildCommand": "npx prisma generate && npm run build",
+  "buildCommand": "bash ../../scripts/vercel-build.sh",
+  "outputDirectory": "public",
   "functions": {
     "api/index.ts": {
-      "includeFiles": "{prisma/**,../../node_modules/.prisma/client/**,../../packages/shared/**}"
+      "includeFiles": "{prisma/**,public/**,../../node_modules/.prisma/client/**,../../packages/shared/**}"
     },
     "src/app.ts": {
-      "includeFiles": "{prisma/**,../../node_modules/.prisma/client/**,../../packages/shared/**}"
+      "includeFiles": "{prisma/**,public/**,../../node_modules/.prisma/client/**,../../packages/shared/**}"
     }
   },
   "rewrites": [
-    { "source": "/(.*)", "destination": "/api" }
+    { "source": "/api/:path*", "destination": "/api" },
+    { "source": "/api", "destination": "/api" },
+    { "source": "/health", "destination": "/api" },
+    { "source": "/((?!assets/).*)", "destination": "/index.html" }
   ]
 }
