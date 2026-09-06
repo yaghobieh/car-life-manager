@@ -1,2 +1,3 @@
-export { appNucleus, bootstrapAppStore } from './app.nucleus';
-export type { AppNucleusState } from './app.nucleus.types';
+export { appNucleus, bootstrapAppStore } from './modules/App';
+export type { AppNucleusState } from './modules/App';
+export { useAppState } from './hooks';

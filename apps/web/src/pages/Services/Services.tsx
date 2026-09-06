@@ -15,9 +15,9 @@ export function Services() {
           <div>
             <Typography weight="bold">{service.name}</Typography>
             <Typography color={COLOR_MUTED}>{service.note}</Typography>
-            {service.officialUrl ? (
+            {service.officialUrl && (
               <a href={service.officialUrl} target="_blank" rel="noreferrer">{t('officialSite')}</a>
-            ) : null}
+            )}
           </div>
           <Badge variant="warning" pill>{t('notSupported')}</Badge>
         </Flex>

@@ -2,38 +2,38 @@ import { Badge, Card, CardBody, CardHeader, Flex, Grid, GridItem, Typography } f
 import { useLingoFormat, useTranslate } from '@forgedevstack/lingo/react';
 import { vehicleStatusFromDates } from '@clm/shared';
 import {
-  COLOR_BLUE,
   COLOR_GREEN,
   COLOR_MUTED,
-  CURRENCY_ILS,
   EXPENSE_SPAN,
   FLEX_GAP_MD,
   FLEX_GAP_SM,
-  FULL_SPAN,
   GRID_COLS,
   GRID_GAP,
   HERO_CAR_SPAN,
   HERO_META_SPAN,
   META_COLS,
-  REMINDER_SPAN,
   SERVICE_SPAN,
   STATUS_SPAN,
   TASK_SPAN,
-  VISIBLE_REMINDER_COUNT,
   VISIBLE_TASK_COUNT,
+  ZERO,
 } from '@const';
 import { CarArt } from '@components/CarArt';
 import { EmptyState } from '@components/EmptyState';
 import { StatusBadge } from '@components/StatusBadge';
 import { useAppState } from '@hooks';
-import { formatOverviewDate, taskFilterCounts, vehicleSubtitle, vehicleTitle } from './Overview.utils';
+import { OverviewExpenses } from './Overview.expenses';
+import { OverviewReminders } from './Overview.reminders';
+import { OVERVIEW_VIEW_EMPTY, OVERVIEW_VIEW_LOADING } from './Overview.const';
+import { formatOverviewDate, resolveOverviewView, taskFilterCounts, vehicleSubtitle, vehicleTitle } from './Overview.utils';
 
 export function Overview() {
   const { dashboard, loading, vehicles } = useAppState();
   const t = useTranslate();
-  const { locale, formatCurrency } = useLingoFormat();
+  const { locale } = useLingoFormat();
+  const view = resolveOverviewView(loading, dashboard, vehicles);
 
-  if (loading) {
+  if (view === OVERVIEW_VIEW_LOADING) {
     return (
       <Card variant="elevated" padding="lg">
         <Typography>{t('loading')}</Typography>
@@ -41,7 +41,7 @@ export function Overview() {
     );
   }
 
-  if (!dashboard || vehicles.length === 0) {
+  if (view === OVERVIEW_VIEW_EMPTY || !dashboard) {
     return (
       <Card variant="elevated" padding="lg">
         <EmptyState title={t('noVehicles')} body={t('noVehiclesBody')} />
@@ -51,7 +51,7 @@ export function Overview() {
 
   const { vehicle, tasks, services, expenseSummary, reminders } = dashboard;
   const status = vehicleStatusFromDates(vehicle);
-  const visibleTasks = tasks.slice(0, VISIBLE_TASK_COUNT);
+  const visibleTasks = tasks.slice(ZERO, VISIBLE_TASK_COUNT);
   const counts = taskFilterCounts(tasks);
 
   return (
@@ -130,29 +130,7 @@ export function Overview() {
 
       <Grid cols={GRID_COLS} gap={GRID_GAP}>
         <GridItem colSpan={EXPENSE_SPAN}>
-          <Card variant="elevated" padding="lg">
-            <CardHeader title={t('monthlyExpenses')} />
-            <CardBody>
-              {expenseSummary.hasData ? (
-                <Flex direction="column" gap={FLEX_GAP_SM}>
-                  {expenseSummary.byCategory.map((row) => (
-                    <Flex justify="between" key={row.category}>
-                      <Typography>{row.category}</Typography>
-                      <Typography weight="bold">{formatCurrency(row.amount, CURRENCY_ILS)}</Typography>
-                    </Flex>
-                  ))}
-                  <Flex justify="between">
-                    <Typography weight="extrabold" color={COLOR_BLUE}>{t('monthTotal')}</Typography>
-                    <Typography weight="extrabold" color={COLOR_BLUE}>
-                      {formatCurrency(expenseSummary.currentMonth, CURRENCY_ILS)}
-                    </Typography>
-                  </Flex>
-                </Flex>
-              ) : (
-                <EmptyState title={t('noExpenses')} body={t('noExpensesBody')} />
-              )}
-            </CardBody>
-          </Card>
+          <OverviewExpenses expenseSummary={expenseSummary} />
         </GridItem>
         <GridItem colSpan={TASK_SPAN}>
           <Card variant="elevated" padding="lg">
@@ -193,24 +171,7 @@ export function Overview() {
         </GridItem>
       </Grid>
 
-      <Card variant="elevated" padding="lg">
-        <Flex direction="column" gap={FLEX_GAP_SM}>
-          <Typography variant="h2">{t('upcoming')}</Typography>
-          <Typography color={COLOR_MUTED}>{t('remindersOfficial')}</Typography>
-        </Flex>
-        <Grid cols={GRID_COLS} gap={GRID_GAP}>
-          {reminders.length === 0 ? (
-            <GridItem colSpan={FULL_SPAN}>
-              <Typography color={COLOR_MUTED}>{t('noReminders')}</Typography>
-            </GridItem>
-          ) : reminders.slice(0, VISIBLE_REMINDER_COUNT).map((item) => (
-            <GridItem key={item.id} colSpan={REMINDER_SPAN}>
-              <Typography weight="bold">{item.title}</Typography>
-              <Typography color={COLOR_MUTED}>{formatOverviewDate(item.dueDate, locale, t('unknown'))}</Typography>
-            </GridItem>
-          ))}
-        </Grid>
-      </Card>
+      <OverviewReminders reminders={reminders} />
     </Flex>
   );
 }

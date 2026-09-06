@@ -9,7 +9,7 @@ import {
 } from "@clm/shared";
 import { prisma } from "../../db";
 import { config, isDevelopment } from "../../config";
-import { audit } from "../../audit";
+import { audit } from "../../db/handlers/audit.handler";
 import { lookupOfficialVehicle, MinistryTransportError } from "../../integrations/ministry-of-transport/client";
 import { developmentVehicle } from "../../integrations/ministry-of-transport/development-adapter";
 import { serializeExpense, serializeReminder, serializeTask, serializeVehicle } from "./serialize";

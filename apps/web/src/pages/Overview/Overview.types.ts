@@ -1,4 +1,4 @@
-import type { Task } from '@clm/shared';
+import type { ExpenseSummary, Reminder } from '@clm/shared';
 
 export interface TaskFilterCounts {
   all: number;
@@ -6,4 +6,12 @@ export interface TaskFilterCounts {
   important: number;
 }
 
-export type VisibleTask = Task;
+export type OverviewView = 'loading' | 'empty' | 'ready';
+
+export interface OverviewExpensesProps {
+  expenseSummary: ExpenseSummary;
+}
+
+export interface OverviewRemindersProps {
+  reminders: Reminder[];
+}

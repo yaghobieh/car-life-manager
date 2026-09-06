@@ -1,0 +1,13 @@
+export const HTTP_NO_CONTENT = 204;
+export const HTTP_CREATED = 201;
+export const HTTP_OK = 200;
+export const HTTP_BAD_REQUEST = 400;
+export const HTTP_SERVER_ERROR = 500;
+export const RATE_LIMIT_WINDOW_MS = 60_000;
+export const RATE_LIMIT_MAX = 20;
+export const CORS_ALLOW_CREDENTIALS = "true";
+export const CORS_ALLOW_HEADERS = "Content-Type, Authorization";
+export const CORS_ALLOW_METHODS = "GET,POST,PUT,PATCH,DELETE,OPTIONS";
+export const OPTIONS_METHOD = "OPTIONS";
+export const API_MOUNT = "/api";
+export const HEALTH_PATH = "/health";

@@ -11,23 +11,23 @@ Use these skills to keep Bear work consistent. Reference by skill name when star
 
 | Skill | When to use |
 |-------|-------------|
-| **bear-ui-standards** | Creating/refactoring components — types, consts, BEM, translations, file layout, `useBearId` |
-| **bear-component-workflow** | Adding a new component or portal page — 4-file pattern, barrel, nav, changelog |
-| **bear-js-fundamentals** | Component logic — Promises, event loop, when to avoid `useEffect` / `useCallback` / `useMemo` |
-| **bear-code-review** | Structured review — hooks, SVG helpers, props pattern, portal PropsTable, `/bear-code-review` |
-| **bear-code-quality** | Code review — types in type files, constants in const files, no magic numbers/strings, logic-first |
-| **bear-release-workflow** | Version bumps, CHANGELOG, build, publish |
+| **car-ui-standards** | Creating/refactoring components — types, consts, BEM, translations, file layout, `useBearId` |
+| **car-component-workflow** | Adding a new component or portal page — 4-file pattern, barrel, nav, changelog |
+| **car-js-fundamentals** | Component logic — Promises, event loop, when to avoid `useEffect` / `useCallback` / `useMemo` |
+| **car-code-review** | Structured review — hooks, SVG helpers, props pattern, portal PropsTable, `/car-code-review` |
+| **car-code-quality** | Code review — types in type files, constants in const files, no magic numbers/strings, logic-first |
+| **car-release-workflow** | Version bumps, CHANGELOG, build, publish |
 
 ## How to invoke
 
-- "Follow bear-ui-standards when refactoring Select"
-- "Use bear-component-workflow to add ToggleButton"
-- "Run /bear-code-review on FormControl"
-- "Prepare 1.2.4 per bear-release-workflow"
+- "Follow car-ui-standards when refactoring Select"
+- "Use car-component-workflow to add ToggleButton"
+- "Run /car-code-review on FormControl"
+- "Prepare 1.2.4 per car-release-workflow"
 
 ## Legacy rule
 
-`bear-ui-standards.mdc` is superseded by the **bear-ui-standards** skill. Prefer the skill for full guidance including component IDs.
+`car-ui-standards.mdc` is superseded by the **car-ui-standards** skill. Prefer the skill for full guidance including component IDs.
 
 ## Publishing
 

@@ -1,3 +1,4 @@
+export { Gate } from './Gate';
 export { Overview } from './Overview';
 export { Onboarding } from './Onboarding';
 export { Vehicles } from './Vehicles';

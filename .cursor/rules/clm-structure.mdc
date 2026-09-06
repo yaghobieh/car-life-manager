@@ -10,8 +10,9 @@ alwaysApply: true
 - Shared tokens live in `src/constants` (`numbers.const.ts`, `generals.const.ts`, `keys.const.ts`).
 - Do not add a project CSS file. Use Bear primitives (`Box`, `Flex`, `Grid`, `Card`, `Badge`, `Button`, `Sidebar`, `Input`, `Typography`).
 - Do not put CSS class strings in const files.
-- Imports more than one level up (`../../`) must use aliases: `@const`, `@hooks`, `@pages`, `@components`, `@store`, `@locales`, `@api`.
-- State is Synapse (`createNucleus` / `useNucleus`), not React context or Redux.
+- Imports more than one level up (`../../`) must use aliases: `@const`, `@hooks`, `@pages`, `@components`, `@store`, `@locales`, `@api`, `@theme`.
+- State is Synapse in `store/modules/Name` (`Name.apis.ts`, `Name.reducers.ts`, `Name.consts.ts`, `Name.utils.ts`). Hooks live in `store/hooks`.
+- API routes live in `apps/api/src/routes/*.routes.ts`. Handlers live in `controllers`. Cross-cutting code lives in `middlewares`. Prisma lives in `db/` with `db/handlers`.
 - Copy is Lingo (`@forgedevstack/lingo`). Default locale is Hebrew.
 - Tags such as חשוב use Bear `Badge`. Do not invent custom tag components with CSS.
 - Official data only. Do not mark Pango, CelloPark, or Highway 6 as connected without a real API.

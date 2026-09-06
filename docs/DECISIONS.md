@@ -2,7 +2,11 @@
 
 ## ADR-001 Persistence
 
-Prisma + SQLite locally. Schema is small and portable to PostgreSQL. Harbor’s Mongo ODM is not used because the product brief prefers relational data and PostgreSQL.
+Prisma is the TypeScript ORM (schema → generated client → typed queries). Local database is **SQLite** (`file:./dev.db`). Production should use PostgreSQL by changing `DATABASE_URL`. Harbor’s Mongo ODM is not used.
+
+## ADR-007 Integrations are adapters, not microservices
+
+`apps/api/src/integrations` are in-process adapters to official external APIs (Ministry of Transport now; Pango / CelloPark / Highway 6 later). They are not separate deployable services.
 
 ## ADR-002 Harbor role
 

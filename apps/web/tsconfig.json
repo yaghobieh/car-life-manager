@@ -14,7 +14,8 @@
     "baseUrl": ".",
     "paths": {
       "@const": ["src/constants"],
-      "@hooks": ["src/hooks"],
+      "@hooks": ["src/store/hooks"],
+      "@theme": ["src/theme"],
       "@pages": ["src/pages"],
       "@components/*": ["src/components/*"],
       "@components": ["src/components"],

@@ -6,7 +6,8 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 export const aliases = {
   '@forgedevstack/bear-icons': path.resolve(root, '../../node_modules/@forgedevstack/bear-icons'),
   '@const': path.resolve(root, 'src/constants'),
-  '@hooks': path.resolve(root, 'src/hooks'),
+  '@hooks': path.resolve(root, 'src/store/hooks'),
+  '@theme': path.resolve(root, 'src/theme'),
   '@pages': path.resolve(root, 'src/pages'),
   '@components': path.resolve(root, 'src/components'),
   '@store': path.resolve(root, 'src/store'),

@@ -1,3 +1,5 @@
+export const ZERO = 0;
+export const ONE = 1;
 export const SIDEBAR_WIDTH = 220;
 export const SIDEBAR_COLLAPSED_WIDTH = 64;
 export const LOGO_MARK_SIZE = 32;

@@ -5,23 +5,20 @@ import {
   Input,
   Select,
   Sidebar,
+  Typography,
   useIsDesktop,
 } from '@forgedevstack/bear';
 import { LocaleSwitcher, useTranslate } from '@forgedevstack/lingo/react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
-  COLOR_BG,
   COLOR_NAVY_DEEP,
   COLOR_WHITE,
   FLEX_GAP_MD,
   MOBILE_NAV_COUNT,
-  MOBILE_NAV_PADDING,
-  PAGE_PADDING,
   ROUTE_ONBOARDING,
   SIDEBAR_COLLAPSED_WIDTH,
   SIDEBAR_WIDTH,
-  TOOLBAR_MARGIN,
-  TOPBAR_PADDING,
+  ZERO,
 } from '@const';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
@@ -42,24 +39,24 @@ export function AppShell() {
   }));
 
   return (
-    <Flex className="Bear-AppShell" style={{ minHeight: '100vh', background: COLOR_BG }}>
-      {isDesktop ? (
-        <Sidebar
-          className="dark"
-          items={items}
-          activeItemId={activeNavId(pathname, NAV_ITEMS)}
-          width={SIDEBAR_WIDTH}
-          collapsedWidth={SIDEBAR_COLLAPSED_WIDTH}
-          position="right"
-          fullHeight
-          header={<Logo />}
-          style={{ background: COLOR_NAVY_DEEP, color: COLOR_WHITE, minHeight: '100vh' }}
-        />
-      ) : null}
-      <Flex direction="column" style={{ flex: 1, minWidth: 0 }}>
-        <Box as="header">
-          <Flex align="center" justify="between" gap={FLEX_GAP_MD} style={{ padding: TOPBAR_PADDING }}>
-            {isDesktop ? null : <Logo compact />}
+    <Flex className="Bear-AppShell bear-min-h-screen">
+      {isDesktop && (
+        <Box bg={COLOR_NAVY_DEEP} className="bear-min-h-screen">
+          <Sidebar
+            items={items}
+            activeItemId={activeNavId(pathname, NAV_ITEMS)}
+            width={SIDEBAR_WIDTH}
+            collapsedWidth={SIDEBAR_COLLAPSED_WIDTH}
+            position="right"
+            fullHeight
+            header={<Logo />}
+          />
+        </Box>
+      )}
+      <Flex direction="column" className="bear-flex-1">
+        <Box as="header" p={4}>
+          <Flex align="center" justify="between" gap={FLEX_GAP_MD}>
+            {!isDesktop && <Logo compact />}
             <Input aria-label={t('search')} placeholder={t('search')} radius="pill" fullWidth />
             <Flex align="center" gap={FLEX_GAP_MD}>
               <LocaleSwitcher />
@@ -72,12 +69,12 @@ export function AppShell() {
             </Flex>
           </Flex>
         </Box>
-        <Box as="main" style={{ padding: PAGE_PADDING, flex: 1 }}>
-          <Flex justify="between" align="center" gap={FLEX_GAP_MD} style={{ marginBottom: TOOLBAR_MARGIN }}>
+        <Box as="main" p={6} className="bear-flex-1">
+          <Flex justify="between" align="center" gap={FLEX_GAP_MD} className="bear-mb-4">
             <Button variant="primary" onClick={() => navigate(ROUTE_ONBOARDING)}>
               {t('addVehicle')}
             </Button>
-            {current ? (
+            {current && (
               <Select
                 aria-label={t('selectVehicle')}
                 value={current.id}
@@ -87,22 +84,21 @@ export function AppShell() {
                   label: vehicle.formattedRegistrationNumber,
                 }))}
               />
-            ) : null}
+            )}
           </Flex>
           <Outlet />
         </Box>
-        {isDesktop ? null : (
-          <Box as="nav" style={{ background: COLOR_NAVY_DEEP, padding: MOBILE_NAV_PADDING, position: 'sticky', bottom: 0 }}>
+        {!isDesktop && (
+          <Box as="nav" bg={COLOR_NAVY_DEEP} p={2}>
             <Flex justify="around">
-              {NAV_ITEMS.slice(0, MOBILE_NAV_COUNT).map((item) => (
+              {NAV_ITEMS.slice(ZERO, MOBILE_NAV_COUNT).map((item) => (
                 <Button
                   key={item.id}
                   variant="ghost"
                   compact
                   onClick={() => navigate(item.to)}
-                  style={{ color: COLOR_WHITE }}
                 >
-                  {t(item.labelKey)}
+                  <Typography color={COLOR_WHITE}>{t(item.labelKey)}</Typography>
                 </Button>
               ))}
             </Flex>

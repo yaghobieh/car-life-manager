@@ -30,6 +30,16 @@ npm run dev:web
 
 Open http://127.0.0.1:5188 (API: http://127.0.0.1:4173)
 
+## Database
+
+Prisma (TypeScript ORM) + SQLite locally. Set `DATABASE_URL` to PostgreSQL in production.
+
+`apps/api/src/integrations` are adapters to external APIs, not microservices.
+
+## Vercel
+
+The web app builds for Vercel (`vercel.json` → `apps/web/dist`). Point `/api` at the Harbor Node host. Harbor is not a Vercel serverless function.
+
 ## Tests
 
 ```bash
