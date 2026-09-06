@@ -44,8 +44,8 @@ export function OverviewExpenses(props: OverviewExpensesProps) {
       <Flex direction="column" gap={FLEX_GAP_MD}>
         <Typography variant={TYPO_SECTION_TITLE}>{t('monthlyExpenses')}</Typography>
         <EmptyState title={t('noExpenses')} body={t('noExpensesBody')} />
-        <Button variant="ghost" compact disableElevation onClick={() => navigate(ROUTE_EXPENSES)}>
-          <Typography color={COLOR_BLUE}>{t('viewAll')}</Typography>
+        <Button variant="primary" onClick={() => navigate(ROUTE_EXPENSES)}>
+          {t('addExpense')}
         </Button>
       </Flex>
     </Card>

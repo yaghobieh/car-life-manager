@@ -1,5 +1,11 @@
-import type { Expense, Reminder, Task, Vehicle } from "@clm/shared";
-import type { Expense as ExpenseRow, Reminder as ReminderRow, Task as TaskRow, Vehicle as VehicleRow } from "@prisma/client";
+import type { Expense, Reminder, Task, Vehicle, VehicleDocument } from "@clm/shared";
+import type {
+  Expense as ExpenseRow,
+  Reminder as ReminderRow,
+  Task as TaskRow,
+  Vehicle as VehicleRow,
+  VehicleDocument as DocumentRow,
+} from "@prisma/client";
 
 export function serializeVehicle(row: VehicleRow): Vehicle {
   return {
@@ -58,6 +64,19 @@ export function serializeExpense(row: ExpenseRow): Expense {
     description: row.description,
     recurring: row.recurring,
     attachmentId: row.attachmentId,
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+export function serializeDocument(row: DocumentRow): VehicleDocument {
+  return {
+    id: row.id,
+    vehicleId: row.vehicleId,
+    type: row.type as VehicleDocument["type"],
+    title: row.title,
+    notes: row.notes,
+    expiresAt: row.expiresAt,
+    storageKey: row.storageKey,
     createdAt: row.createdAt.toISOString(),
   };
 }

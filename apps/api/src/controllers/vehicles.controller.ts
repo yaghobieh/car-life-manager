@@ -2,7 +2,9 @@ import type { Request, Response } from "express";
 import { HTTP_CREATED, HTTP_OK } from "../constants/http.const";
 import { getUserId } from "../middlewares";
 import {
+  addDocument,
   addExpense,
+  addReminder,
   addVehicle,
   getDashboard,
   listVehicles,
@@ -66,4 +68,27 @@ export async function addExpenseController(req: Request, res: Response): Promise
 export async function listVehicleRemindersController(req: Request, res: Response): Promise<void> {
   const dashboard = await getDashboard(getUserId(req), String(req.params.id));
   res.json({ reminders: dashboard.reminders });
+}
+
+export async function addReminderController(req: Request, res: Response): Promise<void> {
+  const reminder = await addReminder(getUserId(req), String(req.params.id), {
+    title: String(req.body?.title ?? ""),
+    dueDate: String(req.body?.dueDate ?? ""),
+  });
+  res.status(HTTP_CREATED).json({ reminder });
+}
+
+export async function listVehicleDocumentsController(req: Request, res: Response): Promise<void> {
+  const dashboard = await getDashboard(getUserId(req), String(req.params.id));
+  res.json({ documents: dashboard.documents });
+}
+
+export async function addDocumentController(req: Request, res: Response): Promise<void> {
+  const document = await addDocument(getUserId(req), String(req.params.id), {
+    type: String(req.body?.type ?? "other"),
+    title: String(req.body?.title ?? ""),
+    notes: req.body?.notes ?? null,
+    expiresAt: req.body?.expiresAt ?? null,
+  });
+  res.status(HTTP_CREATED).json({ document });
 }

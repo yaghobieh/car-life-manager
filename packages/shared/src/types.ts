@@ -12,7 +12,8 @@ export type ConnectionStatus =
   | "not_connected"
   | "connection_required"
   | "unknown"
-  | "not_supported";
+  | "not_supported"
+  | "official";
 
 export type TaskStatus =
   | "not_started"

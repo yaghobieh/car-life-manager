@@ -1,5 +1,6 @@
 import { catalogWithTimestamp, type ProviderContext, type ServiceProviderInfo } from "@clm/shared";
 import {
+  CONNECTION_OFFICIAL,
   PROVIDER_CELLO,
   PROVIDER_EASYPARK,
   PROVIDER_HIGHWAY_6,
@@ -8,16 +9,16 @@ import {
   PROVIDER_INSURANCE,
   PROVIDER_PANGO,
 } from "./providers.const";
-import { unsupportedAdapter } from "./providers.adapter";
+import { hubAwareAdapter, unsupportedAdapter } from "./providers.adapter";
 import type { ProviderAdapter, StoredProviderConnection } from "./providers.types";
 
 const ADAPTERS: Record<string, ProviderAdapter> = {
-  [PROVIDER_PANGO]: unsupportedAdapter(PROVIDER_PANGO),
-  [PROVIDER_CELLO]: unsupportedAdapter(PROVIDER_CELLO),
-  [PROVIDER_HIGHWAY_6]: unsupportedAdapter(PROVIDER_HIGHWAY_6),
-  [PROVIDER_HIGHWAY_6_NORTH]: unsupportedAdapter(PROVIDER_HIGHWAY_6_NORTH),
-  [PROVIDER_EASYPARK]: unsupportedAdapter(PROVIDER_EASYPARK),
-  [PROVIDER_INSURANCE]: unsupportedAdapter(PROVIDER_INSURANCE),
+  [PROVIDER_PANGO]: hubAwareAdapter(PROVIDER_PANGO),
+  [PROVIDER_CELLO]: hubAwareAdapter(PROVIDER_CELLO),
+  [PROVIDER_HIGHWAY_6]: hubAwareAdapter(PROVIDER_HIGHWAY_6),
+  [PROVIDER_HIGHWAY_6_NORTH]: hubAwareAdapter(PROVIDER_HIGHWAY_6_NORTH),
+  [PROVIDER_EASYPARK]: hubAwareAdapter(PROVIDER_EASYPARK),
+  [PROVIDER_INSURANCE]: hubAwareAdapter(PROVIDER_INSURANCE),
   [PROVIDER_IDENTITY]: unsupportedAdapter(PROVIDER_IDENTITY),
 };
 
@@ -39,7 +40,7 @@ export async function listReadyServices(
       const saved = storedById.get(provider.providerId);
       return {
         ...provider,
-        status: live,
+        status: provider.status === CONNECTION_OFFICIAL ? CONNECTION_OFFICIAL : live,
         note: saved?.note ?? provider.note,
         lastCheckedAt: new Date().toISOString(),
       };

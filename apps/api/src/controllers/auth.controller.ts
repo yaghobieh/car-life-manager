@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { isGoogleAuthReady } from "../config";
 import { HTTP_CREATED, HTTP_OK } from "../constants/http.const";
+import { getUserId } from "../middlewares";
 import {
   clearSession,
   createSession,
@@ -8,6 +9,7 @@ import {
   loginUser,
   loginWithGoogleCode,
   registerUser,
+  updateProfile,
   userFromSessionToken,
 } from "../modules/auth/service";
 import {
@@ -45,6 +47,14 @@ export async function meController(req: Request, res: Response): Promise<void> {
   const token = readCookie(req.headers.cookie ?? "", SESSION_COOKIE);
   const user = token ? await userFromSessionToken(token) : null;
   res.status(HTTP_OK).json({ user, googleEnabled: isGoogleAuthReady() });
+}
+
+export async function updateProfileController(req: Request, res: Response): Promise<void> {
+  const user = await updateProfile(getUserId(req), {
+    name: req.body?.name,
+    phone: req.body?.phone,
+  });
+  res.status(HTTP_OK).json({ user });
 }
 
 export async function googleStartController(_req: Request, res: Response): Promise<void> {

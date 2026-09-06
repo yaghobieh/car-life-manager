@@ -5,6 +5,8 @@ import {
   AUTH_PATH,
   EMAIL_PATTERN,
   HASH_SEPARATOR,
+  PHONE_MAX_DIGITS,
+  PHONE_MIN_DIGITS,
   SCRYPT_KEYLEN,
   SESSION_MAX_AGE_MS,
   TOKEN_BYTES,
@@ -57,14 +59,28 @@ export function serializeAuthUser(user: {
   id: string;
   email: string | null;
   name: string | null;
+  phone: string | null;
   imageUrl: string | null;
 }): AuthUserPayload {
   return {
     id: user.id,
     email: user.email,
     name: user.name,
+    phone: user.phone,
     imageUrl: user.imageUrl,
   };
+}
+
+export function normalizePhone(phone: string): string | null {
+  const trimmed = phone.trim();
+  return trimmed || null;
+}
+
+export function isValidPhone(phone: string): boolean {
+  const trimmed = phone.trim();
+  if (!trimmed) return true;
+  const digits = trimmed.replace(/\D/g, "");
+  return digits.length >= PHONE_MIN_DIGITS && digits.length <= PHONE_MAX_DIGITS;
 }
 
 export function appHomeUrl(): string {

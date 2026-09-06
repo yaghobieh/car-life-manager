@@ -16,6 +16,8 @@ import {
   COLOR_WARNING,
   COLOR_WHITE,
   FONT_FAMILY,
+  FONT_FAMILY_EN,
+  LOCALE_EN,
   FONT_SIZE_PAGE_TITLE,
   FONT_SIZE_SECTION_TITLE,
   FONT_WEIGHT_BOLD,
@@ -89,6 +91,21 @@ export const CLM_BEAR_CUSTOM_VARIANTS = {
   },
 };
 
+export function fontFamilyForLocale(locale: string): string {
+  return locale === LOCALE_EN ? FONT_FAMILY_EN : FONT_FAMILY;
+}
+
+export function bearThemeForLocale(locale: string): BearThemeOverride {
+  return {
+    ...CLM_BEAR_THEME,
+    typography: {
+      fontFamily: {
+        sans: fontFamilyForLocale(locale),
+      },
+    },
+  };
+}
+
 export const CLM_BEAR_CUSTOM_TYPOGRAPHY = {
   [TYPO_PAGE_TITLE]: {
     fontSize: FONT_SIZE_PAGE_TITLE,
@@ -105,6 +122,20 @@ export const CLM_BEAR_CUSTOM_TYPOGRAPHY = {
     component: 'h2' as ElementType,
   },
 };
+
+export function bearTypographyForLocale(locale: string) {
+  const fontFamily = fontFamilyForLocale(locale);
+  return {
+    [TYPO_PAGE_TITLE]: {
+      ...CLM_BEAR_CUSTOM_TYPOGRAPHY[TYPO_PAGE_TITLE],
+      fontFamily,
+    },
+    [TYPO_SECTION_TITLE]: {
+      ...CLM_BEAR_CUSTOM_TYPOGRAPHY[TYPO_SECTION_TITLE],
+      fontFamily,
+    },
+  };
+}
 
 export const CLM_BEAR_DEFAULT_PROPS = {
   Card: {

@@ -19,6 +19,11 @@ export const config = {
   enableLogs: process.env.ENABLE_LOGS === "1",
   appVersion: process.env.APP_VERSION ?? "1.0.1",
   buildSha: process.env.VERCEL_GIT_COMMIT_SHA ?? process.env.BUILD_SHA ?? "local",
+  providerHubUrl: process.env.PROVIDER_HUB_URL ?? "",
+  providerHubKey: process.env.PROVIDER_HUB_KEY ?? "",
+  pangoApiUrl: process.env.PANGO_API_URL ?? "",
+  celloApiUrl: process.env.CELLO_API_URL ?? "",
+  highway6ApiUrl: process.env.HIGHWAY6_API_URL ?? "",
 };
 
 export function isDevelopment(): boolean {

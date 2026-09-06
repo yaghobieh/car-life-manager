@@ -18,3 +18,38 @@ export const VEHICLE_IMAGE_BY_MAKE: Record<string, string> = {
 };
 
 export { VEHICLE_IMAGE_DEFAULT };
+
+export const VEHICLE_COLOR_HEX: Record<string, string> = {
+  לבן: '#f3efe6',
+  'לבן פנינה': '#f7f1e4',
+  שחור: '#1c1c1c',
+  כסף: '#c7ccd2',
+  כסוף: '#c7ccd2',
+  אפור: '#8a9098',
+  אדום: '#b42318',
+  כחול: '#1d4e89',
+  תכלת: '#5b8fb8',
+  ירוק: '#2f6b3a',
+  צהוב: '#d4a017',
+  חום: '#6b4423',
+  בז: '#d8c7a3',
+  "בז'": '#d8c7a3',
+  זהב: '#c4a35a',
+  בורדו: '#6d1a2a',
+  כתום: '#c85a17',
+  סגול: '#5a3d7a',
+  ורוד: '#c97b8a',
+  white: '#f3efe6',
+  black: '#1c1c1c',
+  silver: '#c7ccd2',
+  gray: '#8a9098',
+  grey: '#8a9098',
+  red: '#b42318',
+  blue: '#1d4e89',
+  green: '#2f6b3a',
+  yellow: '#d4a017',
+  brown: '#6b4423',
+  beige: '#d8c7a3',
+  gold: '#c4a35a',
+  orange: '#c85a17',
+};

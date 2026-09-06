@@ -19,3 +19,6 @@ export const AUTH_ERROR_QUERY = "error";
 export const AUTH_PATH = "/auth";
 export const GOOGLE_FAILED_CODE = "google_failed";
 export const GOOGLE_UNAVAILABLE_CODE = "google_unavailable";
+export const PHONE_MIN_DIGITS = 9;
+export const PHONE_MAX_DIGITS = 15;
+export const NAME_MAX_LENGTH = 80;

@@ -16,7 +16,13 @@ import { fetchOutstandingRecalls } from "../../integrations/ministry-of-transpor
 import { RECALL_CACHE_SOURCE } from "../../integrations/ministry-of-transport/ministry.const";
 import { developmentVehicle } from "../../integrations/ministry-of-transport/development-adapter";
 import { listReadyServices } from "../../integrations/providers";
-import { serializeExpense, serializeReminder, serializeTask, serializeVehicle } from "./serialize";
+import {
+  serializeDocument,
+  serializeExpense,
+  serializeReminder,
+  serializeTask,
+  serializeVehicle,
+} from "./serialize";
 
 export async function lookupVehicle(registrationNumber: string): Promise<VehicleLookupResult> {
   if (!isValidRegistrationNumber(registrationNumber)) {
@@ -145,10 +151,11 @@ export async function getDashboard(userId: string, vehicleId: string) {
   const recalls = await recallsForPlate(vehicle.registrationNumber);
   await persistRecallTasks(vehicle.id, recalls);
 
-  const [tasks, expenses, reminders, connections] = await Promise.all([
+  const [tasks, expenses, reminders, documents, connections] = await Promise.all([
     prisma.task.findMany({ where: { vehicleId }, orderBy: { createdAt: "asc" } }),
     prisma.expense.findMany({ where: { vehicleId }, orderBy: { occurredAt: "desc" } }),
     prisma.reminder.findMany({ where: { vehicleId }, orderBy: { dueDate: "asc" } }),
+    prisma.vehicleDocument.findMany({ where: { vehicleId }, orderBy: { createdAt: "desc" } }),
     prisma.providerConnection.findMany({ where: { userId } }),
   ]);
 
@@ -156,6 +163,7 @@ export async function getDashboard(userId: string, vehicleId: string) {
     vehicle: serializeVehicle(vehicle),
     tasks: tasks.map(serializeTask),
     recalls,
+    documents: documents.map(serializeDocument),
     services: await listReadyServices(
       {
         userId,
@@ -191,6 +199,9 @@ export async function patchTask(userId: string, taskId: string, status: string) 
 
 export async function addExpense(userId: string, vehicleId: string, input: Omit<Expense, "id" | "createdAt" | "vehicleId">) {
   await getOwnedVehicle(userId, vehicleId);
+  if (!Number.isFinite(input.amount) || input.amount <= 0) {
+    throw Object.assign(new Error("Amount is invalid"), { status: 400, code: "invalid_amount" });
+  }
   const row = await prisma.expense.create({
     data: {
       vehicleId,
@@ -205,6 +216,46 @@ export async function addExpense(userId: string, vehicleId: string, input: Omit<
   });
   await audit({ userId, vehicleId, action: "expense_created" });
   return serializeExpense(row);
+}
+
+export async function addDocument(
+  userId: string,
+  vehicleId: string,
+  input: { type: string; title: string; notes?: string | null; expiresAt?: string | null },
+) {
+  await getOwnedVehicle(userId, vehicleId);
+  const title = input.title.trim();
+  if (!title) throw Object.assign(new Error("Title is required"), { status: 400, code: "invalid_title" });
+  const row = await prisma.vehicleDocument.create({
+    data: {
+      vehicleId,
+      type: input.type,
+      title,
+      notes: input.notes?.trim() || null,
+      expiresAt: input.expiresAt || null,
+      storageKey: "manual",
+    },
+  });
+  await audit({ userId, vehicleId, action: "document_created", metadata: { type: input.type } });
+  return serializeDocument(row);
+}
+
+export async function addReminder(userId: string, vehicleId: string, input: { title: string; dueDate: string }) {
+  await getOwnedVehicle(userId, vehicleId);
+  const title = input.title.trim();
+  if (!title || !input.dueDate) {
+    throw Object.assign(new Error("Reminder is incomplete"), { status: 400, code: "invalid_reminder" });
+  }
+  const row = await prisma.reminder.create({
+    data: {
+      vehicleId,
+      title,
+      dueDate: input.dueDate,
+      status: "upcoming",
+    },
+  });
+  await audit({ userId, vehicleId, action: "reminder_created" });
+  return serializeReminder(row);
 }
 
 export async function removeVehicle(userId: string, vehicleId: string) {

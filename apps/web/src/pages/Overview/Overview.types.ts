@@ -19,3 +19,15 @@ export interface OverviewRemindersProps {
 export interface OverviewRecallsProps {
   recalls: VehicleRecall[];
 }
+
+export interface OverviewStatusProps {
+  licenseKind: string;
+  testKind: string;
+  registrationExpiry: string | null;
+  nextTestDate: string | null;
+  lastTestDate: string | null;
+}
+
+export interface OverviewCompareProps {
+  currentId: string;
+}

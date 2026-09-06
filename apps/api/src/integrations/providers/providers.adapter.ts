@@ -1,5 +1,6 @@
 import { EMPTY_CAPABILITIES, type ConnectionStatus } from "@clm/shared";
 import { CONNECTION_NOT_SUPPORTED, UNSUPPORTED_NOTE } from "./providers.const";
+import { probeProviderHub } from "./providers.hub";
 import type { ProviderAdapter } from "./providers.types";
 
 export function unsupportedAdapter(id: string): ProviderAdapter {
@@ -14,6 +15,16 @@ export function unsupportedAdapter(id: string): ProviderAdapter {
         status: CONNECTION_NOT_SUPPORTED as ConnectionStatus,
         note: UNSUPPORTED_NOTE,
       };
+    },
+  };
+}
+
+export function hubAwareAdapter(id: string): ProviderAdapter {
+  const base = unsupportedAdapter(id);
+  return {
+    ...base,
+    async getConnectionStatus() {
+      return probeProviderHub(id);
     },
   };
 }

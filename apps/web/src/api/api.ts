@@ -1,4 +1,4 @@
-import type { Expense, Task, VehicleLookupResult } from '@clm/shared';
+import type { Expense, Reminder, Task, VehicleDocument, VehicleLookupResult } from '@clm/shared';
 import { HTTP_METHOD_PATCH, HTTP_METHOD_POST } from '@const';
 import {
   AUTH_GOOGLE_PATH,
@@ -27,6 +27,11 @@ export const api = {
     }),
   logout: () =>
     apiClient.request<{ user: null }>(AUTH_LOGOUT_PATH, { method: HTTP_METHOD_POST }),
+  updateProfile: (name: string, phone: string) =>
+    apiClient.request<AuthUserPayload>(AUTH_ME_PATH, {
+      method: HTTP_METHOD_PATCH,
+      body: JSON.stringify({ name, phone }),
+    }),
   googleStart: AUTH_GOOGLE_PATH,
   lookup: (plate: string) =>
     apiClient.request<VehicleLookupResult>(`${LOOKUP_PATH}/${encodeURIComponent(plate)}`),
@@ -44,6 +49,16 @@ export const api = {
     }),
   addExpense: (vehicleId: string, input: Partial<Expense>) =>
     apiClient.request<{ expense: Expense }>(`${VEHICLES_PATH}/${vehicleId}/expenses`, {
+      method: HTTP_METHOD_POST,
+      body: JSON.stringify(input),
+    }),
+  addDocument: (vehicleId: string, input: Pick<VehicleDocument, 'type' | 'title'> & Partial<VehicleDocument>) =>
+    apiClient.request<{ document: VehicleDocument }>(`${VEHICLES_PATH}/${vehicleId}/documents`, {
+      method: HTTP_METHOD_POST,
+      body: JSON.stringify(input),
+    }),
+  addReminder: (vehicleId: string, input: Pick<Reminder, 'title' | 'dueDate'>) =>
+    apiClient.request<{ reminder: Reminder }>(`${VEHICLES_PATH}/${vehicleId}/reminders`, {
       method: HTTP_METHOD_POST,
       body: JSON.stringify(input),
     }),

@@ -14,17 +14,20 @@ import {
   GOOGLE_TOKEN_URL,
   GOOGLE_USERINFO_URL,
   GRANT_AUTHORIZATION_CODE,
+  NAME_MAX_LENGTH,
   OAUTH_RESPONSE_TYPE,
   PASSWORD_MIN_LENGTH,
   PROVIDER_EMAIL,
   PROVIDER_GOOGLE,
   SESSION_MAX_AGE_MS,
 } from "./auth.const";
-import type { AuthUserPayload, GoogleTokenResponse, GoogleUserInfo } from "./auth.types";
+import type { AuthUserPayload, GoogleTokenResponse, GoogleUserInfo, ProfileUpdateInput } from "./auth.types";
 import {
   hashPassword,
   isValidEmail,
+  isValidPhone,
   normalizeEmail,
+  normalizePhone,
   randomToken,
   serializeAuthUser,
   verifyPassword,
@@ -160,5 +163,24 @@ export async function loginWithGoogleCode(code: string): Promise<AuthUserPayload
         },
       });
   logger.info("google login user", user.id);
+  return serializeAuthUser(user);
+}
+
+export async function updateProfile(userId: string, input: ProfileUpdateInput): Promise<AuthUserPayload> {
+  if (input.phone !== undefined && !isValidPhone(input.phone)) {
+    throw new HttpError("Invalid phone", HTTP_BAD_REQUEST, "invalid_phone");
+  }
+  const name = input.name === undefined ? undefined : input.name.trim() || null;
+  if (name && name.length > NAME_MAX_LENGTH) {
+    throw new HttpError("Name is too long", HTTP_BAD_REQUEST, "invalid_name");
+  }
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      ...(name !== undefined ? { name } : {}),
+      ...(input.phone !== undefined ? { phone: normalizePhone(input.phone) } : {}),
+    },
+  });
+  logger.info("updated profile", user.id);
   return serializeAuthUser(user);
 }

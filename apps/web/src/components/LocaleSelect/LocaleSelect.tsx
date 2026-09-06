@@ -1,6 +1,6 @@
-import { Select } from '@forgedevstack/bear';
+import { Box, Select } from '@forgedevstack/bear';
 import { useLocale, useTranslate } from '@forgedevstack/lingo/react';
-import { LOCALE_EN, LOCALE_HE } from '@const';
+import { LOCALE_EN, LOCALE_HE, LOCALE_SELECT_MIN_WIDTH } from '@const';
 import { LOCALE_OPTION_KEYS } from './LocaleSelect.const';
 import type { LocaleSelectProps } from './LocaleSelect.types';
 
@@ -10,18 +10,28 @@ export function LocaleSelect(props: LocaleSelectProps) {
   const t = useTranslate();
 
   return (
-    <Select
-      id={id}
-      aria-label={t('language')}
-      value={locale}
-      fullWidth={fullWidth}
-      onChange={(value) => {
-        void setLocale(value);
+    <Box
+      className="Bear-LocaleSelect"
+      style={{
+        minWidth: LOCALE_SELECT_MIN_WIDTH,
+        width: fullWidth ? '100%' : LOCALE_SELECT_MIN_WIDTH,
       }}
-      options={[
-        { value: LOCALE_HE, label: t(LOCALE_OPTION_KEYS[LOCALE_HE]) },
-        { value: LOCALE_EN, label: t(LOCALE_OPTION_KEYS[LOCALE_EN]) },
-      ]}
-    />
+    >
+      <Select
+        id={id}
+        aria-label={t('language')}
+        label={t('language')}
+        size="md"
+        value={locale}
+        fullWidth
+        onChange={(value) => {
+          void setLocale(value);
+        }}
+        options={[
+          { value: LOCALE_HE, label: t(LOCALE_OPTION_KEYS[LOCALE_HE]) },
+          { value: LOCALE_EN, label: t(LOCALE_OPTION_KEYS[LOCALE_EN]) },
+        ]}
+      />
+    </Box>
   );
 }

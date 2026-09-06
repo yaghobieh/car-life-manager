@@ -36,3 +36,20 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 export const MOBILE_PRIMARY_NAV_IDS = [NAV_OVERVIEW, NAV_VEHICLES, NAV_TASKS, NAV_EXPENSES];
+
+export const SEARCH_MAKE_ALIASES: Record<string, string> = {
+  'קיה': 'kia',
+  'טויוטה': 'toyota',
+  'יונדאי': 'hyundai',
+  'מאזדה': 'mazda',
+  'סקודה': 'skoda',
+  'פולקסווגן': 'volkswagen',
+  'הונדה': 'honda',
+  'פורד': 'ford',
+  'פיג': 'peugeot',
+  'רנו': 'renault',
+  'שברולט': 'chevrolet',
+  'מרצדס': 'mercedes',
+  'במוו': 'bmw',
+  'אאודי': 'audi',
+};

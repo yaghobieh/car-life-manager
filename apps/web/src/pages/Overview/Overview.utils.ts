@@ -51,3 +51,26 @@ export function visibleReminders(reminders: Reminder[], limit: number): Reminder
 export function statusKindColor(kind: string): string {
   return STATUS_KIND_COLOR[kind as keyof typeof STATUS_KIND_COLOR] ?? STATUS_KIND_COLOR[STATUS_KIND_UNKNOWN];
 }
+
+export function compareVehicleLabel(vehicle: Vehicle, unknownLabel: string): string {
+  return `${vehicle.formattedRegistrationNumber}${SUBTITLE_SEPARATOR}${vehicleTitle(vehicle.make, vehicle.model, unknownLabel)}`;
+}
+
+export function compareFieldValue(
+  field: string,
+  vehicle: Vehicle,
+  locale: string,
+  unknownLabel: string,
+): string {
+  if (field === 'plate') return vehicle.formattedRegistrationNumber;
+  if (field === 'make') return vehicle.make ?? unknownLabel;
+  if (field === 'model') return vehicle.model ?? unknownLabel;
+  if (field === 'year') return vehicle.modelYear ? String(vehicle.modelYear) : unknownLabel;
+  if (field === 'color') return vehicle.color ?? unknownLabel;
+  if (field === 'fuel') return vehicle.fuelType ?? unknownLabel;
+  if (field === 'hand') return vehicle.ownershipSequence ? String(vehicle.ownershipSequence) : unknownLabel;
+  if (field === 'ownershipType') return vehicle.ownershipType ?? unknownLabel;
+  if (field === 'licenseExpiry') return formatOverviewDate(vehicle.registrationExpiry, locale, unknownLabel);
+  if (field === 'test') return formatOverviewDate(vehicle.nextTestDate, locale, unknownLabel);
+  return unknownLabel;
+}

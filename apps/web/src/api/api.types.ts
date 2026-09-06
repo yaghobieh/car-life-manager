@@ -5,6 +5,7 @@ import type {
   ServiceProviderInfo,
   Task,
   Vehicle,
+  VehicleDocument,
   VehicleRecall,
 } from '@clm/shared';
 import {
@@ -20,6 +21,7 @@ export interface DashboardPayload {
   expenses: Expense[];
   expenseSummary: ExpenseSummary;
   reminders: Reminder[];
+  documents: VehicleDocument[];
   recalls: VehicleRecall[];
   identityVerification: { status: string; note: string };
 }
@@ -32,6 +34,7 @@ export interface AuthUser {
   id: string;
   email: string | null;
   name: string | null;
+  phone: string | null;
   imageUrl: string | null;
 }
 
