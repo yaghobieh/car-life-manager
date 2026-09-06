@@ -12,6 +12,7 @@
     "dev:web": "npm run dev -w @clm/web",
     "dev:api": "npm run dev -w @clm/api",
     "build": "npm run build --workspaces --if-present",
+    "vercel-build": "bash scripts/vercel-build.sh",
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "db:generate": "npm run db:generate -w @clm/api",
