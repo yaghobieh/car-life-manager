@@ -146,7 +146,10 @@ export function generateVehicleTasks(context: VehicleContext): Task[] {
 
   for (const providerId of ["pango", "cello", "highway-6"] as const) {
     const connection = serviceOf(services, providerId);
-    if (!connection || connection.status === "connected") continue;
+    if (!connection) continue;
+    if (connection.status === "connected" || connection.status === "user_confirmed" || connection.status === "not_connected") {
+      continue;
+    }
     const labels: Record<typeof providerId, { title: string; description: string; url: string | null }> = {
       pango: {
         title: "הוספת הרכב ל-Pango",

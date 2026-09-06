@@ -1,6 +1,7 @@
-import type { Expense, Reminder, Task, Vehicle, VehicleDocument } from "@clm/shared";
+import type { Expense, MaintenanceRecord, Reminder, Task, Vehicle, VehicleDocument } from "@clm/shared";
 import type {
   Expense as ExpenseRow,
+  MaintenanceRecord as MaintenanceRow,
   Reminder as ReminderRow,
   Task as TaskRow,
   Vehicle as VehicleRow,
@@ -77,6 +78,21 @@ export function serializeDocument(row: DocumentRow): VehicleDocument {
     notes: row.notes,
     expiresAt: row.expiresAt,
     storageKey: row.storageKey,
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+export function serializeMaintenance(row: MaintenanceRow): MaintenanceRecord {
+  return {
+    id: row.id,
+    vehicleId: row.vehicleId,
+    serviceDate: row.serviceDate,
+    mileage: row.mileage,
+    garage: row.garage,
+    serviceType: row.serviceType,
+    parts: row.parts,
+    cost: row.cost,
+    notes: row.notes,
     createdAt: row.createdAt.toISOString(),
   };
 }

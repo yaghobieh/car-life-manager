@@ -1,5 +1,5 @@
-import type { Expense, Reminder, Task, VehicleDocument, VehicleLookupResult } from '@clm/shared';
-import { HTTP_METHOD_PATCH, HTTP_METHOD_POST } from '@const';
+import type { Expense, MaintenanceRecord, Reminder, ServiceAnswer, Task, VehicleDocument, VehicleLookupResult } from '@clm/shared';
+import { HTTP_METHOD_PATCH, HTTP_METHOD_POST, ICS_PATH_SUFFIX } from '@const';
 import {
   AUTH_GOOGLE_PATH,
   AUTH_LOGIN_PATH,
@@ -11,7 +11,7 @@ import {
   VEHICLES_PATH,
 } from './api.const';
 import { apiClient } from './ApiClient';
-import type { AuthMePayload, AuthUserPayload, DashboardPayload, VehicleListPayload } from './api.types';
+import type { AuthMePayload, AuthUserPayload, DashboardPayload, ProfileUpdateInput, VehicleListPayload } from './api.types';
 
 export const api = {
   me: () => apiClient.request<AuthMePayload>(AUTH_ME_PATH),
@@ -27,11 +27,12 @@ export const api = {
     }),
   logout: () =>
     apiClient.request<{ user: null }>(AUTH_LOGOUT_PATH, { method: HTTP_METHOD_POST }),
-  updateProfile: (name: string, phone: string) =>
+  updateProfile: (input: ProfileUpdateInput) =>
     apiClient.request<AuthUserPayload>(AUTH_ME_PATH, {
       method: HTTP_METHOD_PATCH,
-      body: JSON.stringify({ name, phone }),
+      body: JSON.stringify(input),
     }),
+  calendarUrl: (vehicleId: string) => `${VEHICLES_PATH}/${vehicleId}${ICS_PATH_SUFFIX}`,
   googleStart: AUTH_GOOGLE_PATH,
   lookup: (plate: string) =>
     apiClient.request<VehicleLookupResult>(`${LOOKUP_PATH}/${encodeURIComponent(plate)}`),
@@ -59,6 +60,16 @@ export const api = {
     }),
   addReminder: (vehicleId: string, input: Pick<Reminder, 'title' | 'dueDate'>) =>
     apiClient.request<{ reminder: Reminder }>(`${VEHICLES_PATH}/${vehicleId}/reminders`, {
+      method: HTTP_METHOD_POST,
+      body: JSON.stringify(input),
+    }),
+  confirmService: (vehicleId: string, providerId: string, answer: ServiceAnswer) =>
+    apiClient.request<{ confirmed: boolean }>(`${VEHICLES_PATH}/${vehicleId}/services/${providerId}/confirm`, {
+      method: HTTP_METHOD_POST,
+      body: JSON.stringify({ answer }),
+    }),
+  addMaintenance: (vehicleId: string, input: Pick<MaintenanceRecord, 'serviceDate' | 'serviceType'> & Partial<MaintenanceRecord>) =>
+    apiClient.request<{ maintenance: MaintenanceRecord }>(`${VEHICLES_PATH}/${vehicleId}/maintenance`, {
       method: HTTP_METHOD_POST,
       body: JSON.stringify(input),
     }),

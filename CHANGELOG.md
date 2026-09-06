@@ -1,3 +1,21 @@
+## [1.0.2] - 2026-09-06
+
+### Added
+- Public landing page and vehicle file with tabs and timeline
+- Manual service confirmation stored as user-confirmed, never as Connected
+- Task groups, task drawer, source badges, and What’s Next
+- Maintenance records, expense cost insight, and reports from recorded data only
+- Email and SMS reminder dispatch (Resend / Twilio) with skipped status when not configured
+- ICS calendar download and Add to Google Calendar template links
+- Settings toggles for email and SMS notifications
+
+### Changed
+- Vercel build runs `prisma migrate deploy` so new tables exist in production
+- Database connection failures return HTTP 503 `db_unreachable` instead of a raw Prisma crash
+
+### Fixed
+- Bear component IDs, extracted page RFCs, and official-site buttons (no raw anchors)
+
 ## [1.0.1] - 2026-09-06
 
 ### Added

@@ -17,13 +17,18 @@ export const config = {
   googleRedirectUri:
     process.env.GOOGLE_REDIRECT_URI ?? "http://127.0.0.1:5188/api/auth/google/callback",
   enableLogs: process.env.ENABLE_LOGS === "1",
-  appVersion: process.env.APP_VERSION ?? "1.0.1",
+  appVersion: process.env.APP_VERSION ?? "1.0.2",
   buildSha: process.env.VERCEL_GIT_COMMIT_SHA ?? process.env.BUILD_SHA ?? "local",
   providerHubUrl: process.env.PROVIDER_HUB_URL ?? "",
   providerHubKey: process.env.PROVIDER_HUB_KEY ?? "",
   pangoApiUrl: process.env.PANGO_API_URL ?? "",
   celloApiUrl: process.env.CELLO_API_URL ?? "",
   highway6ApiUrl: process.env.HIGHWAY6_API_URL ?? "",
+  resendApiKey: process.env.RESEND_API_KEY ?? "",
+  notifyFromEmail: process.env.NOTIFY_FROM_EMAIL ?? "Car Life Manager <noreply@carlifemanager.app>",
+  twilioAccountSid: process.env.TWILIO_ACCOUNT_SID ?? "",
+  twilioAuthToken: process.env.TWILIO_AUTH_TOKEN ?? "",
+  twilioFromNumber: process.env.TWILIO_FROM_NUMBER ?? "",
 };
 
 export function isDevelopment(): boolean {
@@ -32,4 +37,12 @@ export function isDevelopment(): boolean {
 
 export function isGoogleAuthReady(): boolean {
   return Boolean(config.googleClientId && config.googleClientSecret);
+}
+
+export function isEmailNotifyReady(): boolean {
+  return Boolean(config.resendApiKey);
+}
+
+export function isSmsNotifyReady(): boolean {
+  return Boolean(config.twilioAccountSid && config.twilioAuthToken && config.twilioFromNumber);
 }

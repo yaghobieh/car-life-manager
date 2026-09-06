@@ -14,6 +14,8 @@ export const appNucleus = createNucleus<AppNucleusState>(
   (set, get) => ({
     user: null,
     googleEnabled: BOOLEAN_FALSE,
+    emailNotifyReady: BOOLEAN_FALSE,
+    smsNotifyReady: BOOLEAN_FALSE,
     authReady: BOOLEAN_FALSE,
     vehicles: [],
     currentId: null,
@@ -26,13 +28,25 @@ export const appNucleus = createNucleus<AppNucleusState>(
         const session = await api.me();
         if (!session.user) {
           logger.info('session empty');
-          set(refreshUnauthenticated(session.googleEnabled));
+          set(refreshUnauthenticated(
+            session.googleEnabled,
+            session.notificationChannels?.email ?? BOOLEAN_FALSE,
+            session.notificationChannels?.sms ?? BOOLEAN_FALSE,
+          ));
           return;
         }
         const { vehicles } = await fetchVehicleList();
         const selected = resolveSelectedVehicleId(get().currentId, vehicles);
         const dashboard = selected ? await fetchDashboard(selected) : null;
-        set(refreshSucceeded(session.user, session.googleEnabled, vehicles, selected, dashboard));
+        set(refreshSucceeded(
+          session.user,
+          session.googleEnabled,
+          session.notificationChannels?.email ?? BOOLEAN_FALSE,
+          session.notificationChannels?.sms ?? BOOLEAN_FALSE,
+          vehicles,
+          selected,
+          dashboard,
+        ));
       } catch (err) {
         logger.error(err);
         set(refreshFailed(err instanceof Error ? err.message : String(err)));

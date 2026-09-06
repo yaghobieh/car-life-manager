@@ -1,38 +1,47 @@
-import { Badge, Button, Card, Flex, Typography } from '@forgedevstack/bear';
+import { useState } from 'react';
+import { Card, Flex, Typography } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import { useNavigate } from 'react-router-dom';
+import type { ServiceAnswer } from '@clm/shared';
+import { api } from '@api';
 import {
   CARD_RADIUS_XL,
   COLOR_MUTED,
-  EXPENSE_CATEGORY_INSURANCE,
-  EXPENSE_CATEGORY_PARKING,
-  EXPENSE_CATEGORY_TOLLS,
+  EMPTY_STRING,
   FLEX_GAP_LG,
-  FLEX_GAP_MD,
-  FLEX_GAP_SM,
   PROVIDER_STATUS_OFFICIAL,
+  PROVIDER_STATUS_USER_CONFIRMED,
   QUERY_CATEGORY,
   ROUTE_EXPENSES,
+  WINDOW_BLANK,
+  WINDOW_NOREFERRER,
   ZERO,
 } from '@const';
 import { EmptyState } from '@components/EmptyState';
-import { ProviderMark } from '@components/ProviderMark';
 import { useAppState } from '@hooks';
 import { serviceBadgeVariant, serviceStatusKey, translatedService } from '@locales';
-
-function receiptCategory(category: string): string {
-  if (category === 'toll') return EXPENSE_CATEGORY_TOLLS;
-  if (category === 'insurance') return EXPENSE_CATEGORY_INSURANCE;
-  return EXPENSE_CATEGORY_PARKING;
-}
+import { ServiceItem } from './components/ServiceItem';
+import { receiptCategory, SERVICE_ANSWERS } from './Services.utils';
 
 export function Services() {
-  const { dashboard } = useAppState();
+  const { dashboard, currentId, refresh } = useAppState();
   const t = useTranslate();
   const navigate = useNavigate();
+  const [busyId, setBusyId] = useState(EMPTY_STRING);
   const services = dashboard?.services ?? [];
   const official = services.filter((service) => service.status === PROVIDER_STATUS_OFFICIAL);
   const others = services.filter((service) => service.status !== PROVIDER_STATUS_OFFICIAL);
+
+  async function confirm(providerId: string, answer: ServiceAnswer) {
+    if (!currentId) return;
+    setBusyId(providerId);
+    try {
+      await api.confirmService(currentId, providerId, answer);
+      await refresh();
+    } finally {
+      setBusyId(EMPTY_STRING);
+    }
+  }
 
   if (services.length === ZERO) {
     return (
@@ -48,40 +57,29 @@ export function Services() {
         <Typography color={COLOR_MUTED}>{t('servicesHubHelp')}</Typography>
         {[...official, ...others].map((service) => {
           const item = translatedService(service, t);
-          const isOfficial = service.status === PROVIDER_STATUS_OFFICIAL;
           return (
-            <Flex key={service.providerId} justify="between" align="center" wrap="wrap" gap={FLEX_GAP_SM}>
-              <Flex align="center" gap={FLEX_GAP_SM}>
-                <ProviderMark providerId={service.providerId} name={item.name} />
-                <Flex direction="column" gap={FLEX_GAP_MD}>
-                  <Typography weight="bold">{item.name}</Typography>
-                  <Typography color={COLOR_MUTED}>{item.note}</Typography>
-                </Flex>
-              </Flex>
-              <Flex align="center" gap={FLEX_GAP_SM} wrap="wrap">
-                <Badge variant={serviceBadgeVariant(service.status)} pill>
-                  {t(serviceStatusKey(service.status))}
-                </Badge>
-                {service.officialUrl && (
-                  <Button
-                    variant="ghost"
-                    compact
-                    onClick={() => window.open(service.officialUrl ?? '', '_blank', 'noreferrer')}
-                  >
-                    {t('officialSite')}
-                  </Button>
-                )}
-                {!isOfficial && (
-                  <Button
-                    variant="secondary"
-                    compact
-                    onClick={() => navigate(`${ROUTE_EXPENSES}?${QUERY_CATEGORY}=${receiptCategory(service.category)}`)}
-                  >
-                    {t('logReceipt')}
-                  </Button>
-                )}
-              </Flex>
-            </Flex>
+            <ServiceItem
+              key={service.providerId}
+              service={service}
+              name={item.name}
+              note={item.note}
+              statusLabel={t(serviceStatusKey(service.status))}
+              statusVariant={serviceBadgeVariant(service.status)}
+              busy={busyId === service.providerId}
+              isOfficial={service.status === PROVIDER_STATUS_OFFICIAL}
+              confirmed={service.status === PROVIDER_STATUS_USER_CONFIRMED}
+              officialSiteLabel={t('officialSite')}
+              logReceiptLabel={t('logReceipt')}
+              confirmedHelp={t('userConfirmedHelp')}
+              notVerifiedHelp={t('notVerifiedAuto')}
+              confirmLabel={t('confirmService')}
+              checkLaterLabel={t('checkLater')}
+              savingLabel={t('saving')}
+              answers={SERVICE_ANSWERS.map((answer) => ({ value: answer.value, label: t(answer.labelKey) }))}
+              onConfirm={(answer) => void confirm(service.providerId, answer)}
+              onOfficialSite={() => window.open(service.officialUrl ?? EMPTY_STRING, WINDOW_BLANK, WINDOW_NOREFERRER)}
+              onLogReceipt={() => navigate(`${ROUTE_EXPENSES}?${QUERY_CATEGORY}=${receiptCategory(service.category)}`)}
+            />
           );
         })}
       </Flex>

@@ -179,6 +179,8 @@ export async function updateProfile(userId: string, input: ProfileUpdateInput): 
     data: {
       ...(name !== undefined ? { name } : {}),
       ...(input.phone !== undefined ? { phone: normalizePhone(input.phone) } : {}),
+      ...(input.notifyEmail !== undefined ? { notifyEmail: input.notifyEmail } : {}),
+      ...(input.notifySms !== undefined ? { notifySms: input.notifySms } : {}),
     },
   });
   logger.info("updated profile", user.id);

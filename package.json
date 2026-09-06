@@ -1,6 +1,6 @@
 {
   "name": "car-life-manager",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Israeli vehicle ownership platform — everything you need for your car, in one place.",
   "workspaces": [

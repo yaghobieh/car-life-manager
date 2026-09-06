@@ -12,6 +12,8 @@ vi.mock('@hooks', () => ({
     vehicles: [],
     dashboard: null,
   }),
+  useBearId: () => 'Bear-EmptyState-a000000000000',
+  resolveBearId: (_id: string | undefined, generatedId: string) => generatedId,
 }));
 
 describe('Overview', () => {
