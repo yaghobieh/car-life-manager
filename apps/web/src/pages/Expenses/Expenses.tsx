@@ -1,7 +1,7 @@
 import { Card, Flex } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import { GridTable } from '@forgedevstack/grid-table';
-import { FLEX_GAP_LG, ZERO } from '@const';
+import { CARD_RADIUS_XL, FLEX_GAP_LG, ZERO } from '@const';
 import { EmptyState } from '@components/EmptyState';
 import { useAppState } from '@hooks';
 import { asTableRows } from '../table.utils';
@@ -14,7 +14,7 @@ export function Expenses() {
 
   if (expenses.length === ZERO) {
     return (
-      <Card className="Bear-Expenses" variant="elevated" padding="lg">
+      <Card className="Bear-Expenses" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
         <Flex direction="column" gap={FLEX_GAP_LG}>
           <EmptyState title={t('noExpenses')} body={t('noExpensesBody')} />
         </Flex>
@@ -23,7 +23,7 @@ export function Expenses() {
   }
 
   return (
-    <Card className="Bear-Expenses" variant="elevated" padding="lg">
+    <Card className="Bear-Expenses" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
         <GridTable
           data={asTableRows(expenses)}

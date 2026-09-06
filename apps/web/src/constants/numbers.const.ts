@@ -1,6 +1,6 @@
 export const ZERO = 0;
 export const ONE = 1;
-export const SIDEBAR_WIDTH = 220;
+export const SIDEBAR_WIDTH = 256;
 export const SIDEBAR_COLLAPSED_WIDTH = 64;
 export const LOGO_MARK_SIZE = 32;
 export const LOGO_ICON_SIZE = 18;
@@ -27,6 +27,7 @@ export const REMINDER_SPAN = 3;
 export const FULL_SPAN = 12;
 export const GRID_COLS = 12;
 export const META_COLS = 5;
+export const STATUS_TILE_COLS = 2;
 export const PAGE_PADDING = 24;
 export const TOPBAR_PADDING = 18;
 export const TOOLBAR_MARGIN = 16;

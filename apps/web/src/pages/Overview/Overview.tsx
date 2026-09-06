@@ -1,9 +1,13 @@
-import { Badge, Card, CardBody, CardHeader, Flex, Grid, GridItem, Typography } from '@forgedevstack/bear';
+import { Badge, Box, Button, Card, Flex, Grid, GridItem, Typography } from '@forgedevstack/bear';
 import { useLingoFormat, useTranslate } from '@forgedevstack/lingo/react';
+import { useNavigate } from 'react-router-dom';
 import { vehicleStatusFromDates } from '@clm/shared';
 import {
-  COLOR_GREEN,
+  CARD_RADIUS_XL,
+  COLOR_BLUE,
+  COLOR_INK,
   COLOR_MUTED,
+  COLOR_TILE,
   EXPENSE_SPAN,
   FLEX_GAP_MD,
   FLEX_GAP_SM,
@@ -12,9 +16,15 @@ import {
   HERO_CAR_SPAN,
   HERO_META_SPAN,
   META_COLS,
+  ROUTE_DOCUMENTS,
+  ROUTE_SERVICES,
+  ROUTE_TASKS,
   SERVICE_SPAN,
   STATUS_SPAN,
+  STATUS_TILE_COLS,
   TASK_SPAN,
+  TYPO_PAGE_TITLE,
+  TYPO_SECTION_TITLE,
   VISIBLE_TASK_COUNT,
   ZERO,
 } from '@const';
@@ -25,17 +35,25 @@ import { useAppState } from '@hooks';
 import { OverviewExpenses } from './Overview.expenses';
 import { OverviewReminders } from './Overview.reminders';
 import { OVERVIEW_VIEW_EMPTY, OVERVIEW_VIEW_LOADING } from './Overview.const';
-import { formatOverviewDate, resolveOverviewView, taskFilterCounts, vehicleSubtitle, vehicleTitle } from './Overview.utils';
+import {
+  formatOverviewDate,
+  resolveOverviewView,
+  statusKindColor,
+  taskFilterCounts,
+  vehicleSubtitle,
+  vehicleTitle,
+} from './Overview.utils';
 
 export function Overview() {
   const { dashboard, loading, vehicles } = useAppState();
+  const navigate = useNavigate();
   const t = useTranslate();
   const { locale } = useLingoFormat();
   const view = resolveOverviewView(loading, dashboard, vehicles);
 
   if (view === OVERVIEW_VIEW_LOADING) {
     return (
-      <Card variant="elevated" padding="lg">
+      <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
         <Typography>{t('loading')}</Typography>
       </Card>
     );
@@ -43,7 +61,7 @@ export function Overview() {
 
   if (view === OVERVIEW_VIEW_EMPTY || !dashboard) {
     return (
-      <Card variant="elevated" padding="lg">
+      <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
         <EmptyState title={t('noVehicles')} body={t('noVehiclesBody')} />
       </Card>
     );
@@ -58,72 +76,89 @@ export function Overview() {
     <Flex className="Bear-Overview" direction="column" gap={GRID_GAP}>
       <Grid cols={GRID_COLS} gap={GRID_GAP}>
         <GridItem colSpan={HERO_META_SPAN}>
-          <Card variant="elevated" padding="lg">
+          <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
             <Grid cols={GRID_COLS} gap={GRID_GAP}>
               <GridItem colSpan={HERO_CAR_SPAN}>
                 <CarArt />
               </GridItem>
               <GridItem colSpan={HERO_META_SPAN}>
-                <Typography color={COLOR_MUTED}>{vehicle.formattedRegistrationNumber}</Typography>
-                <Typography variant="h1">{vehicleTitle(vehicle.make, vehicle.model, t('unknown'))}</Typography>
-                <Typography color={COLOR_MUTED}>
-                  {vehicleSubtitle(vehicle.fuelType, vehicle.modelYear, t('unknown'))}
-                </Typography>
-                <Badge variant="success" pill>
-                  {t('active')}
-                </Badge>
-                <Grid cols={META_COLS} gap={FLEX_GAP_SM}>
-                  <div>
-                    <Typography color={COLOR_MUTED}>{t('year')}</Typography>
-                    <Typography>{vehicle.modelYear ?? t('unknown')}</Typography>
-                  </div>
-                  <div>
-                    <Typography color={COLOR_MUTED}>{t('roadEntry')}</Typography>
-                    <Typography>{formatOverviewDate(vehicle.registrationDate, locale, t('unknown'))}</Typography>
-                  </div>
-                  <div>
-                    <Typography color={COLOR_MUTED}>{t('hand')}</Typography>
-                    <Typography>{vehicle.ownershipSequence ?? t('unknown')}</Typography>
-                  </div>
-                  <div>
-                    <Typography color={COLOR_MUTED}>{t('ownershipType')}</Typography>
-                    <Typography>{vehicle.ownershipType ?? t('unknown')}</Typography>
-                  </div>
-                  <div>
-                    <Typography color={COLOR_MUTED}>{t('mileage')}</Typography>
-                    <Typography>{vehicle.mileage ?? t('unknown')}</Typography>
-                  </div>
-                </Grid>
-                <Typography color={COLOR_MUTED}>
-                  {t('source')}: {vehicle.dataSource}
-                </Typography>
+                <Flex direction="column" gap={FLEX_GAP_SM}>
+                  <Typography color={COLOR_MUTED}>{vehicle.formattedRegistrationNumber}</Typography>
+                  <Typography variant={TYPO_PAGE_TITLE} color={COLOR_INK}>
+                    {vehicleTitle(vehicle.make, vehicle.model, t('unknown'))}
+                  </Typography>
+                  <Typography color={COLOR_MUTED}>
+                    {vehicleSubtitle(vehicle.fuelType, vehicle.modelYear, t('unknown'))}
+                  </Typography>
+                  <Badge variant="success" pill>
+                    {t('active')}
+                  </Badge>
+                  <Grid cols={META_COLS} gap={FLEX_GAP_SM}>
+                    <div>
+                      <Typography color={COLOR_MUTED}>{t('year')}</Typography>
+                      <Typography>{vehicle.modelYear ?? t('unknown')}</Typography>
+                    </div>
+                    <div>
+                      <Typography color={COLOR_MUTED}>{t('roadEntry')}</Typography>
+                      <Typography>{formatOverviewDate(vehicle.registrationDate, locale, t('unknown'))}</Typography>
+                    </div>
+                    <div>
+                      <Typography color={COLOR_MUTED}>{t('hand')}</Typography>
+                      <Typography>{vehicle.ownershipSequence ?? t('unknown')}</Typography>
+                    </div>
+                    <div>
+                      <Typography color={COLOR_MUTED}>{t('ownershipType')}</Typography>
+                      <Typography>{vehicle.ownershipType ?? t('unknown')}</Typography>
+                    </div>
+                    <div>
+                      <Typography color={COLOR_MUTED}>{t('mileage')}</Typography>
+                      <Typography>{vehicle.mileage ?? t('unknown')}</Typography>
+                    </div>
+                  </Grid>
+                  <Typography color={COLOR_MUTED}>
+                    {t('source')}: {vehicle.dataSource}
+                  </Typography>
+                </Flex>
               </GridItem>
             </Grid>
           </Card>
         </GridItem>
         <GridItem colSpan={STATUS_SPAN}>
-          <Card variant="elevated" padding="lg">
-            <CardHeader title={t('generalStatus')} />
-            <CardBody>
-              <Flex direction="column" gap={FLEX_GAP_MD}>
-                <Flex justify="between">
-                  <Typography>{t('license')}</Typography>
-                  <Typography color={COLOR_GREEN} weight="bold">{status.license.label}</Typography>
-                </Flex>
-                <Flex justify="between">
-                  <Typography>{t('test')}</Typography>
-                  <Typography color={COLOR_GREEN} weight="bold">{status.test.label}</Typography>
-                </Flex>
-                <Flex justify="between">
-                  <Typography>{t('fee')}</Typography>
+          <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+            <Flex direction="column" gap={FLEX_GAP_MD}>
+              <Typography variant={TYPO_SECTION_TITLE}>{t('generalStatus')}</Typography>
+              <Grid cols={STATUS_TILE_COLS} gap={FLEX_GAP_SM}>
+                <Box bg={COLOR_TILE} p={3} rounded="lg">
+                  <Typography color={COLOR_MUTED}>{t('license')}</Typography>
+                  <Typography color={statusKindColor(status.license.kind)} weight="bold">
+                    {status.license.label}
+                  </Typography>
+                  <Typography color={COLOR_MUTED}>
+                    {formatOverviewDate(vehicle.registrationExpiry, locale, t('unknown'))}
+                  </Typography>
+                </Box>
+                <Box bg={COLOR_TILE} p={3} rounded="lg">
+                  <Typography color={COLOR_MUTED}>{t('test')}</Typography>
+                  <Typography color={statusKindColor(status.test.kind)} weight="bold">
+                    {status.test.label}
+                  </Typography>
+                  <Typography color={COLOR_MUTED}>
+                    {formatOverviewDate(vehicle.nextTestDate, locale, t('unknown'))}
+                  </Typography>
+                </Box>
+                <Box bg={COLOR_TILE} p={3} rounded="lg">
+                  <Typography color={COLOR_MUTED}>{t('fee')}</Typography>
                   <Typography color={COLOR_MUTED}>{t('unknown')}</Typography>
-                </Flex>
-                <Flex justify="between">
-                  <Typography>{t('insurance')}</Typography>
+                </Box>
+                <Box bg={COLOR_TILE} p={3} rounded="lg">
+                  <Typography color={COLOR_MUTED}>{t('insurance')}</Typography>
                   <Typography color={COLOR_MUTED}>{t('noInsuranceLink')}</Typography>
-                </Flex>
-              </Flex>
-            </CardBody>
+                </Box>
+              </Grid>
+              <Button variant="ghost" compact disableElevation onClick={() => navigate(ROUTE_DOCUMENTS)}>
+                <Typography color={COLOR_BLUE}>{t('viewAll')}</Typography>
+              </Button>
+            </Flex>
           </Card>
         </GridItem>
       </Grid>
@@ -133,30 +168,35 @@ export function Overview() {
           <OverviewExpenses expenseSummary={expenseSummary} />
         </GridItem>
         <GridItem colSpan={TASK_SPAN}>
-          <Card variant="elevated" padding="lg">
-            <Flex justify="between" align="center" wrap="wrap" gap={FLEX_GAP_SM}>
-              <Typography variant="h2">{t('leftover')}</Typography>
-              <Flex gap={FLEX_GAP_SM} wrap="wrap">
-                <Badge variant="primary" pill>{t('all')} {counts.all}</Badge>
-                <Badge variant="danger" pill>{t('overdue')} {counts.overdue}</Badge>
-                <Badge variant="warning" pill>{t('important')} {counts.important}</Badge>
+          <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+            <Flex direction="column" gap={FLEX_GAP_MD}>
+              <Flex justify="between" align="center" wrap="wrap" gap={FLEX_GAP_SM}>
+                <Typography variant={TYPO_SECTION_TITLE}>{t('leftover')}</Typography>
+                <Flex gap={FLEX_GAP_SM} wrap="wrap">
+                  <Badge variant="primary" pill>{t('all')} {counts.all}</Badge>
+                  <Badge variant="danger" pill>{t('overdue')} {counts.overdue}</Badge>
+                  <Badge variant="warning" pill>{t('important')} {counts.important}</Badge>
+                </Flex>
               </Flex>
+              {visibleTasks.map((task) => (
+                <Flex key={task.id} justify="between" align="center" gap={FLEX_GAP_SM}>
+                  <div>
+                    <Typography weight="bold">{task.title}</Typography>
+                    <Typography color={COLOR_MUTED}>{task.description}</Typography>
+                  </div>
+                  <StatusBadge priority={task.priority} />
+                </Flex>
+              ))}
+              <Button variant="ghost" compact disableElevation onClick={() => navigate(ROUTE_TASKS)}>
+                <Typography color={COLOR_BLUE}>{t('viewAll')}</Typography>
+              </Button>
             </Flex>
-            {visibleTasks.map((task) => (
-              <Flex key={task.id} justify="between" align="center" gap={FLEX_GAP_SM}>
-                <div>
-                  <Typography weight="bold">{task.title}</Typography>
-                  <Typography color={COLOR_MUTED}>{task.description}</Typography>
-                </div>
-                <StatusBadge priority={task.priority} />
-              </Flex>
-            ))}
           </Card>
         </GridItem>
         <GridItem colSpan={SERVICE_SPAN}>
-          <Card variant="elevated" padding="lg">
-            <CardHeader title={t('services')} />
-            <CardBody>
+          <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+            <Flex direction="column" gap={FLEX_GAP_MD}>
+              <Typography variant={TYPO_SECTION_TITLE}>{t('services')}</Typography>
               {services.map((service) => (
                 <Flex key={service.providerId} justify="between" gap={FLEX_GAP_SM}>
                   <div>
@@ -166,7 +206,10 @@ export function Overview() {
                   <Badge variant="warning" pill>{t('notSupported')}</Badge>
                 </Flex>
               ))}
-            </CardBody>
+              <Button variant="ghost" compact disableElevation onClick={() => navigate(ROUTE_SERVICES)}>
+                <Typography color={COLOR_BLUE}>{t('viewAll')}</Typography>
+              </Button>
+            </Flex>
           </Card>
         </GridItem>
       </Grid>

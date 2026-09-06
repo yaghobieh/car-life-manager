@@ -1,9 +1,9 @@
 import { Box, Flex, Typography } from '@forgedevstack/bear';
-import { COLOR_BLUE, COLOR_WHITE, FLEX_GAP_SM } from '@const';
+import { COLOR_BLUE, COLOR_INK, COLOR_WHITE, FLEX_GAP_SM } from '@const';
 import { LogoMarkSvg } from './helpers/LogoMarkSvg';
 import type { LogoProps } from './Logo.types';
 
-export function Logo({ compact = false }: LogoProps) {
+export function Logo({ compact = false, onDark = false }: LogoProps) {
   return (
     <Flex className="Bear-Logo" align="center" gap={FLEX_GAP_SM} aria-label="Car Life Manager">
       <Box
@@ -15,7 +15,7 @@ export function Logo({ compact = false }: LogoProps) {
         <LogoMarkSvg />
       </Box>
       {!compact && (
-        <Typography weight="extrabold" color={COLOR_WHITE}>
+        <Typography weight="extrabold" color={onDark ? COLOR_WHITE : COLOR_INK}>
           Car Life Manager
         </Typography>
       )}

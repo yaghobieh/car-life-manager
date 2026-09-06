@@ -1,7 +1,7 @@
 import { Card } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import { GridTable } from '@forgedevstack/grid-table';
-import { ZERO } from '@const';
+import { CARD_RADIUS_XL, ZERO } from '@const';
 import { EmptyState } from '@components/EmptyState';
 import { useAppState } from '@hooks';
 import { asTableRows } from '../table.utils';
@@ -14,14 +14,14 @@ export function Tasks() {
 
   if (tasks.length === ZERO) {
     return (
-      <Card variant="elevated" padding="lg">
+      <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
         <EmptyState title={t('noTasks')} body={t('noVehiclesBody')} />
       </Card>
     );
   }
 
   return (
-    <Card className="Bear-Tasks" variant="elevated" padding="lg">
+    <Card className="Bear-Tasks" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <GridTable
         data={asTableRows(tasks)}
         getRowId={(row) => row.id}

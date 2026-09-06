@@ -22,7 +22,7 @@ export const en = {
   reminders: 'Reminders',
   reports: 'Reports',
   settings: 'Settings',
-  search: 'Search...',
+  search: 'Search for a vehicle, service or document...',
   generalStatus: 'Overall status',
   leftover: 'What is left to do?',
   all: 'All',

@@ -5,6 +5,8 @@ import { useTranslate } from '@forgedevstack/lingo/react';
 import type { VehicleLookupResult } from '@clm/shared';
 import { api } from '@api';
 import {
+  CARD_RADIUS_XL,
+  COLOR_BG,
   COLOR_MUTED,
   COLOR_NAVY_DEEP,
   DATA_SOURCE_DEVELOPMENT,
@@ -15,6 +17,7 @@ import {
   ONBOARDING_STEP_WELCOME,
   ROUTE_HOME,
   TITLE_SEPARATOR,
+  TYPO_PAGE_TITLE,
 } from '@const';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
@@ -51,15 +54,16 @@ export function Onboarding() {
   }
 
   return (
-    <Flex className="Bear-Onboarding bear-min-h-screen" align="center" justify="center">
-      <Card variant="elevated" padding="lg" className="bear-w-full bear-max-w-xl">
-        <Flex direction="column" gap={FLEX_GAP_LG}>
+    <Box bg={COLOR_BG} className="Bear-Onboarding bear-min-h-screen">
+      <Flex className="bear-min-h-screen" align="center" justify="center">
+        <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL} className="bear-w-full bear-max-w-xl">
+          <Flex direction="column" gap={FLEX_GAP_LG}>
           <Box bg={COLOR_NAVY_DEEP} p={4} rounded="lg">
-            <Logo />
+            <Logo onDark />
           </Box>
           {step === ONBOARDING_STEP_WELCOME && (
             <div>
-              <Typography variant="h1">{t('welcomeTitle')}</Typography>
+              <Typography variant={TYPO_PAGE_TITLE}>{t('welcomeTitle')}</Typography>
               <Typography color={COLOR_MUTED}>{t('tagline')}</Typography>
               <Button variant="primary" onClick={() => setStep(ONBOARDING_STEP_PLATE)}>
                 {t('addCar')}
@@ -68,7 +72,7 @@ export function Onboarding() {
           )}
           {step === ONBOARDING_STEP_PLATE && (
             <div>
-              <Typography variant="h1">{t('plateTitle')}</Typography>
+              <Typography variant={TYPO_PAGE_TITLE}>{t('plateTitle')}</Typography>
               <Typography color={COLOR_MUTED}>{t('plateHelp')}</Typography>
               <Input
                 label={t('plateTitle')}
@@ -87,7 +91,7 @@ export function Onboarding() {
           )}
           {step === ONBOARDING_STEP_CONFIRM && lookup && (
             <div>
-              <Typography variant="h1">{t('vehicleFound')}</Typography>
+              <Typography variant={TYPO_PAGE_TITLE}>{t('vehicleFound')}</Typography>
               <Typography>
                 {lookupTitle(lookup.vehicle.make, lookup.vehicle.model, lookup.vehicle.modelYear, t('unknown'))}
               </Typography>
@@ -107,8 +111,9 @@ export function Onboarding() {
               </Button>
             </div>
           )}
-        </Flex>
-      </Card>
-    </Flex>
+          </Flex>
+        </Card>
+      </Flex>
+    </Box>
   );
 }

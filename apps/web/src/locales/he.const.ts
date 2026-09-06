@@ -22,7 +22,7 @@ export const he = {
   reminders: 'תזכורות',
   reports: 'דוחות',
   settings: 'הגדרות',
-  search: 'חיפוש...',
+  search: 'חיפוש רכב, שירות או מסמך...',
   generalStatus: 'סטטוס כללי',
   leftover: 'מה נשאר לך לעשות?',
   all: 'הכל',

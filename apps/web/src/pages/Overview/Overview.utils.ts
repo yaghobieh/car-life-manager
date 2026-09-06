@@ -1,7 +1,13 @@
 import type { ExpenseSummary, Reminder, Task, Vehicle } from '@clm/shared';
-import { SPACE, SUBTITLE_SEPARATOR, TASK_PRIORITY_IMPORTANT, TASK_PRIORITY_OVERDUE, ZERO } from '@const';
+import { SPACE, STATUS_KIND_UNKNOWN, SUBTITLE_SEPARATOR, TASK_PRIORITY_IMPORTANT, TASK_PRIORITY_OVERDUE, ZERO } from '@const';
 import type { OverviewView, TaskFilterCounts } from './Overview.types';
-import { OVERVIEW_DATE_OPTIONS, OVERVIEW_VIEW_EMPTY, OVERVIEW_VIEW_LOADING, OVERVIEW_VIEW_READY } from './Overview.const';
+import {
+  OVERVIEW_DATE_OPTIONS,
+  OVERVIEW_VIEW_EMPTY,
+  OVERVIEW_VIEW_LOADING,
+  OVERVIEW_VIEW_READY,
+  STATUS_KIND_COLOR,
+} from './Overview.const';
 
 export function formatOverviewDate(value: string | null, locale: string, unknownLabel: string): string {
   return value ? new Date(value).toLocaleDateString(locale, OVERVIEW_DATE_OPTIONS) : unknownLabel;
@@ -40,4 +46,8 @@ export function hasExpenseData(summary: ExpenseSummary): boolean {
 export function visibleReminders(reminders: Reminder[], limit: number): Reminder[] {
   if (reminders.length === ZERO) return [];
   return reminders.slice(ZERO, limit);
+}
+
+export function statusKindColor(kind: string): string {
+  return STATUS_KIND_COLOR[kind as keyof typeof STATUS_KIND_COLOR] ?? STATUS_KIND_COLOR[STATUS_KIND_UNKNOWN];
 }
