@@ -30,6 +30,7 @@ import {
 } from '@const';
 import { CarArt } from '@components/CarArt';
 import { EmptyState } from '@components/EmptyState';
+import { ProviderMark } from '@components/ProviderMark';
 import { StatusBadge } from '@components/StatusBadge';
 import { useAppState } from '@hooks';
 import { OverviewExpenses } from './Overview.expenses';
@@ -79,7 +80,7 @@ export function Overview() {
           <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
             <Grid cols={GRID_COLS} gap={GRID_GAP}>
               <GridItem colSpan={HERO_CAR_SPAN}>
-                <CarArt />
+                <CarArt make={vehicle.make} model={vehicle.model} />
               </GridItem>
               <GridItem colSpan={HERO_META_SPAN}>
                 <Flex direction="column" gap={FLEX_GAP_SM}>
@@ -198,11 +199,14 @@ export function Overview() {
             <Flex direction="column" gap={FLEX_GAP_MD}>
               <Typography variant={TYPO_SECTION_TITLE}>{t('services')}</Typography>
               {services.map((service) => (
-                <Flex key={service.providerId} justify="between" gap={FLEX_GAP_SM}>
-                  <div>
-                    <Typography weight="bold">{service.name}</Typography>
-                    <Typography color={COLOR_MUTED}>{service.note}</Typography>
-                  </div>
+                <Flex key={service.providerId} justify="between" align="center" gap={FLEX_GAP_SM}>
+                  <Flex align="center" gap={FLEX_GAP_SM}>
+                    <ProviderMark providerId={service.providerId} name={service.name} />
+                    <div>
+                      <Typography weight="bold">{service.name}</Typography>
+                      <Typography color={COLOR_MUTED}>{service.note}</Typography>
+                    </div>
+                  </Flex>
                   <Badge variant="warning" pill>{t('notSupported')}</Badge>
                 </Flex>
               ))}

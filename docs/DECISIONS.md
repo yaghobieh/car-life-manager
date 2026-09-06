@@ -6,7 +6,7 @@ Prisma is the TypeScript ORM (schema → generated client → typed queries). Lo
 
 ## ADR-007 Integrations are adapters, not microservices
 
-`apps/api/src/integrations` are in-process adapters to official external APIs (Ministry of Transport now; Pango / CelloPark / Highway 6 later). They are not separate deployable services.
+`apps/api/src/integrations` are in-process adapters to official external APIs (Ministry of Transport now; Pango / Cello / Highway 6 later via `providers.registry`). They are not separate deployable services.
 
 ## ADR-002 Harbor role
 
@@ -26,4 +26,4 @@ Parking and toll adapters expose `not_supported` until a real authenticated API 
 
 ## ADR-006 Session foundation
 
-Anonymous HttpOnly cookie user. Replace with Forge auth when wiring production identity.
+Anonymous HttpOnly cookie user locally. Production SSO writes `User` + `AuthIdentity` + `AuthSession` in **PostgreSQL**. See `docs/SSO.md`.

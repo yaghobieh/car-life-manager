@@ -1,1 +1,4 @@
-export type CarArtProps = Record<string, never>;
+export interface CarArtProps {
+  make?: string | null;
+  model?: string | null;
+}

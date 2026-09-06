@@ -1,31 +1,7 @@
-import { EMPTY_CAPABILITIES, type ConnectionStatus, type ProviderCapabilities } from "@clm/shared";
-import type { ProviderContext } from "@clm/shared";
+import { getProviderAdapter, PROVIDER_CELLO, PROVIDER_HIGHWAY_6, PROVIDER_PANGO } from "../providers";
 
-export interface ProviderAdapter {
-  id: string;
-  capabilities(): ProviderCapabilities;
-  lookup?(input: unknown): Promise<unknown>;
-  getConnectionStatus?(context: ProviderContext): Promise<ConnectionStatus>;
-  connect?(context: ProviderContext): Promise<{ status: ConnectionStatus; note: string }>;
-  disconnect?(context: ProviderContext): Promise<void>;
-}
+export { unsupportedAdapter } from "../providers";
 
-export function unsupportedAdapter(id: string): ProviderAdapter {
-  return {
-    id,
-    capabilities: () => EMPTY_CAPABILITIES,
-    async getConnectionStatus() {
-      return "not_supported";
-    },
-    async connect() {
-      return {
-        status: "not_supported",
-        note: "No official authenticated API is configured for this provider.",
-      };
-    },
-  };
-}
-
-export const pangoAdapter = unsupportedAdapter("pango");
-export const celloAdapter = unsupportedAdapter("cello");
-export const highway6Adapter = unsupportedAdapter("highway-6");
+export const pangoAdapter = getProviderAdapter(PROVIDER_PANGO);
+export const celloAdapter = getProviderAdapter(PROVIDER_CELLO);
+export const highway6Adapter = getProviderAdapter(PROVIDER_HIGHWAY_6);

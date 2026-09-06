@@ -1,5 +1,4 @@
 import {
-  catalogWithTimestamp,
   generateVehicleTasks,
   isValidRegistrationNumber,
   normalizeRegistrationNumber,
@@ -12,6 +11,7 @@ import { config, isDevelopment } from "../../config";
 import { audit } from "../../db/handlers/audit.handler";
 import { lookupOfficialVehicle, MinistryTransportError } from "../../integrations/ministry-of-transport/client";
 import { developmentVehicle } from "../../integrations/ministry-of-transport/development-adapter";
+import { listReadyServices } from "../../integrations/providers";
 import { serializeExpense, serializeReminder, serializeTask, serializeVehicle } from "./serialize";
 
 export async function lookupVehicle(registrationNumber: string): Promise<VehicleLookupResult> {
@@ -74,7 +74,11 @@ export async function addVehicle(userId: string, registrationNumber: string) {
 
   const generated = generateVehicleTasks({
     vehicle: serializeVehicle(vehicle),
-    services: catalogWithTimestamp(),
+    services: await listReadyServices({
+      userId,
+      vehicleId: vehicle.id,
+      registrationNumber: vehicle.registrationNumber,
+    }),
     expenses: [],
     documents: [],
   });
@@ -133,16 +137,24 @@ export async function getOwnedVehicle(userId: string, vehicleId: string) {
 
 export async function getDashboard(userId: string, vehicleId: string) {
   const vehicle = await getOwnedVehicle(userId, vehicleId);
-  const [tasks, expenses, reminders] = await Promise.all([
+  const [tasks, expenses, reminders, connections] = await Promise.all([
     prisma.task.findMany({ where: { vehicleId }, orderBy: { createdAt: "asc" } }),
     prisma.expense.findMany({ where: { vehicleId }, orderBy: { occurredAt: "desc" } }),
     prisma.reminder.findMany({ where: { vehicleId }, orderBy: { dueDate: "asc" } }),
+    prisma.providerConnection.findMany({ where: { userId } }),
   ]);
 
   return {
     vehicle: serializeVehicle(vehicle),
     tasks: tasks.map(serializeTask),
-    services: catalogWithTimestamp(),
+    services: await listReadyServices(
+      {
+        userId,
+        vehicleId: vehicle.id,
+        registrationNumber: vehicle.registrationNumber,
+      },
+      connections.map((row) => ({ providerId: row.providerId, status: row.status, note: row.note })),
+    ),
     expenses: expenses.map(serializeExpense),
     expenseSummary: summarizeExpenses(expenses.map(serializeExpense)),
     reminders: reminders.map(serializeReminder),

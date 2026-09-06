@@ -8,13 +8,19 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String?  @unique
-  phone     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  vehicles  Vehicle[]
-  audits    AuditLog[]
+  id              String   @id @default(cuid())
+  email           String?  @unique
+  phone           String?
+  name            String?
+  imageUrl        String?
+  emailVerifiedAt DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  vehicles        Vehicle[]
+  audits          AuditLog[]
+  identities      AuthIdentity[]
+  sessions        AuthSession[]
+  connections     ProviderConnection[]
 }
 
 model Vehicle {
@@ -141,6 +147,44 @@ model VehicleLookupCache {
   expiresAt            DateTime
 
   @@index([registrationNumber])
+}
+
+model AuthIdentity {
+  id                String   @id @default(cuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider          String
+  providerAccountId String
+  createdAt         DateTime @default(now())
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model AuthSession {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model ProviderConnection {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  providerId    String
+  status        String   @default("not_supported")
+  note          String?
+  lastCheckedAt DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([userId, providerId])
+  @@index([userId])
 }
 
 model AuditLog {

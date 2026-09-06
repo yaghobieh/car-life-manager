@@ -1,5 +1,4 @@
 import type { Request, Response } from "express";
-import { catalogWithTimestamp } from "@clm/shared";
 import { HTTP_CREATED, HTTP_OK } from "../constants/http.const";
 import { getUserId } from "../middlewares";
 import {
@@ -41,8 +40,8 @@ export async function listVehicleTasksController(req: Request, res: Response): P
 }
 
 export async function listVehicleServicesController(req: Request, res: Response): Promise<void> {
-  await getDashboard(getUserId(req), String(req.params.id));
-  res.json({ services: catalogWithTimestamp() });
+  const dashboard = await getDashboard(getUserId(req), String(req.params.id));
+  res.json({ services: dashboard.services });
 }
 
 export async function listVehicleExpensesController(req: Request, res: Response): Promise<void> {
