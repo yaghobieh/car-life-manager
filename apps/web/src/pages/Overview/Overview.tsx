@@ -35,6 +35,7 @@ import { ProviderMark } from '@components/ProviderMark';
 import { StatusBadge } from '@components/StatusBadge';
 import { useAppState } from '@hooks';
 import { OverviewExpenses } from './Overview.expenses';
+import { OverviewRecalls } from './Overview.recalls';
 import { OverviewReminders } from './Overview.reminders';
 import { OVERVIEW_VIEW_EMPTY, OVERVIEW_VIEW_LOADING } from './Overview.const';
 import {
@@ -79,7 +80,7 @@ export function Overview() {
     );
   }
 
-  const { vehicle, tasks, services, expenseSummary, reminders } = dashboard;
+  const { vehicle, tasks, services, expenseSummary, reminders, recalls } = dashboard;
   const status = vehicleStatusFromDates(vehicle);
   const visibleTasks = tasks.slice(ZERO, VISIBLE_TASK_COUNT);
   const counts = taskFilterCounts(tasks);
@@ -106,6 +107,14 @@ export function Overview() {
                     {t('active')}
                   </Badge>
                   <Grid cols={metaCols} gap={FLEX_GAP_SM}>
+                    <div>
+                      <Typography color={COLOR_MUTED}>{t('make')}</Typography>
+                      <Typography>{vehicle.make ?? t('unknown')}</Typography>
+                    </div>
+                    <div>
+                      <Typography color={COLOR_MUTED}>{t('model')}</Typography>
+                      <Typography>{vehicle.model ?? t('unknown')}</Typography>
+                    </div>
                     <div>
                       <Typography color={COLOR_MUTED}>{t('year')}</Typography>
                       <Typography>{vehicle.modelYear ?? t('unknown')}</Typography>
@@ -156,6 +165,9 @@ export function Overview() {
                   </Typography>
                   <Typography color={COLOR_MUTED}>
                     {formatOverviewDate(vehicle.nextTestDate, locale, t('unknown'))}
+                  </Typography>
+                  <Typography color={COLOR_MUTED}>
+                    {t('lastTest')}: {formatOverviewDate(vehicle.lastTestDate, locale, t('unknown'))}
                   </Typography>
                 </Box>
                 <Box bg={COLOR_TILE} p={3} rounded="lg">
@@ -229,6 +241,7 @@ export function Overview() {
         </GridItem>
       </Grid>
 
+      <OverviewRecalls recalls={recalls ?? []} />
       <OverviewReminders reminders={reminders} />
     </Flex>
   );

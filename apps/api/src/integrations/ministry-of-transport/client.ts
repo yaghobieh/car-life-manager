@@ -1,8 +1,10 @@
 import { registrationLookupKey } from "@clm/shared";
 import { config } from "../../config";
 import { mapMinistryRecord } from "./map-record";
+import { fetchOutstandingRecalls } from "./recalls.client";
 import type { MinistrySearchResponse } from "./types";
 import type { VehicleLookupResult } from "@clm/shared";
+import { ACCEPT_JSON, DATASTORE_LOOKUP_LIMIT, DATASTORE_TIMEOUT_MS } from "./ministry.const";
 
 export class MinistryTransportError extends Error {
   constructor(
@@ -24,15 +26,15 @@ export async function lookupOfficialVehicle(registrationNumber: string): Promise
   const url = new URL(config.dataGovUrl);
   url.searchParams.set("resource_id", config.ministryResourceId);
   url.searchParams.set("filters", JSON.stringify({ mispar_rechev: plate }));
-  url.searchParams.set("limit", "1");
+  url.searchParams.set("limit", DATASTORE_LOOKUP_LIMIT);
 
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 12_000);
+  const timer = setTimeout(() => controller.abort(), DATASTORE_TIMEOUT_MS);
 
   try {
     const response = await fetch(url, {
       signal: controller.signal,
-      headers: { Accept: "application/json" },
+      headers: { Accept: ACCEPT_JSON },
     });
 
     if (response.status === 429) {
@@ -50,7 +52,9 @@ export async function lookupOfficialVehicle(registrationNumber: string): Promise
     if (!record) {
       throw new MinistryTransportError("Vehicle not found in the public registry", "not_found");
     }
-    return mapMinistryRecord(record);
+    const mapped = mapMinistryRecord(record);
+    mapped.recalls = await fetchOutstandingRecalls(String(plate));
+    return mapped;
   } catch (error) {
     if (error instanceof MinistryTransportError) throw error;
     if (error instanceof Error && error.name === "AbortError") {

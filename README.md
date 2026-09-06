@@ -6,7 +6,7 @@ Israeli vehicle ownership platform.
 
 Hebrew, RTL-first dashboard for managing a vehicle after purchase: official lookup, tasks, documents, expenses, reminders, and service connections.
 
-Version **1.0.0**.
+Version **1.0.1**.
 
 ## Stack
 
@@ -56,7 +56,8 @@ Add these environment variables in Vercel:
 - `DATABASE_DIRECT_URL` — Neon direct URL
 - `AUTH_SECRET`
 - `WEB_ORIGIN` — the Vercel app URL
-- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `GOOGLE_REDIRECT_URI` when Google login is ready
+- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`
+- `GOOGLE_REDIRECT_URI` — must match Google Cloud exactly, e.g. `https://car-life-manager-api.vercel.app/api/auth/google/callback`
 
 ### Two projects
 
@@ -71,6 +72,6 @@ npm test
 
 ## Official data
 
-Vehicle lookup uses the public Ministry of Transport dataset on [data.gov.il](https://data.gov.il) via CKAN `datastore_search`.
+Vehicle lookup and open safety recalls use public Ministry of Transport datasets on [data.gov.il](https://data.gov.il) via CKAN `datastore_search`. Make and model are the official Hebrew names (`tozeret_nm`, `kinuy_mishari`).
 
 No parking, toll, or insurance account is marked connected unless a real authenticated integration exists. Those providers are currently **not supported**.

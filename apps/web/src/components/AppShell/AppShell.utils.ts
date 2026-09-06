@@ -1,6 +1,13 @@
-import { NAV_OVERVIEW, ROUTE_HOME, VARIANT_NAV, VARIANT_NAV_ACTIVE } from '@const';
+import type { Vehicle } from '@clm/shared';
+import { NAV_OVERVIEW, ROUTE_HOME, SPACE, TITLE_SEPARATOR, VARIANT_NAV, VARIANT_NAV_ACTIVE } from '@const';
 import type { NavItem } from './AppShell.types';
 import { MOBILE_PRIMARY_NAV_IDS } from './AppShell.const';
+
+export function vehicleOptionLabel(vehicle: Vehicle): string {
+  const officialName = [vehicle.make, vehicle.model].filter(Boolean).join(SPACE);
+  if (!officialName) return vehicle.formattedRegistrationNumber;
+  return `${vehicle.formattedRegistrationNumber}${TITLE_SEPARATOR}${officialName}`;
+}
 
 export function activeNavId(pathname: string, items: NavItem[]): string {
   const match = items.find((item) => item.to !== ROUTE_HOME && pathname.startsWith(item.to));

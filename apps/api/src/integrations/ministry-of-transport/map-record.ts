@@ -34,6 +34,7 @@ export function mapMinistryRecord(record: MinistryVehicleRecord): VehicleLookupR
   const lastTest = isoDate(record.mivchan_acharon_dt);
   return {
     rawAvailable: true,
+    recalls: [],
     vehicle: {
       registrationNumber: plate,
       formattedRegistrationNumber: formatRegistrationNumber(plate),

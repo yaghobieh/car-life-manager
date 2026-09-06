@@ -30,10 +30,10 @@ import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
 import { NAV_ITEMS } from './AppShell.const';
 import { AppShellMenu } from './AppShellMenu';
-import { activeNavId, isMoreNavActive, mobilePrimaryItems, navButtonVariant } from './AppShell.utils';
+import { activeNavId, isMoreNavActive, mobilePrimaryItems, navButtonVariant, vehicleOptionLabel } from './AppShell.utils';
 
 export function AppShell() {
-  const { vehicles, currentId, select } = useAppState();
+  const { vehicles, currentId, select, user } = useAppState();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const t = useTranslate();
@@ -90,6 +90,7 @@ export function AppShell() {
                   <Button variant="ghost" iconOnly aria-label={t('notifications')}>
                     <BearIcons.Communication.BellIcon />
                   </Button>
+                  {user?.name && <Typography>{user.name}</Typography>}
                   <Button variant="ghost" iconOnly aria-label={t('account')} onClick={() => navigate(ROUTE_SETTINGS)}>
                     <UserIcon />
                   </Button>
@@ -131,7 +132,7 @@ export function AppShell() {
                   fullWidth={!isDesktop}
                   options={vehicles.map((vehicle) => ({
                     value: vehicle.id,
-                    label: vehicle.formattedRegistrationNumber,
+                    label: vehicleOptionLabel(vehicle),
                   }))}
                 />
               )}

@@ -5,6 +5,7 @@ Adapters live in `apps/api/src/integrations`. The dashboard loads them through `
 | Provider | Discovery | Auth | Vehicle data | Status |
 | --- | --- | --- | --- | --- |
 | Ministry of Transport / data.gov.il | Yes | None (public) | Yes | Implemented |
+| Ministry of Transport recalls | Yes | None (public) | Yes | Implemented (`hagbalat_recall`) |
 | Highway 6 | Adapter ready | TBD | TBD | `not_supported` — needs partnership |
 | Highway 6 North | Adapter ready | TBD | TBD | `not_supported` |
 | Pango | Adapter ready | TBD | TBD | `not_supported` — no public OAuth |

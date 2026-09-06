@@ -5,6 +5,7 @@ export function developmentVehicle(registrationNumber: string): VehicleLookupRes
   const plate = normalizeRegistrationNumber(registrationNumber);
   return {
     rawAvailable: false,
+    recalls: [],
     vehicle: {
       registrationNumber: plate,
       formattedRegistrationNumber: formatRegistrationNumber(plate),

@@ -1,6 +1,8 @@
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import { config, isDevelopment } from "../../config";
 import {
+  AUTH_ERROR_QUERY,
+  AUTH_PATH,
   EMAIL_PATTERN,
   HASH_SEPARATOR,
   SCRYPT_KEYLEN,
@@ -67,4 +69,10 @@ export function serializeAuthUser(user: {
 
 export function appHomeUrl(): string {
   return `${config.webOrigin}/`;
+}
+
+export function authErrorUrl(code: string): string {
+  const url = new URL(AUTH_PATH, `${config.webOrigin}/`);
+  url.searchParams.set(AUTH_ERROR_QUERY, code);
+  return url.toString();
 }

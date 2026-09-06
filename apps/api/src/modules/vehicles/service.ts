@@ -1,15 +1,19 @@
 import {
+  generateRecallTasks,
   generateVehicleTasks,
   isValidRegistrationNumber,
   normalizeRegistrationNumber,
   summarizeExpenses,
   type Expense,
   type VehicleLookupResult,
+  type VehicleRecall,
 } from "@clm/shared";
 import { prisma } from "../../db";
 import { config, isDevelopment } from "../../config";
 import { audit } from "../../db/handlers/audit.handler";
 import { lookupOfficialVehicle, MinistryTransportError } from "../../integrations/ministry-of-transport/client";
+import { fetchOutstandingRecalls } from "../../integrations/ministry-of-transport/recalls.client";
+import { RECALL_CACHE_SOURCE } from "../../integrations/ministry-of-transport/ministry.const";
 import { developmentVehicle } from "../../integrations/ministry-of-transport/development-adapter";
 import { listReadyServices } from "../../integrations/providers";
 import { serializeExpense, serializeReminder, serializeTask, serializeVehicle } from "./serialize";
@@ -25,7 +29,7 @@ export async function lookupVehicle(registrationNumber: string): Promise<Vehicle
     orderBy: { fetchedAt: "desc" },
   });
   if (cached) {
-    return JSON.parse(cached.payload) as VehicleLookupResult;
+    return withRecalls(JSON.parse(cached.payload) as VehicleLookupResult);
   }
 
   try {
@@ -81,6 +85,7 @@ export async function addVehicle(userId: string, registrationNumber: string) {
     }),
     expenses: [],
     documents: [],
+    recalls: lookup.recalls ?? [],
   });
 
   await prisma.task.createMany({
@@ -137,6 +142,9 @@ export async function getOwnedVehicle(userId: string, vehicleId: string) {
 
 export async function getDashboard(userId: string, vehicleId: string) {
   const vehicle = await getOwnedVehicle(userId, vehicleId);
+  const recalls = await recallsForPlate(vehicle.registrationNumber);
+  await persistRecallTasks(vehicle.id, recalls);
+
   const [tasks, expenses, reminders, connections] = await Promise.all([
     prisma.task.findMany({ where: { vehicleId }, orderBy: { createdAt: "asc" } }),
     prisma.expense.findMany({ where: { vehicleId }, orderBy: { occurredAt: "desc" } }),
@@ -147,6 +155,7 @@ export async function getDashboard(userId: string, vehicleId: string) {
   return {
     vehicle: serializeVehicle(vehicle),
     tasks: tasks.map(serializeTask),
+    recalls,
     services: await listReadyServices(
       {
         userId,
@@ -202,4 +211,50 @@ export async function removeVehicle(userId: string, vehicleId: string) {
   await getOwnedVehicle(userId, vehicleId);
   await prisma.vehicle.delete({ where: { id: vehicleId } });
   await audit({ userId, vehicleId, action: "vehicle_deleted" });
+}
+
+function withRecalls(result: VehicleLookupResult): VehicleLookupResult {
+  return { ...result, recalls: result.recalls ?? [] };
+}
+
+async function recallsForPlate(registrationNumber: string): Promise<VehicleRecall[]> {
+  const plate = normalizeRegistrationNumber(registrationNumber);
+  const cached = await prisma.vehicleLookupCache.findFirst({
+    where: { registrationNumber: plate, source: RECALL_CACHE_SOURCE, expiresAt: { gt: new Date() } },
+    orderBy: { fetchedAt: "desc" },
+  });
+  if (cached) return JSON.parse(cached.payload) as VehicleRecall[];
+  const recalls = await fetchOutstandingRecalls(plate);
+  await prisma.vehicleLookupCache.create({
+    data: {
+      registrationNumber: plate,
+      payload: JSON.stringify(recalls),
+      source: RECALL_CACHE_SOURCE,
+      fetchedAt: new Date(),
+      expiresAt: new Date(Date.now() + config.lookupCacheTtlMs),
+    },
+  });
+  return recalls;
+}
+
+async function persistRecallTasks(vehicleId: string, recalls: VehicleRecall[]): Promise<void> {
+  const generated = generateRecallTasks(vehicleId, recalls);
+  for (const item of generated) {
+    const existing = await prisma.task.findFirst({ where: { vehicleId, source: item.source } });
+    if (existing) continue;
+    await prisma.task.create({
+      data: {
+        vehicleId,
+        title: item.title,
+        description: item.description,
+        category: item.category,
+        priority: item.priority,
+        status: item.status,
+        dueDate: item.dueDate,
+        provider: item.provider,
+        source: item.source,
+        externalUrl: item.externalUrl,
+      },
+    });
+  }
 }

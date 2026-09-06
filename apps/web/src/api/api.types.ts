@@ -5,6 +5,7 @@ import type {
   ServiceProviderInfo,
   Task,
   Vehicle,
+  VehicleRecall,
 } from '@clm/shared';
 import {
   ERROR_PRESENTATION_MODAL,
@@ -19,6 +20,7 @@ export interface DashboardPayload {
   expenses: Expense[];
   expenseSummary: ExpenseSummary;
   reminders: Reminder[];
+  recalls: VehicleRecall[];
   identityVerification: { status: string; note: string };
 }
 

@@ -35,9 +35,32 @@ describe("generateVehicleTasks", () => {
       services: catalogWithTimestamp(),
       expenses: [],
       documents: [],
+      recalls: [],
     });
     expect(tasks.some((task) => task.category === "insurance")).toBe(true);
     expect(tasks.some((task) => task.provider === "pango")).toBe(true);
-    expect(tasks.every((task) => task.source === "task-engine")).toBe(true);
+    expect(tasks.filter((task) => task.category !== "recall").every((task) => task.source === "task-engine")).toBe(true);
+  });
+
+  it("creates official recall tasks from Ministry of Transport records", () => {
+    const tasks = generateVehicleTasks({
+      vehicle,
+      services: catalogWithTimestamp(),
+      expenses: [],
+      documents: [],
+      recalls: [
+        {
+          recallId: "15781",
+          kind: "תקלה סידרתית בטיחותית",
+          faultKind: "חשמל",
+          description: "נוזל בלמים",
+          openedAt: "2024-12-03",
+        },
+      ],
+    });
+    const recall = tasks.find((item) => item.category === "recall");
+    expect(recall?.title).toBe("קריאה לתיקון 15781");
+    expect(recall?.source).toBe("official-recall:15781");
+    expect(recall?.status).toBe("needs_attention");
   });
 });

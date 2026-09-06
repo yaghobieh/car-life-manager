@@ -15,5 +15,6 @@ export function authErrorKey(code?: string): string {
   if (code === 'password_short') return 'authPasswordShort';
   if (code === 'invalid_email') return 'authInvalidEmail';
   if (code === 'google_unavailable') return 'authGoogleUnavailable';
+  if (code === 'google_failed') return 'authGoogleFailed';
   return 'authFailed';
 }
