@@ -1,4 +1,4 @@
-import type { ExpenseSummary, Reminder } from '@clm/shared';
+import type { ExpenseSummary, Reminder, VehicleRecall } from '@clm/shared';
 
 export interface TaskFilterCounts {
   all: number;
@@ -14,4 +14,20 @@ export interface OverviewExpensesProps {
 
 export interface OverviewRemindersProps {
   reminders: Reminder[];
+}
+
+export interface OverviewRecallsProps {
+  recalls: VehicleRecall[];
+}
+
+export interface OverviewStatusProps {
+  licenseKind: string;
+  testKind: string;
+  registrationExpiry: string | null;
+  nextTestDate: string | null;
+  lastTestDate: string | null;
+}
+
+export interface OverviewCompareProps {
+  currentId: string;
 }

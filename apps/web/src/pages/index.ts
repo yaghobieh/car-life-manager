@@ -7,4 +7,6 @@ export { Vehicles } from './Vehicles';
 export { Tasks } from './Tasks';
 export { Services } from './Services';
 export { Expenses } from './Expenses';
+export { Documents } from './Documents';
+export { Reminders } from './Reminders';
 export { Simple } from './Simple';

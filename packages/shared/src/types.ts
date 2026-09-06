@@ -12,7 +12,8 @@ export type ConnectionStatus =
   | "not_connected"
   | "connection_required"
   | "unknown"
-  | "not_supported";
+  | "not_supported"
+  | "official";
 
 export type TaskStatus =
   | "not_started"
@@ -86,9 +87,18 @@ export interface Vehicle {
   updatedAt: string;
 }
 
+export interface VehicleRecall {
+  recallId: string;
+  kind: string | null;
+  faultKind: string | null;
+  description: string | null;
+  openedAt: string | null;
+}
+
 export interface VehicleLookupResult {
   vehicle: Omit<Vehicle, "id" | "userId" | "createdAt" | "updatedAt">;
   rawAvailable: boolean;
+  recalls: VehicleRecall[];
 }
 
 export interface Task {
@@ -189,6 +199,7 @@ export interface VehicleContext {
   services: ServiceProviderInfo[];
   expenses: Expense[];
   documents: VehicleDocument[];
+  recalls: VehicleRecall[];
 }
 
 export interface ProviderCapabilities {

@@ -1,3 +1,4 @@
+import "./env";
 import { config } from "./config";
 import { logger } from "./logger";
 import app from "./app";

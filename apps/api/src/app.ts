@@ -1,3 +1,4 @@
+import "./env";
 import express from "express";
 import { registerExpressApp } from "./routes/register.utils";
 

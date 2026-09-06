@@ -13,7 +13,7 @@ import {
   ROUTE_TASKS,
   ROUTE_VEHICLES,
 } from '@const';
-import { Auth, Expenses, Gate, Onboarding, Overview, Services, Settings, Simple, Tasks, Vehicles } from '@pages';
+import { Auth, Documents, Expenses, Gate, Onboarding, Overview, Reminders, Services, Settings, Simple, Tasks, Vehicles } from '@pages';
 
 export function AppRoutes() {
   return (
@@ -26,9 +26,9 @@ export function AppRoutes() {
         <Route path={ROUTE_TASKS.slice(1)} element={<Tasks />} />
         <Route path={ROUTE_SERVICES.slice(1)} element={<Services />} />
         <Route path={ROUTE_EXPENSES.slice(1)} element={<Expenses />} />
-        <Route path={ROUTE_DOCUMENTS.slice(1)} element={<Simple titleKey="documents" bodyKey="noDocuments" />} />
+        <Route path={ROUTE_DOCUMENTS.slice(1)} element={<Documents />} />
         <Route path={ROUTE_MAINTENANCE.slice(1)} element={<Simple titleKey="maintenance" bodyKey="noMaintenance" />} />
-        <Route path={ROUTE_REMINDERS.slice(1)} element={<Simple titleKey="reminders" bodyKey="noReminders" />} />
+        <Route path={ROUTE_REMINDERS.slice(1)} element={<Reminders />} />
         <Route path={ROUTE_REPORTS.slice(1)} element={<Simple titleKey="reports" bodyKey="reportsBody" />} />
         <Route path={ROUTE_SETTINGS.slice(1)} element={<Settings />} />
       </Route>

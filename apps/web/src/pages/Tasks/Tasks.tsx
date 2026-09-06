@@ -1,11 +1,9 @@
-import { Card } from '@forgedevstack/bear';
+import { Card, Flex } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { GridTable } from '@forgedevstack/grid-table';
-import { CARD_RADIUS_XL, ZERO } from '@const';
+import { CARD_RADIUS_XL, FLEX_GAP_LG, FLEX_GAP_MD, ZERO } from '@const';
 import { EmptyState } from '@components/EmptyState';
+import { TaskRow } from '@components/TaskRow';
 import { useAppState } from '@hooks';
-import { asTableRows } from '../table.utils';
-import { taskColumns } from './Tasks.utils';
 
 export function Tasks() {
   const { dashboard } = useAppState();
@@ -15,18 +13,20 @@ export function Tasks() {
   if (tasks.length === ZERO) {
     return (
       <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
-        <EmptyState title={t('noTasks')} body={t('noVehiclesBody')} />
+        <EmptyState title={t('noTasks')} body={t('leftoverHelp')} />
       </Card>
     );
   }
 
   return (
-    <Card className="Bear-Tasks bear-overflow-x-auto" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
-      <GridTable
-        data={asTableRows(tasks)}
-        getRowId={(row) => row.id}
-        columns={taskColumns(t)}
-      />
+    <Card className="Bear-Tasks" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+      <Flex direction="column" gap={FLEX_GAP_LG}>
+        <Flex direction="column" gap={FLEX_GAP_MD}>
+          {tasks.map((task) => (
+            <TaskRow key={task.id} task={task} />
+          ))}
+        </Flex>
+      </Flex>
     </Card>
   );
 }

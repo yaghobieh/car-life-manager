@@ -5,4 +5,5 @@ export { EmptyState } from './EmptyState';
 export { Logo } from './Logo';
 export { ProviderMark } from './ProviderMark';
 export { StatusBadge } from './StatusBadge';
+export { TaskRow } from './TaskRow';
 

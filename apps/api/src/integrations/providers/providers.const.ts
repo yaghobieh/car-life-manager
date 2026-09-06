@@ -5,6 +5,12 @@ export const PROVIDER_HIGHWAY_6_NORTH = "highway-6-north";
 export const PROVIDER_EASYPARK = "easypark";
 export const PROVIDER_INSURANCE = "mandatory-insurance";
 export const PROVIDER_IDENTITY = "identity";
+export const PROVIDER_MOT = "ministry-of-transport";
+export const PROVIDER_RECALLS = "ministry-recalls";
 
 export const UNSUPPORTED_NOTE = "No official authenticated API is configured for this provider.";
 export const CONNECTION_NOT_SUPPORTED = "not_supported";
+export const CONNECTION_OFFICIAL = "official" as const;
+export const CONNECTION_CONNECTED = "connected" as const;
+export const HUB_TIMEOUT_MS = 8_000;
+export const HUB_STATUS_PATH = "/providers";

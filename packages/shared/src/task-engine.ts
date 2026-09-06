@@ -1,4 +1,4 @@
-import type { ServiceProviderInfo, Task, TaskPriority, Vehicle, VehicleContext } from "./types";
+import type { ServiceProviderInfo, Task, TaskPriority, Vehicle, VehicleContext, VehicleRecall } from "./types";
 
 function daysUntil(iso: string | null): number | null {
   if (!iso) return null;
@@ -40,8 +40,28 @@ function serviceOf(services: ServiceProviderInfo[], providerId: string): Service
   return services.find((item) => item.providerId === providerId);
 }
 
+export const RECALL_TASK_SOURCE_PREFIX = "official-recall:";
+export const RECALL_OFFICIAL_URL = "https://data.gov.il/dataset/hagbalat_recall";
+
+export function generateRecallTasks(vehicleId: string, recalls: VehicleRecall[]): Task[] {
+  return recalls.map((recall) =>
+    task(vehicleId, `recall_${recall.recallId}`, {
+      title: `קריאה לתיקון ${recall.recallId}`,
+      description: [recall.faultKind, recall.description].filter(Boolean).join(" — ")
+        || "קריאה לתיקון רשמית ממשרד התחבורה.",
+      category: "recall",
+      priority: "overdue",
+      status: "needs_attention",
+      dueDate: recall.openedAt,
+      provider: "ministry-of-transport",
+      source: `${RECALL_TASK_SOURCE_PREFIX}${recall.recallId}`,
+      externalUrl: RECALL_OFFICIAL_URL,
+    }),
+  );
+}
+
 export function generateVehicleTasks(context: VehicleContext): Task[] {
-  const { vehicle, services, documents } = context;
+  const { vehicle, services, documents, recalls } = context;
   const tasks: Task[] = [];
   const licenseDays = daysUntil(vehicle.registrationExpiry);
   const testDays = daysUntil(vehicle.nextTestDate);
@@ -175,6 +195,8 @@ export function generateVehicleTasks(context: VehicleContext): Task[] {
       }),
     );
   }
+
+  tasks.push(...generateRecallTasks(vehicle.id, recalls));
 
   tasks.push(
     task(vehicle.id, "tires", {

@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Flex,
-  Input,
   Select,
   Typography,
   useIsDesktop,
@@ -18,6 +17,7 @@ import {
   COLOR_CARD,
   COLOR_NAVY_DEEP,
   COLOR_WHITE,
+  EMPTY_STRING,
   FLEX_GAP_MD,
   FLEX_GAP_SM,
   ROUTE_ONBOARDING,
@@ -30,15 +30,17 @@ import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
 import { NAV_ITEMS } from './AppShell.const';
 import { AppShellMenu } from './AppShellMenu';
-import { activeNavId, isMoreNavActive, mobilePrimaryItems, navButtonVariant } from './AppShell.utils';
+import { AppShellSearch } from './components/AppShellSearch';
+import { activeNavId, isMoreNavActive, mobilePrimaryItems, navButtonVariant, vehicleOptionLabel } from './AppShell.utils';
 
 export function AppShell() {
-  const { vehicles, currentId, select } = useAppState();
+  const { vehicles, currentId, select, user } = useAppState();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const t = useTranslate();
   const isDesktop = useIsDesktop();
   const [menuOpen, setMenuOpen] = useState(BOOLEAN_FALSE);
+  const [query, setQuery] = useState(EMPTY_STRING);
   const current = vehicles.find((item) => item.id === currentId);
   const activeId = activeNavId(pathname, NAV_ITEMS);
   const primaryItems = mobilePrimaryItems(NAV_ITEMS);
@@ -84,12 +86,13 @@ export function AppShell() {
           <Box as="header" bg={COLOR_CARD} px={isDesktop ? 6 : 3} py={isDesktop ? 4 : 3} shadow="sm">
             {isDesktop ? (
               <Flex align="center" justify="between" gap={FLEX_GAP_MD}>
-                <Input aria-label={t('search')} placeholder={t('search')} radius="pill" fullWidth />
+                <AppShellSearch query={query} onQueryChange={setQuery} />
                 <Flex align="center" gap={FLEX_GAP_MD}>
                   <LocaleSelect />
                   <Button variant="ghost" iconOnly aria-label={t('notifications')}>
                     <BearIcons.Communication.BellIcon />
                   </Button>
+                  {user?.name && <Typography>{user.name}</Typography>}
                   <Button variant="ghost" iconOnly aria-label={t('account')} onClick={() => navigate(ROUTE_SETTINGS)}>
                     <UserIcon />
                   </Button>
@@ -111,7 +114,7 @@ export function AppShell() {
                     </Button>
                   </Flex>
                 </Flex>
-                <Input aria-label={t('search')} placeholder={t('search')} radius="pill" fullWidth />
+                <AppShellSearch query={query} onQueryChange={setQuery} />
               </Flex>
             )}
           </Box>
@@ -131,7 +134,7 @@ export function AppShell() {
                   fullWidth={!isDesktop}
                   options={vehicles.map((vehicle) => ({
                     value: vehicle.id,
-                    label: vehicle.formattedRegistrationNumber,
+                    label: vehicleOptionLabel(vehicle),
                   }))}
                 />
               )}

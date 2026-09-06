@@ -2,9 +2,12 @@ import { Router } from "express";
 import { RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS } from "../constants/http.const";
 import { asyncRoute, rateLimit } from "../middlewares";
 import {
+  addDocumentController,
   addExpenseController,
+  addReminderController,
   addVehicleController,
   getDashboardController,
+  listVehicleDocumentsController,
   listVehicleExpensesController,
   listVehicleRemindersController,
   listVehicleServicesController,
@@ -29,4 +32,7 @@ export function registerVehicleRoutes(router: Router): void {
   router.get("/vehicles/:id/expenses", asyncRoute(listVehicleExpensesController));
   router.post("/vehicles/:id/expenses", asyncRoute(addExpenseController));
   router.get("/vehicles/:id/reminders", asyncRoute(listVehicleRemindersController));
+  router.post("/vehicles/:id/reminders", asyncRoute(addReminderController));
+  router.get("/vehicles/:id/documents", asyncRoute(listVehicleDocumentsController));
+  router.post("/vehicles/:id/documents", asyncRoute(addDocumentController));
 }

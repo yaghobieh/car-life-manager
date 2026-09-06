@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { isGoogleAuthReady } from "../config";
-import { HTTP_CREATED, HTTP_OK, HTTP_UNAUTHORIZED } from "../constants/http.const";
-import { HttpError } from "../errors/http-error";
+import { HTTP_CREATED, HTTP_OK } from "../constants/http.const";
+import { getUserId } from "../middlewares";
 import {
   clearSession,
   createSession,
@@ -9,10 +9,16 @@ import {
   loginUser,
   loginWithGoogleCode,
   registerUser,
+  updateProfile,
   userFromSessionToken,
 } from "../modules/auth/service";
-import { OAUTH_STATE_COOKIE, SESSION_COOKIE } from "../modules/auth/auth.const";
-import { appHomeUrl, randomToken, readCookie, sessionCookieOptions } from "../modules/auth/auth.utils";
+import {
+  GOOGLE_FAILED_CODE,
+  GOOGLE_UNAVAILABLE_CODE,
+  OAUTH_STATE_COOKIE,
+  SESSION_COOKIE,
+} from "../modules/auth/auth.const";
+import { appHomeUrl, authErrorUrl, randomToken, readCookie, sessionCookieOptions } from "../modules/auth/auth.utils";
 
 function attachSession(res: Response, token: string): void {
   res.cookie(SESSION_COOKIE, token, sessionCookieOptions());
@@ -43,7 +49,19 @@ export async function meController(req: Request, res: Response): Promise<void> {
   res.status(HTTP_OK).json({ user, googleEnabled: isGoogleAuthReady() });
 }
 
+export async function updateProfileController(req: Request, res: Response): Promise<void> {
+  const user = await updateProfile(getUserId(req), {
+    name: req.body?.name,
+    phone: req.body?.phone,
+  });
+  res.status(HTTP_OK).json({ user });
+}
+
 export async function googleStartController(_req: Request, res: Response): Promise<void> {
+  if (!isGoogleAuthReady()) {
+    res.redirect(authErrorUrl(GOOGLE_UNAVAILABLE_CODE));
+    return;
+  }
   const state = randomToken();
   res.cookie(OAUTH_STATE_COOKIE, state, sessionCookieOptions());
   res.redirect(googleAuthorizeUrl(state));
@@ -54,10 +72,15 @@ export async function googleCallbackController(req: Request, res: Response): Pro
   const state = String(req.query.state ?? "");
   const code = String(req.query.code ?? "");
   if (!expected || !state || expected !== state || !code) {
-    throw new HttpError("Google sign-in failed", HTTP_UNAUTHORIZED, "google_failed");
+    res.redirect(authErrorUrl(GOOGLE_FAILED_CODE));
+    return;
   }
-  const user = await loginWithGoogleCode(code);
-  attachSession(res, await createSession(user.id));
-  res.clearCookie(OAUTH_STATE_COOKIE, { path: "/" });
-  res.redirect(appHomeUrl());
+  try {
+    const user = await loginWithGoogleCode(code);
+    attachSession(res, await createSession(user.id));
+    res.clearCookie(OAUTH_STATE_COOKIE, { path: "/" });
+    res.redirect(appHomeUrl());
+  } catch {
+    res.redirect(authErrorUrl(GOOGLE_FAILED_CODE));
+  }
 }

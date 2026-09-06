@@ -1,19 +1,33 @@
 # Roadmap
 
-## Phase 1 (this milestone)
+## MVP / 1.x (in progress)
 
-Application shell, onboarding, official lookup, dashboard, task engine, empty/loading/error states.
+Shipped in 1.0.1: official vehicle lookup, recalls, dashboard shell, tasks, services honesty, user expenses/documents/reminders, English locale, profile.
 
-## Phase 2
+Still required for a trustworthy MVP:
 
-Stronger auth, documents upload, expense forms, reminder notifications, maintenance timeline.
+- Vehicle hero + “What’s next”
+- Manual service confirmation
+- Task engine + task drawer
+- Document vault + secure storage
+- Expense dashboard from recorded data only
+- Maintenance + vehicle timeline
+- Reminders + reports
+- Landing page
 
-## Phase 3
+## V2
 
-Real provider OAuth where partnerships exist, identity verification, notifications.
+- Official partner integrations only when a real API exists
+- Identity verification
+- Notifications (in-app first; email/push/SMS behind an abstraction)
+- Document extraction (architecture now, no fake OCR)
+- Richer reports
 
-## Phase 4
+## V3
 
-AI assistant over real vehicle context, reports, sale lifecycle.
+- AI assistant over real vehicle context
+- Insurance partnerships
+- Service marketplace
+- Vehicle sale workflow
 
-Extension points: `ProviderAdapter`, Prisma models, task engine rules.
+Extension points already in the repo: `ProviderAdapter`, Prisma models, task-engine rules, optional `PROVIDER_HUB_URL`.

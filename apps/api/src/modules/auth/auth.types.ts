@@ -2,7 +2,13 @@ export interface AuthUserPayload {
   id: string;
   email: string | null;
   name: string | null;
+  phone: string | null;
   imageUrl: string | null;
+}
+
+export interface ProfileUpdateInput {
+  name?: string;
+  phone?: string;
 }
 
 export interface GoogleTokenResponse {

@@ -5,6 +5,7 @@ import { CARD_RADIUS_XL, FLEX_GAP_LG, ZERO } from '@const';
 import { EmptyState } from '@components/EmptyState';
 import { useAppState } from '@hooks';
 import { asTableRows } from '../table.utils';
+import { ExpensesForm } from './Expenses.form';
 import { expenseColumns } from './Expenses.utils';
 
 export function Expenses() {
@@ -12,24 +13,18 @@ export function Expenses() {
   const t = useTranslate();
   const expenses = dashboard?.expenses ?? [];
 
-  if (expenses.length === ZERO) {
-    return (
-      <Card className="Bear-Expenses" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
-        <Flex direction="column" gap={FLEX_GAP_LG}>
-          <EmptyState title={t('noExpenses')} body={t('noExpensesBody')} />
-        </Flex>
-      </Card>
-    );
-  }
-
   return (
-    <Card className="Bear-Expenses bear-overflow-x-auto" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+    <Card className="Bear-Expenses bear-overflow-x-auto light" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
-        <GridTable
-          data={asTableRows(expenses)}
-          getRowId={(row) => row.id}
-          columns={expenseColumns(t)}
-        />
+        <ExpensesForm />
+        {expenses.length === ZERO && <EmptyState title={t('noExpenses')} body={t('noExpensesBody')} />}
+        {expenses.length > ZERO && (
+          <GridTable
+            data={asTableRows(expenses)}
+            getRowId={(row) => row.id}
+            columns={expenseColumns(t)}
+          />
+        )}
       </Flex>
     </Card>
   );

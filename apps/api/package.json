@@ -1,11 +1,11 @@
 {
   "name": "@clm/api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "main": "./src/app.ts",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch --env-file=.env src/server.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
     "test": "vitest run",
@@ -15,7 +15,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@clm/shared": "1.0.0",
+    "@clm/shared": "1.0.1",
     "@forgedevstack/harbor": "^1.6.4",
     "@prisma/client": "^6.7.0",
     "prisma": "^6.7.0",

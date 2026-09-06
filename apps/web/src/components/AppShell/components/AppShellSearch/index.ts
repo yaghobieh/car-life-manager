@@ -1,0 +1,1 @@
+export { AppShellSearch } from './AppShellSearch';

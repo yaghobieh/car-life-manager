@@ -2,9 +2,12 @@
 
 Adapters live in `apps/api/src/integrations`. The dashboard loads them through `listReadyServices`. Status stays **לא נתמך** until an authenticated API exists.
 
+Optional **provider hub** (`PROVIDER_HUB_URL` + `PROVIDER_HUB_KEY`): GET `{hub}/providers/{id}` must return JSON `{ "verified": true, "status": "connected" }`. A 200 from a marketing site is not enough. RapidAPI / custom hubs / Reducto-style extractors can sit behind this URL. There is still no public official API for Pango, CelloPark, or Highway 6.
+
 | Provider | Discovery | Auth | Vehicle data | Status |
 | --- | --- | --- | --- | --- |
 | Ministry of Transport / data.gov.il | Yes | None (public) | Yes | Implemented |
+| Ministry of Transport recalls | Yes | None (public) | Yes | Implemented (`hagbalat_recall`) |
 | Highway 6 | Adapter ready | TBD | TBD | `not_supported` — needs partnership |
 | Highway 6 North | Adapter ready | TBD | TBD | `not_supported` |
 | Pango | Adapter ready | TBD | TBD | `not_supported` — no public OAuth |

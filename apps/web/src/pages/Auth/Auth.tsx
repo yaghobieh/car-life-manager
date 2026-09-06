@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { Box, Button, Card, Flex, Input, Typography } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import { api, ApiError } from '@api';
@@ -17,7 +17,7 @@ import { LocaleSelect } from '@components/LocaleSelect';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
 import { logger } from '@logger';
-import { AUTH_MODE_LOGIN, AUTH_MODE_REGISTER } from './Auth.const';
+import { AUTH_ERROR_QUERY, AUTH_MODE_LOGIN, AUTH_MODE_REGISTER } from './Auth.const';
 import type { AuthMode } from './Auth.types';
 import { afterAuthPath, authErrorKey, nextAuthMode } from './Auth.utils';
 
@@ -30,6 +30,9 @@ export function Auth() {
   const [name, setName] = useState(EMPTY_STRING);
   const [busy, setBusy] = useState(false);
   const [errorKey, setErrorKey] = useState(EMPTY_STRING);
+  const [params] = useSearchParams();
+  const queryError = params.get(AUTH_ERROR_QUERY);
+  const shownError = errorKey !== EMPTY_STRING ? errorKey : queryError ? authErrorKey(queryError) : EMPTY_STRING;
   const isRegister = mode === AUTH_MODE_REGISTER;
 
   if (!authReady || loading) {
@@ -94,8 +97,8 @@ export function Auth() {
               onChange={(event) => setPassword(event.target.value)}
               fullWidth
             />
-            {errorKey !== EMPTY_STRING && (
-              <Typography color={COLOR_DANGER} role="alert">{t(errorKey)}</Typography>
+            {shownError !== EMPTY_STRING && (
+              <Typography color={COLOR_DANGER} role="alert">{t(shownError)}</Typography>
             )}
             <Button
               variant="primary"
@@ -106,19 +109,17 @@ export function Auth() {
             >
               {isRegister ? t('register') : t('login')}
             </Button>
-            <Button
-              variant="secondary"
-              fullWidth
-              onClick={() => {
-                if (!googleEnabled) {
-                  setErrorKey('authGoogleUnavailable');
-                  return;
-                }
-                window.location.href = api.googleStart;
-              }}
-            >
-              {t('googleSignIn')}
-            </Button>
+            {googleEnabled && (
+              <Button
+                variant="secondary"
+                fullWidth
+                onClick={() => {
+                  window.location.href = api.googleStart;
+                }}
+              >
+                {t('googleSignIn')}
+              </Button>
+            )}
             <Button variant="ghost" fullWidth onClick={() => setMode(nextAuthMode(mode))}>
               {isRegister ? t('haveAccount') : t('needAccount')}
             </Button>

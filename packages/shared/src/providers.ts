@@ -2,6 +2,22 @@ import type { ConnectionStatus, ProviderCapabilities, ServiceProviderInfo } from
 
 export const CATALOG_PROVIDERS: Array<Omit<ServiceProviderInfo, "lastCheckedAt">> = [
   {
+    providerId: "ministry-of-transport",
+    name: "משרד התחבורה",
+    category: "other",
+    officialUrl: "https://data.gov.il/dataset/private-and-commercial-vehicles",
+    status: "official",
+    note: "רישוי רשמי לפי מספר רכב מ-data.gov.il.",
+  },
+  {
+    providerId: "ministry-recalls",
+    name: "קריאות לתיקון",
+    category: "other",
+    officialUrl: "https://data.gov.il/dataset/hagbalat_recall",
+    status: "official",
+    note: "קריאות תיקון פתוחות לפי לוחית מ-data.gov.il.",
+  },
+  {
     providerId: "highway-6",
     name: "כביש 6",
     category: "toll",

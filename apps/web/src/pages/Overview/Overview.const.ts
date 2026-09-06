@@ -20,6 +20,19 @@ export const OVERVIEW_VIEW_LOADING = 'loading';
 export const OVERVIEW_VIEW_EMPTY = 'empty';
 export const OVERVIEW_VIEW_READY = 'ready';
 
+export const COMPARE_FIELD_KEYS = [
+  'plate',
+  'make',
+  'model',
+  'year',
+  'color',
+  'fuel',
+  'hand',
+  'ownershipType',
+  'licenseExpiry',
+  'test',
+] as const;
+
 export const STATUS_KIND_COLOR = {
   [STATUS_KIND_HEALTHY]: COLOR_GREEN,
   [STATUS_KIND_ATTENTION]: COLOR_WARNING,
