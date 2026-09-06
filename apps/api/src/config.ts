@@ -46,3 +46,7 @@ export function isEmailNotifyReady(): boolean {
 export function isSmsNotifyReady(): boolean {
   return Boolean(config.twilioAccountSid && config.twilioAuthToken && config.twilioFromNumber);
 }
+
+export function isClerkReady(): boolean {
+  return Boolean(process.env.CLERK_SECRET_KEY && process.env.CLERK_PUBLISHABLE_KEY);
+}

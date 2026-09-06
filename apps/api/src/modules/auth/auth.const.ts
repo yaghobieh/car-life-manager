@@ -14,6 +14,7 @@ export const OAUTH_RESPONSE_TYPE = "code";
 export const GRANT_AUTHORIZATION_CODE = "authorization_code";
 export const PROVIDER_EMAIL = "email";
 export const PROVIDER_GOOGLE = "google";
+export const PROVIDER_CLERK = "clerk";
 export const HASH_SEPARATOR = ":";
 export const AUTH_ERROR_QUERY = "error";
 export const AUTH_PATH = "/auth";

@@ -1,9 +1,10 @@
 import { Card, Flex, Typography } from '@forgedevstack/bear';
 import { useLingoFormat, useTranslate } from '@forgedevstack/lingo/react';
-import { GridTable } from '@forgedevstack/grid-table';
 import { vehicleCostInsight } from '@clm/shared';
 import { CARD_RADIUS_XL, COLOR_MUTED, CURRENCY_ILS, FLEX_GAP_LG, FLEX_GAP_SM, TYPO_SECTION_TITLE, ZERO } from '@const';
+import { ClmGridTable } from '@components/ClmGridTable';
 import { EmptyState } from '@components/EmptyState';
+import { PageHeader } from '@components/PageHeader';
 import { useAppState } from '@hooks';
 import { asTableRows } from '../table.utils';
 import { ExpensesForm } from './Expenses.form';
@@ -17,7 +18,9 @@ export function Expenses() {
   const insight = dashboard?.expenseSummary ? vehicleCostInsight(dashboard.expenseSummary) : null;
 
   return (
-    <Card className="Bear-Expenses bear-overflow-x-auto light" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+    <Flex className="Bear-Expenses" direction="column" gap={FLEX_GAP_LG}>
+      <PageHeader title={t('expenses')} subtitle={t('pageSubExpenses')} />
+    <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
         {insight?.hasData ? (
           <Flex direction="column" gap={FLEX_GAP_SM}>
@@ -34,7 +37,7 @@ export function Expenses() {
         <ExpensesForm />
         {expenses.length === ZERO && <EmptyState title={t('noExpenses')} body={t('noExpensesBody')} />}
         {expenses.length > ZERO && (
-          <GridTable
+          <ClmGridTable
             data={asTableRows(expenses)}
             getRowId={(row) => row.id}
             columns={expenseColumns(t)}
@@ -42,5 +45,6 @@ export function Expenses() {
         )}
       </Flex>
     </Card>
+    </Flex>
   );
 }

@@ -15,6 +15,7 @@ import {
   ZERO,
 } from '@const';
 import { useAppState } from '@hooks';
+import { PageHeader } from '@components/PageHeader';
 import { ReminderCalendarDownload } from './helpers/ReminderCalendarDownload';
 import { ReminderEmpty } from './helpers/ReminderEmpty';
 
@@ -39,7 +40,9 @@ export function Reminders() {
   }
 
   return (
-    <Card className="Bear-Reminders" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+    <Flex className="Bear-Reminders" direction="column" gap={FLEX_GAP_LG}>
+      <PageHeader title={t('reminders')} subtitle={t('pageSubReminders')} />
+    <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
         <Typography color={COLOR_MUTED}>{t('remindersOfficial')}</Typography>
         <Typography color={COLOR_MUTED}>{t('calendarHelp')}</Typography>
@@ -71,5 +74,6 @@ export function Reminders() {
         ))}
       </Flex>
     </Card>
+    </Flex>
   );
 }

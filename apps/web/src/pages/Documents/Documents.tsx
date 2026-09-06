@@ -7,6 +7,7 @@ import {
   CARD_RADIUS_XL,
   COLOR_MUTED,
   DOCUMENT_TYPE_LICENSE,
+  EMPTY_ICON_DOCUMENT,
   EMPTY_STRING,
   FLEX_GAP_LG,
   FLEX_GAP_MD,
@@ -14,6 +15,7 @@ import {
   ZERO,
 } from '@const';
 import { EmptyState } from '@components/EmptyState';
+import { PageHeader } from '@components/PageHeader';
 import { useAppState } from '@hooks';
 import { DOCUMENT_TYPE_OPTIONS } from './Documents.const';
 
@@ -47,7 +49,9 @@ export function Documents() {
   }
 
   return (
-    <Card className="Bear-Documents" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+    <Flex className="Bear-Documents" direction="column" gap={FLEX_GAP_LG}>
+      <PageHeader title={t('documents')} subtitle={t('pageSubDocuments')} />
+    <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
         <Typography color={COLOR_MUTED}>{t('noDocumentsBody')}</Typography>
         <Typography color={COLOR_MUTED}>{t('documentProcessing')}</Typography>
@@ -67,7 +71,7 @@ export function Documents() {
         <Button variant="primary" loading={busy} loadingText={t('saving')} onClick={() => void submit()}>
           {t('addDocument')}
         </Button>
-        {documents.length === ZERO && <EmptyState title={t('noDocuments')} body={t('noDocumentsBody')} />}
+        {documents.length === ZERO && <EmptyState title={t('noDocuments')} body={t('noDocumentsBody')} icon={EMPTY_ICON_DOCUMENT} />}
         {documents.map((document) => (
           <Flex key={document.id} direction="column" gap={FLEX_GAP_SM}>
             <Typography weight="bold">{document.title}</Typography>
@@ -78,5 +82,6 @@ export function Documents() {
         ))}
       </Flex>
     </Card>
+    </Flex>
   );
 }

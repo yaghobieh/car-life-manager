@@ -5,7 +5,7 @@ import { LOCALE_OPTION_KEYS } from './LocaleSelect.const';
 import type { LocaleSelectProps } from './LocaleSelect.types';
 
 export function LocaleSelect(props: LocaleSelectProps) {
-  const { id, fullWidth } = props;
+  const { id, fullWidth, showLabel = true } = props;
   const { locale, setLocale } = useLocale();
   const t = useTranslate();
 
@@ -20,7 +20,7 @@ export function LocaleSelect(props: LocaleSelectProps) {
       <Select
         id={id}
         aria-label={t('language')}
-        label={t('language')}
+        label={showLabel ? t('language') : undefined}
         size="md"
         value={locale}
         fullWidth

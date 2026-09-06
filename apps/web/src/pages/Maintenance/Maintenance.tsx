@@ -6,12 +6,14 @@ import {
   CARD_RADIUS_XL,
   COLOR_MUTED,
   CURRENCY_ILS,
+  EMPTY_ICON_MAINTENANCE,
   EMPTY_STRING,
   FLEX_GAP_LG,
   FLEX_GAP_SM,
   ZERO,
 } from '@const';
 import { EmptyState } from '@components/EmptyState';
+import { PageHeader } from '@components/PageHeader';
 import { useAppState } from '@hooks';
 import { MAINTENANCE_TYPES } from './Maintenance.const';
 
@@ -52,7 +54,9 @@ export function Maintenance() {
   }
 
   return (
-    <Card className="Bear-Maintenance" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+    <Flex className="Bear-Maintenance" direction="column" gap={FLEX_GAP_LG}>
+      <PageHeader title={t('maintenance')} subtitle={t('pageSubMaintenance')} />
+    <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
         <Select
           label={t('serviceType')}
@@ -69,7 +73,7 @@ export function Maintenance() {
         <Button variant="primary" loading={busy} loadingText={t('saving')} onClick={() => void submit()}>
           {t('addMaintenance')}
         </Button>
-        {records.length === ZERO && <EmptyState title={t('maintenance')} body={t('noMaintenance')} />}
+        {records.length === ZERO && <EmptyState title={t('maintenance')} body={t('noMaintenance')} icon={EMPTY_ICON_MAINTENANCE} />}
         {records.map((record) => (
           <Flex key={record.id} direction="column" gap={FLEX_GAP_SM}>
             <Typography weight="bold">{t(`maintenance_${record.serviceType}`)}</Typography>
@@ -81,5 +85,6 @@ export function Maintenance() {
         ))}
       </Flex>
     </Card>
+    </Flex>
   );
 }

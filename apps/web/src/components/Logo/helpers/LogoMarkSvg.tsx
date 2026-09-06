@@ -1,11 +1,10 @@
-import { COLOR_NAVY, COLOR_WHITE, LOGO_ICON_SIZE } from '@const';
+import { COLOR_INK, COLOR_PLATE, LOGO_MARK_SIZE } from '@const';
 
 export function LogoMarkSvg() {
   return (
-    <svg width={LOGO_ICON_SIZE} height={LOGO_ICON_SIZE} viewBox="0 0 24 24" fill="none">
-      <path d="M4 15h16l-1.5-5.5A3 3 0 0 0 15.6 7H8.4A3 3 0 0 0 5.5 9.5L4 15Z" fill={COLOR_WHITE} />
-      <circle cx="7.5" cy="16.5" r="1.6" fill={COLOR_NAVY} />
-      <circle cx="16.5" cy="16.5" r="1.6" fill={COLOR_NAVY} />
+    <svg width={LOGO_MARK_SIZE} height={LOGO_MARK_SIZE} viewBox="0 0 34 34" fill="none" aria-hidden="true">
+      <rect width="34" height="34" rx="9" fill={COLOR_PLATE} />
+      <path d="M8 20c0-1.4.9-3.6 3.6-3.6h1.8l2.3-4.6c.7-1.5 2.2-2.4 3.8-2.4h5.4c1.6 0 3.1.9 3.8 2.4l2.3 4.6h1c1.4 0 2.6 1.1 2.6 2.6v2.2c0 .8-.7 1.4-1.4 1.4h-1.2a3 3 0 1 1-5.9 0h-9a3 3 0 1 1-5.9 0H9.4c-.8 0-1.4-.6-1.4-1.4V20Z" fill={COLOR_INK} />
     </svg>
   );
 }

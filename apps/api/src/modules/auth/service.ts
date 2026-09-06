@@ -9,6 +9,7 @@ import { prisma } from "../../db";
 import { HttpError } from "../../errors/http-error";
 import { logger } from "../../logger";
 import {
+  PROVIDER_CLERK,
   GOOGLE_AUTH_URL,
   GOOGLE_SCOPE,
   GOOGLE_TOKEN_URL,
@@ -78,6 +79,50 @@ export async function createSession(userId: string): Promise<string> {
     },
   });
   return token;
+}
+
+export async function userById(userId: string): Promise<AuthUserPayload | null> {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  return user ? serializeAuthUser(user) : null;
+}
+
+export async function userFromClerkId(clerkUserId: string): Promise<AuthUserPayload | null> {
+  const identity = await prisma.authIdentity.findUnique({
+    where: { provider_providerAccountId: { provider: PROVIDER_CLERK, providerAccountId: clerkUserId } },
+    include: { user: true },
+  });
+  return identity ? serializeAuthUser(identity.user) : null;
+}
+
+export async function loginWithClerk(input: {
+  clerkUserId: string;
+  email: string | null;
+  name: string | null;
+  imageUrl: string | null;
+}): Promise<AuthUserPayload> {
+  const existing = await userFromClerkId(input.clerkUserId);
+  if (existing) return existing;
+  const email = input.email ? normalizeEmail(input.email) : null;
+  const byEmail = email ? await prisma.user.findUnique({ where: { email } }) : null;
+  const user = byEmail
+    ? await prisma.user.update({
+        where: { id: byEmail.id },
+        data: {
+          name: byEmail.name ?? input.name,
+          imageUrl: byEmail.imageUrl ?? input.imageUrl,
+          identities: { create: { provider: PROVIDER_CLERK, providerAccountId: input.clerkUserId } },
+        },
+      })
+    : await prisma.user.create({
+        data: {
+          email,
+          name: input.name,
+          imageUrl: input.imageUrl,
+          identities: { create: { provider: PROVIDER_CLERK, providerAccountId: input.clerkUserId } },
+        },
+      });
+  logger.info("clerk login user", user.id);
+  return serializeAuthUser(user);
 }
 
 export async function userFromSessionToken(token: string): Promise<AuthUserPayload | null> {

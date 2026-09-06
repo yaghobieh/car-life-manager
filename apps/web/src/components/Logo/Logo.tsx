@@ -1,23 +1,23 @@
-import { Box, Flex, Typography } from '@forgedevstack/bear';
-import { COLOR_BLUE, COLOR_INK, COLOR_WHITE, FLEX_GAP_SM } from '@const';
+import { Flex, Typography } from '@forgedevstack/bear';
+import { useTranslate } from '@forgedevstack/lingo/react';
+import { COLOR_BLUE, COLOR_INK, COLOR_MUTED_2, COLOR_WHITE, FLEX_GAP_SM } from '@const';
 import { LogoMarkSvg } from './helpers/LogoMarkSvg';
 import type { LogoProps } from './Logo.types';
 
 export function Logo({ compact = false, onDark = false }: LogoProps) {
+  const t = useTranslate();
+  const wordColor = onDark ? COLOR_WHITE : COLOR_INK;
   return (
-    <Flex className="Bear-Logo" align="center" gap={FLEX_GAP_SM} aria-label="Car Life Manager">
-      <Box
-        className="Bear-Logo__mark bear-w-8 bear-h-8 bear-grid bear-place-items-center"
-        rounded="md"
-        bg={COLOR_BLUE}
-        aria-hidden="true"
-      >
-        <LogoMarkSvg />
-      </Box>
+    <Flex className="Bear-Logo" align="center" gap={FLEX_GAP_SM} aria-label={t('brand')}>
+      <LogoMarkSvg />
       {!compact && (
-        <Typography weight="extrabold" color={onDark ? COLOR_WHITE : COLOR_INK}>
-          Car Life Manager
-        </Typography>
+        <Flex direction="column">
+          <Flex align="center">
+            <Typography weight="extrabold" color={wordColor}>Car</Typography>
+            <Typography weight="extrabold" color={COLOR_BLUE}>Life</Typography>
+          </Flex>
+          <Typography color={COLOR_MUTED_2}>{t('tagline')}</Typography>
+        </Flex>
       )}
     </Flex>
   );

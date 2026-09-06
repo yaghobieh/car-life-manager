@@ -1,20 +1,23 @@
 import { useState } from 'react';
 import {
+  Avatar,
   Box,
   Button,
   Flex,
   Select,
+  Sidebar,
   Typography,
   useIsDesktop,
 } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { BearIcons, MenuIcon, UserIcon } from '@forgedevstack/bear-icons';
+import { BearIcons, MenuIcon } from '@forgedevstack/bear-icons';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   BOOLEAN_FALSE,
   BOOLEAN_TRUE,
   COLOR_BG,
   COLOR_CARD,
+  COLOR_MUTED_2,
   COLOR_NAVY_DEEP,
   COLOR_WHITE,
   EMPTY_STRING,
@@ -27,11 +30,21 @@ import {
 } from '@const';
 import { LocaleSelect } from '@components/LocaleSelect';
 import { Logo } from '@components/Logo';
+import { PlateBadge } from '@components/PlateBadge';
+import { ClerkSignedInButton } from '../../auth/ClerkAuthControls';
 import { useAppState } from '@hooks';
 import { NAV_ITEMS } from './AppShell.const';
 import { AppShellMenu } from './AppShellMenu';
 import { AppShellSearch } from './components/AppShellSearch';
-import { activeNavId, isMoreNavActive, mobilePrimaryItems, navButtonVariant, vehicleOptionLabel } from './AppShell.utils';
+import {
+  activeNavId,
+  isMoreNavActive,
+  mobilePrimaryItems,
+  navButtonVariant,
+  sidebarGroups,
+  userInitials,
+  vehicleOptionLabel,
+} from './AppShell.utils';
 
 export function AppShell() {
   const { vehicles, currentId, select, user } = useAppState();
@@ -45,56 +58,78 @@ export function AppShell() {
   const activeId = activeNavId(pathname, NAV_ITEMS);
   const primaryItems = mobilePrimaryItems(NAV_ITEMS);
   const moreActive = isMoreNavActive(activeId);
+  const groups = sidebarGroups(NAV_ITEMS, t);
+  const initials = userInitials(user?.name, user?.email);
 
   function goTo(to: string) {
     setMenuOpen(BOOLEAN_FALSE);
     navigate(to);
   }
 
+  const sidebarItems = groups.map((group) => ({
+    id: group.id,
+    label: group.label,
+    children: group.items.map((item) => ({
+      id: item.id,
+      label: t(item.labelKey),
+      onClick: () => navigate(item.to),
+    })),
+  }));
+
   return (
     <Box bg={COLOR_BG} className="Bear-AppShell bear-min-h-screen">
       <Flex className="bear-min-h-screen">
         {isDesktop && (
-          <Box
-            as="aside"
-            bg={COLOR_NAVY_DEEP}
-            p={3}
-            className="bear-min-h-screen"
-            style={{ width: SIDEBAR_WIDTH }}
-          >
-            <Flex direction="column" gap={FLEX_GAP_MD} className="bear-h-full">
-              <Logo onDark />
-              <Flex direction="column" gap={FLEX_GAP_SM} className="bear-flex-1">
-                {NAV_ITEMS.map((item) => (
-                  <Button
-                    key={item.id}
-                    variant={navButtonVariant(item.id === activeId)}
-                    fullWidth
-                    disableElevation
-                    className="bear-justify-start"
-                    style={{ borderWidth: ZERO }}
-                    onClick={() => navigate(item.to)}
-                  >
-                    {t(item.labelKey)}
-                  </Button>
-                ))}
-              </Flex>
-            </Flex>
-          </Box>
+          <Sidebar
+            items={sidebarItems}
+            activeItemId={activeId}
+            onItemClick={(item) => {
+              const match = NAV_ITEMS.find((nav) => nav.id === item.id);
+              if (match) navigate(match.to);
+            }}
+            header={<Logo onDark />}
+            footer={(
+              <Typography color={COLOR_MUTED_2}>{t('officialFooter')}</Typography>
+            )}
+            width={SIDEBAR_WIDTH}
+            fullHeight
+            activeVariant="indicator"
+            className="Bear-AppShell__sidebar"
+            style={{ background: COLOR_NAVY_DEEP, color: COLOR_WHITE }}
+          />
         )}
         <Flex direction="column" className="bear-flex-1">
           <Box as="header" bg={COLOR_CARD} px={isDesktop ? 6 : 3} py={isDesktop ? 4 : 3} shadow="sm">
             {isDesktop ? (
-              <Flex align="center" justify="between" gap={FLEX_GAP_MD}>
+              <Flex align="center" gap={FLEX_GAP_MD}>
                 <AppShellSearch query={query} onQueryChange={setQuery} />
-                <Flex align="center" gap={FLEX_GAP_MD}>
-                  <LocaleSelect />
-                  <Button variant="ghost" iconOnly aria-label={t('notifications')}>
-                    <BearIcons.Communication.BellIcon />
-                  </Button>
-                  {user?.name && <Typography>{user.name}</Typography>}
+                {current && (
+                  <Select
+                    aria-label={t('selectVehicle')}
+                    value={current.id}
+                    onChange={select}
+                    renderValue={() => (
+                      <Flex align="center" gap={FLEX_GAP_SM}>
+                        <PlateBadge plate={current.formattedRegistrationNumber} />
+                        <Typography>{vehicleOptionLabel(current)}</Typography>
+                      </Flex>
+                    )}
+                    options={vehicles.map((vehicle) => ({
+                      value: vehicle.id,
+                      label: vehicleOptionLabel(vehicle),
+                    }))}
+                  />
+                )}
+                <Box className="bear-flex-1" />
+                <LocaleSelect showLabel={BOOLEAN_FALSE} />
+                <Button variant="ghost" iconOnly aria-label={t('notifications')} onClick={() => navigate(ROUTE_SETTINGS)}>
+                  <BearIcons.Communication.BellIcon />
+                </Button>
+                <ClerkSignedInButton />
+                <Flex align="center" gap={FLEX_GAP_SM}>
+                  {user?.name && <Typography weight="bold">{user.name}</Typography>}
                   <Button variant="ghost" iconOnly aria-label={t('account')} onClick={() => navigate(ROUTE_SETTINGS)}>
-                    <UserIcon />
+                    <Avatar initials={initials || undefined} size="sm" alt={t('account')} />
                   </Button>
                 </Flex>
               </Flex>
@@ -106,11 +141,11 @@ export function AppShell() {
                     <Button variant="ghost" iconOnly aria-label={t('menu')} onClick={() => setMenuOpen(BOOLEAN_TRUE)}>
                       <MenuIcon />
                     </Button>
-                    <Button variant="ghost" iconOnly aria-label={t('notifications')}>
+                    <Button variant="ghost" iconOnly aria-label={t('notifications')} onClick={() => navigate(ROUTE_SETTINGS)}>
                       <BearIcons.Communication.BellIcon />
                     </Button>
                     <Button variant="ghost" iconOnly aria-label={t('account')} onClick={() => navigate(ROUTE_SETTINGS)}>
-                      <UserIcon />
+                      <Avatar initials={initials || undefined} size="sm" alt={t('account')} />
                     </Button>
                   </Flex>
                 </Flex>
@@ -119,29 +154,36 @@ export function AppShell() {
             )}
           </Box>
           <Box as="main" p={isDesktop ? 6 : 3} className="bear-flex-1">
-            <Flex
-              direction={isDesktop ? 'row' : 'column'}
-              justify="between"
-              align={isDesktop ? 'center' : 'stretch'}
-              gap={FLEX_GAP_MD}
-              className="bear-mb-4"
-            >
-              {current && (
+            {!isDesktop && current && (
+              <Flex className="bear-mb-4" gap={FLEX_GAP_MD} wrap="wrap">
                 <Select
                   aria-label={t('selectVehicle')}
                   value={current.id}
                   onChange={select}
-                  fullWidth={!isDesktop}
+                  fullWidth
+                  renderValue={() => (
+                    <Flex align="center" gap={FLEX_GAP_SM}>
+                      <PlateBadge plate={current.formattedRegistrationNumber} />
+                      <Typography>{vehicleOptionLabel(current)}</Typography>
+                    </Flex>
+                  )}
                   options={vehicles.map((vehicle) => ({
                     value: vehicle.id,
                     label: vehicleOptionLabel(vehicle),
                   }))}
                 />
-              )}
-              <Button variant="primary" fullWidth={!isDesktop} onClick={() => navigate(ROUTE_ONBOARDING)}>
-                {t('addVehicle')}
-              </Button>
-            </Flex>
+                <Button variant="primary" fullWidth onClick={() => navigate(ROUTE_ONBOARDING)}>
+                  {t('addVehicle')}
+                </Button>
+              </Flex>
+            )}
+            {isDesktop && (
+              <Flex justify="end" className="bear-mb-4">
+                <Button variant="primary" onClick={() => navigate(ROUTE_ONBOARDING)}>
+                  {t('addVehicle')}
+                </Button>
+              </Flex>
+            )}
             <Outlet />
           </Box>
           {!isDesktop && (

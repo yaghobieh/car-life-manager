@@ -15,15 +15,19 @@ import {
 } from '@const';
 import { LocaleSelect } from '@components/LocaleSelect';
 import { Logo } from '@components/Logo';
+import { ClerkSignedOutActions } from '../../auth/ClerkAuthControls';
+import { isClerkBrowserReady } from '../../auth/clerk.utils';
 import { useAppState } from '@hooks';
 import { LandingFeatures } from './helpers/LandingFeatures';
 import { LandingHow } from './helpers/LandingHow';
 import { LandingLoading } from './helpers/LandingLoading';
+import { LandingSecondaryCta } from './helpers/LandingSecondaryCta';
 
 export function Landing() {
   const { user, authReady, loading } = useAppState();
   const navigate = useNavigate();
   const t = useTranslate();
+  const clerkReady = isClerkBrowserReady();
 
   if (!authReady || loading) {
     return <LandingLoading label={t('loading')} />;
@@ -33,19 +37,26 @@ export function Landing() {
 
   return (
     <Box bg={COLOR_BG} className="Bear-Landing bear-min-h-screen">
-      <Box className="bear-max-w-3xl bear-mx-auto bear-p-4">
-        <Flex direction="column" gap={FLEX_GAP_LG}>
+      <Box bg={COLOR_NAVY_DEEP} className="bear-px-4 bear-py-4">
+        <Box className="bear-max-w-5xl bear-mx-auto">
           <Flex justify="between" align="center">
-            <Logo />
-            <LocaleSelect />
+            <Logo onDark />
+            <Flex align="center" gap={FLEX_GAP_MD}>
+              <LocaleSelect />
+              <ClerkSignedOutActions />
+            </Flex>
           </Flex>
+        </Box>
+      </Box>
+      <Box className="bear-max-w-5xl bear-mx-auto bear-p-4">
+        <Flex direction="column" gap={FLEX_GAP_LG}>
           <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
             <Flex direction="column" gap={FLEX_GAP_LG}>
               <Typography variant={TYPO_PAGE_TITLE} color={COLOR_NAVY_DEEP}>{t('landingHero')}</Typography>
               <Typography color={COLOR_MUTED}>{t('landingSub')}</Typography>
               <Flex gap={FLEX_GAP_MD} wrap="wrap">
                 <Button variant="primary" onClick={() => navigate(ROUTE_AUTH)}>{t('addCar')}</Button>
-                <Button variant="ghost" onClick={() => navigate(ROUTE_AUTH)}>{t('howItWorksCta')}</Button>
+                <LandingSecondaryCta hidden={clerkReady} label={t('howItWorksCta')} onClick={() => navigate(ROUTE_AUTH)} />
               </Flex>
             </Flex>
           </Card>

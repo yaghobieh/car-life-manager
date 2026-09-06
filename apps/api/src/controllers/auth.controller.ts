@@ -1,17 +1,20 @@
 import type { Request, Response } from "express";
-import { isEmailNotifyReady, isGoogleAuthReady, isSmsNotifyReady } from "../config";
-import { HTTP_CREATED, HTTP_OK } from "../constants/http.const";
-import { getUserId } from "../middlewares";
+import { clerkClient, getAuth } from "@clerk/express";
+import { isClerkReady, isEmailNotifyReady, isGoogleAuthReady, isSmsNotifyReady } from "../config";
+import { HTTP_CREATED, HTTP_OK, HTTP_UNAUTHORIZED, HTTP_UNAVAILABLE } from "../constants/http.const";
+import { getUserId, type AuthedRequest } from "../middlewares";
 import {
   clearSession,
   createSession,
   googleAuthorizeUrl,
   loginUser,
+  loginWithClerk,
   loginWithGoogleCode,
   registerUser,
   updateProfile,
-  userFromSessionToken,
+  userById,
 } from "../modules/auth/service";
+import { HttpError } from "../errors/http-error";
 import {
   GOOGLE_FAILED_CODE,
   GOOGLE_UNAVAILABLE_CODE,
@@ -44,16 +47,37 @@ export async function logoutController(req: Request, res: Response): Promise<voi
 }
 
 export async function meController(req: Request, res: Response): Promise<void> {
-  const token = readCookie(req.headers.cookie ?? "", SESSION_COOKIE);
-  const user = token ? await userFromSessionToken(token) : null;
+  const userId = (req as AuthedRequest).userId;
+  const user = userId ? await userById(userId) : null;
   res.status(HTTP_OK).json({
     user,
     googleEnabled: isGoogleAuthReady(),
+    clerkEnabled: isClerkReady(),
     notificationChannels: {
       email: isEmailNotifyReady(),
       sms: isSmsNotifyReady(),
     },
   });
+}
+
+export async function clerkSyncController(req: Request, res: Response): Promise<void> {
+  if (!isClerkReady()) {
+    throw new HttpError("Clerk is not configured", HTTP_UNAVAILABLE, "clerk_unavailable");
+  }
+  const clerkId = getAuth(req).userId;
+  if (!clerkId) {
+    throw new HttpError("Authentication required", HTTP_UNAUTHORIZED, "auth_required");
+  }
+  const profile = await clerkClient.users.getUser(clerkId);
+  const email = profile.primaryEmailAddress?.emailAddress ?? profile.emailAddresses[0]?.emailAddress ?? null;
+  const user = await loginWithClerk({
+    clerkUserId: profile.id,
+    email,
+    name: [profile.firstName, profile.lastName].filter(Boolean).join(" ") || profile.username || null,
+    imageUrl: profile.imageUrl ?? null,
+  });
+  attachSession(res, await createSession(user.id));
+  res.status(HTTP_OK).json({ user });
 }
 
 export async function updateProfileController(req: Request, res: Response): Promise<void> {

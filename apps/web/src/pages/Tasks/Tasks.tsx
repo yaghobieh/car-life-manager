@@ -14,6 +14,7 @@ import {
   ZERO,
 } from '@const';
 import { EmptyState } from '@components/EmptyState';
+import { PageHeader } from '@components/PageHeader';
 import { TaskDrawer } from '@components/TaskDrawer';
 import { TaskRow } from '@components/TaskRow';
 import { useAppState } from '@hooks';
@@ -41,7 +42,9 @@ export function Tasks() {
   }
 
   return (
-    <Card className="Bear-Tasks" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+    <Flex className="Bear-Tasks" direction="column" gap={FLEX_GAP_LG}>
+      <PageHeader title={t('tasks')} subtitle={t('pageSubTasks')} />
+    <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
         {GROUPS.map((group) => (
           <Flex key={group.id} direction="column" gap={FLEX_GAP_MD}>
@@ -55,5 +58,6 @@ export function Tasks() {
       </Flex>
       <TaskDrawer task={openTask} onClose={() => setOpenTask(null)} />
     </Card>
+    </Flex>
   );
 }

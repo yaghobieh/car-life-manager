@@ -16,6 +16,8 @@ The site is a Vite frontend plus `/api` serverless functions (`vercel.json`).
 | --- | --- |
 | `DATABASE_DIRECT_URL` | Non-pooler URL used for `prisma migrate deploy` during build |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `GOOGLE_REDIRECT_URI` | Gmail button |
+| `VITE_CLERK_PUBLISHABLE_KEY` | Clerk sign-in on the web app |
+| `CLERK_PUBLISHABLE_KEY` / `CLERK_SECRET_KEY` | Clerk on the API. Secret stays server-side |
 | `RESEND_API_KEY` / `NOTIFY_FROM_EMAIL` | Email reminders |
 | `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_FROM_NUMBER` | SMS reminders |
 | `APP_VERSION` | Shown as `1.0.2` |

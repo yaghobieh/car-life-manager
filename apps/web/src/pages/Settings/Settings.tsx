@@ -14,6 +14,7 @@ import {
   ROUTE_AUTH,
   TYPO_SECTION_TITLE,
 } from '@const';
+import { PageHeader } from '@components/PageHeader';
 import { useAppState } from '@hooks';
 import { logger } from '@logger';
 import { SETTINGS_AVATAR_SIZE } from './Settings.const';
@@ -63,7 +64,9 @@ export function Settings() {
   const smsReadyLabel = smsNotifyReady ? t('notifySmsReady') : t('notifySmsMissing');
 
   return (
-    <Card className="Bear-Settings" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+    <Flex className="Bear-Settings" direction="column" gap={FLEX_GAP_LG}>
+      <PageHeader title={t('settings')} subtitle={t('pageSubSettings')} />
+    <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
         <Typography variant={TYPO_SECTION_TITLE}>{t('account')}</Typography>
         <Flex align="center" gap={FLEX_GAP_MD}>
@@ -105,5 +108,6 @@ export function Settings() {
         <Button variant="ghost" onClick={() => void logout()}>{t('logout')}</Button>
       </Flex>
     </Card>
+    </Flex>
   );
 }

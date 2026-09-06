@@ -1,5 +1,8 @@
 import type { ServiceProviderInfo, Task, Vehicle } from '@clm/shared';
 import {
+  EMPTY_STRING,
+  NAV_GROUP_GENERAL,
+  NAV_GROUP_MANAGE,
   NAV_OVERVIEW,
   ROUTE_HOME,
   ROUTE_SERVICES,
@@ -18,6 +21,29 @@ import {
 import { providerDisplayName, taskDisplayTitle } from '@locales';
 import type { NavItem, SearchHit } from './AppShell.types';
 import { MOBILE_PRIMARY_NAV_IDS, SEARCH_MAKE_ALIASES } from './AppShell.const';
+
+export function userInitials(name?: string | null, email?: string | null): string {
+  const source = name?.trim() || email?.trim() || EMPTY_STRING;
+  if (!source) return EMPTY_STRING;
+  const parts = source.split(SPACE).filter(Boolean);
+  if (parts.length > 1) return `${parts[0][0]}.${parts[1][0]}`;
+  return source.slice(ZERO, 2);
+}
+
+export function sidebarGroups(items: NavItem[], t: (key: string) => string) {
+  return [
+    {
+      id: NAV_GROUP_GENERAL,
+      label: t('navGeneral'),
+      items: items.filter((item) => item.group === NAV_GROUP_GENERAL),
+    },
+    {
+      id: NAV_GROUP_MANAGE,
+      label: t('navManage'),
+      items: items.filter((item) => item.group === NAV_GROUP_MANAGE),
+    },
+  ];
+}
 
 export function vehicleOptionLabel(vehicle: Vehicle): string {
   const officialName = [vehicle.make, vehicle.model].filter(Boolean).join(SPACE);

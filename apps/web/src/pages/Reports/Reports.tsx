@@ -5,12 +5,14 @@ import {
   CARD_RADIUS_XL,
   COLOR_MUTED,
   CURRENCY_ILS,
+  EMPTY_ICON_REPORT,
   FLEX_GAP_LG,
   FLEX_GAP_SM,
   TYPO_SECTION_TITLE,
   ZERO,
 } from '@const';
 import { EmptyState } from '@components/EmptyState';
+import { PageHeader } from '@components/PageHeader';
 import { useAppState } from '@hooks';
 
 export function Reports() {
@@ -26,14 +28,19 @@ export function Reports() {
 
   if (empty) {
     return (
-      <Card className="Bear-Reports" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
-        <EmptyState title={t('reports')} body={t('noReports')} />
-      </Card>
+      <Flex className="Bear-Reports" direction="column" gap={FLEX_GAP_LG}>
+        <PageHeader title={t('reports')} subtitle={t('pageSubReports')} />
+        <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+          <EmptyState title={t('reports')} body={t('noReports')} icon={EMPTY_ICON_REPORT} />
+        </Card>
+      </Flex>
     );
   }
 
   return (
-    <Card className="Bear-Reports" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+    <Flex className="Bear-Reports" direction="column" gap={FLEX_GAP_LG}>
+      <PageHeader title={t('reports')} subtitle={t('pageSubReports')} />
+    <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
         {insight?.hasData && (
           <Flex direction="column" gap={FLEX_GAP_SM}>
@@ -66,5 +73,6 @@ export function Reports() {
         </Flex>
       </Flex>
     </Card>
+    </Flex>
   );
 }

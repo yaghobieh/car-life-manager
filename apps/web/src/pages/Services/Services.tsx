@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, Flex, Typography } from '@forgedevstack/bear';
+import { Badge, Card, Flex, Typography } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import { useNavigate } from 'react-router-dom';
 import type { ServiceAnswer } from '@clm/shared';
@@ -18,10 +18,11 @@ import {
   ZERO,
 } from '@const';
 import { EmptyState } from '@components/EmptyState';
+import { PageHeader } from '@components/PageHeader';
 import { useAppState } from '@hooks';
 import { serviceBadgeVariant, serviceStatusKey, translatedService } from '@locales';
 import { ServiceItem } from './components/ServiceItem';
-import { receiptCategory, SERVICE_ANSWERS } from './Services.utils';
+import { connectedServiceCount, receiptCategory, SERVICE_ANSWERS } from './Services.utils';
 
 export function Services() {
   const { dashboard, currentId, refresh } = useAppState();
@@ -52,8 +53,16 @@ export function Services() {
   }
 
   return (
-    <Card className="Bear-Services" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+    <Flex className="Bear-Services" direction="column" gap={FLEX_GAP_LG}>
+      <PageHeader title={t('services')} subtitle={t('pageSubServices')} />
+    <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
+        <Flex justify="between" align="center" wrap="wrap" gap={FLEX_GAP_LG}>
+          <Typography color={COLOR_MUTED}>{t('connectedNone')}</Typography>
+          <Badge variant="neutral" pill>
+            {connectedServiceCount(services)} {t('connections')}
+          </Badge>
+        </Flex>
         <Typography color={COLOR_MUTED}>{t('servicesHubHelp')}</Typography>
         {[...official, ...others].map((service) => {
           const item = translatedService(service, t);
@@ -84,5 +93,6 @@ export function Services() {
         })}
       </Flex>
     </Card>
+    </Flex>
   );
 }

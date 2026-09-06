@@ -3,6 +3,7 @@ export interface NavItem {
   to: string;
   labelKey: string;
   shortLabelKey?: string;
+  group: string;
 }
 
 export interface SearchHit {

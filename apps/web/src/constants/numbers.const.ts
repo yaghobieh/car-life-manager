@@ -1,6 +1,8 @@
 export const ZERO = 0;
 export const ONE = 1;
-export const SIDEBAR_WIDTH = 256;
+export const SIDEBAR_WIDTH = 236;
+export const LOADER_Z = 999;
+export const SELECT_MENU_Z = 80;
 export const SIDEBAR_COLLAPSED_WIDTH = 64;
 export const LOGO_MARK_SIZE = 32;
 export const LOGO_ICON_SIZE = 18;
