@@ -11,7 +11,8 @@
     "test": "vitest run",
     "lint": "tsc --noEmit",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate deploy"
+    "db:migrate": "prisma migrate deploy",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@clm/shared": "1.0.0",
