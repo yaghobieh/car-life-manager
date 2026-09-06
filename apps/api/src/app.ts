@@ -1,3 +1,4 @@
+import express from "express";
 import { createServer } from "@forgedevstack/harbor";
 import type { HarborServer } from "@forgedevstack/harbor";
 import { config } from "./config";
@@ -12,3 +13,8 @@ export function createClmServer(): HarborServer {
   registerServerRoutes(server);
   return server;
 }
+
+export const clmServer = createClmServer();
+const app: express.Express = clmServer.app;
+
+export default app;

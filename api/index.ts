@@ -1,3 +1,1 @@
-import { createClmServer } from "../apps/api/src/app";
-
-export default createClmServer().app;
+export { default } from "../apps/api/src/app";
