@@ -1,18 +1,25 @@
 import type { Request, Response } from "express";
-import { isEmailNotifyReady, isGoogleAuthReady, isSmsNotifyReady } from "../config";
+import { isAuth0Ready, isEmailNotifyReady, isGoogleAuthReady, isSmsNotifyReady } from "../config";
 import { HTTP_CREATED, HTTP_OK } from "../constants/http.const";
-import { getUserId } from "../middlewares";
+import { getUserId, type AuthedRequest } from "../middlewares";
 import {
+  auth0AuthorizeUrl,
   clearSession,
   createSession,
   googleAuthorizeUrl,
   loginUser,
+  loginWithAuth0Code,
   loginWithGoogleCode,
   registerUser,
   updateProfile,
-  userFromSessionToken,
+  userById,
 } from "../modules/auth/service";
 import {
+  AUTH0_FAILED_CODE,
+  AUTH0_MODE_REGISTER,
+  AUTH0_QUERY_MODE,
+  AUTH0_SCREEN_HINT_SIGNUP,
+  AUTH0_UNAVAILABLE_CODE,
   GOOGLE_FAILED_CODE,
   GOOGLE_UNAVAILABLE_CODE,
   OAUTH_STATE_COOKIE,
@@ -44,11 +51,12 @@ export async function logoutController(req: Request, res: Response): Promise<voi
 }
 
 export async function meController(req: Request, res: Response): Promise<void> {
-  const token = readCookie(req.headers.cookie ?? "", SESSION_COOKIE);
-  const user = token ? await userFromSessionToken(token) : null;
+  const userId = (req as AuthedRequest).userId;
+  const user = userId ? await userById(userId) : null;
   res.status(HTTP_OK).json({
     user,
     googleEnabled: isGoogleAuthReady(),
+    auth0Enabled: isAuth0Ready(),
     notificationChannels: {
       email: isEmailNotifyReady(),
       sms: isSmsNotifyReady(),
@@ -91,5 +99,35 @@ export async function googleCallbackController(req: Request, res: Response): Pro
     res.redirect(appHomeUrl());
   } catch {
     res.redirect(authErrorUrl(GOOGLE_FAILED_CODE));
+  }
+}
+
+export async function auth0StartController(req: Request, res: Response): Promise<void> {
+  if (!isAuth0Ready()) {
+    res.redirect(authErrorUrl(AUTH0_UNAVAILABLE_CODE));
+    return;
+  }
+  const state = randomToken();
+  const screenHint =
+    String(req.query[AUTH0_QUERY_MODE] ?? "") === AUTH0_MODE_REGISTER ? AUTH0_SCREEN_HINT_SIGNUP : undefined;
+  res.cookie(OAUTH_STATE_COOKIE, state, sessionCookieOptions());
+  res.redirect(auth0AuthorizeUrl(state, screenHint));
+}
+
+export async function auth0CallbackController(req: Request, res: Response): Promise<void> {
+  const expected = readCookie(req.headers.cookie ?? "", OAUTH_STATE_COOKIE);
+  const state = String(req.query.state ?? "");
+  const code = String(req.query.code ?? "");
+  if (!expected || !state || expected !== state || !code) {
+    res.redirect(authErrorUrl(AUTH0_FAILED_CODE));
+    return;
+  }
+  try {
+    const user = await loginWithAuth0Code(code);
+    attachSession(res, await createSession(user.id));
+    res.clearCookie(OAUTH_STATE_COOKIE, { path: "/" });
+    res.redirect(appHomeUrl());
+  } catch {
+    res.redirect(authErrorUrl(AUTH0_FAILED_CODE));
   }
 }

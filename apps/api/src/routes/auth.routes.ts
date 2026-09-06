@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { asyncRoute } from "../middlewares";
 import {
+  auth0CallbackController,
+  auth0StartController,
   googleCallbackController,
   googleStartController,
   loginController,
@@ -18,4 +20,6 @@ export function registerAuthRoutes(router: Router): void {
   router.patch("/auth/me", asyncRoute(updateProfileController));
   router.get("/auth/google", asyncRoute(googleStartController));
   router.get("/auth/google/callback", asyncRoute(googleCallbackController));
+  router.get("/auth/auth0", asyncRoute(auth0StartController));
+  router.get("/auth/auth0/callback", asyncRoute(auth0CallbackController));
 }

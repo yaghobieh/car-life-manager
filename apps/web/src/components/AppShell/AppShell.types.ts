@@ -3,6 +3,15 @@ export interface NavItem {
   to: string;
   labelKey: string;
   shortLabelKey?: string;
+  group: string;
+  iconSrc: string;
+}
+
+export interface AppShellSidebarProps {
+  groups: Array<{ id: string; label: string; items: NavItem[] }>;
+  activeId: string;
+  onNavigate: (to: string) => void;
+  footer: string;
 }
 
 export interface SearchHit {

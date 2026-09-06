@@ -143,4 +143,10 @@ export const CLM_BEAR_DEFAULT_PROPS = {
     radius: 'xl',
     padding: 'lg',
   },
+  Select: {
+    size: 'md',
+  },
+  Input: {
+    size: 'md',
+  },
 };

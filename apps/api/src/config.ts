@@ -16,6 +16,12 @@ export const config = {
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
   googleRedirectUri:
     process.env.GOOGLE_REDIRECT_URI ?? "http://127.0.0.1:5188/api/auth/google/callback",
+  auth0Domain: process.env.AUTH0_DOMAIN ?? "",
+  auth0ClientId: process.env.AUTH0_CLIENT_ID ?? "",
+  auth0ClientSecret: process.env.AUTH0_CLIENT_SECRET ?? "",
+  auth0Audience: process.env.AUTH0_AUDIENCE ?? "",
+  auth0RedirectUri:
+    process.env.AUTH0_CALLBACK_URL ?? "http://127.0.0.1:5188/api/auth/auth0/callback",
   enableLogs: process.env.ENABLE_LOGS === "1",
   appVersion: process.env.APP_VERSION ?? "1.0.2",
   buildSha: process.env.VERCEL_GIT_COMMIT_SHA ?? process.env.BUILD_SHA ?? "local",
@@ -37,6 +43,10 @@ export function isDevelopment(): boolean {
 
 export function isGoogleAuthReady(): boolean {
   return Boolean(config.googleClientId && config.googleClientSecret);
+}
+
+export function isAuth0Ready(): boolean {
+  return Boolean(config.auth0Domain && config.auth0ClientId && config.auth0ClientSecret);
 }
 
 export function isEmailNotifyReady(): boolean {

@@ -9,15 +9,7 @@ export function Gate() {
   const { user, vehicles, loading, authReady, error, refresh } = useAppState();
   const t = useTranslate();
   if (!authReady || loading) {
-    return (
-      <Box bg={COLOR_BG} className="bear-min-h-screen">
-        <Flex className="bear-min-h-screen" align="center" justify="center">
-          <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
-            <Typography>{t('loading')}</Typography>
-          </Card>
-        </Flex>
-      </Box>
-    );
+    return null;
   }
   if (!user) return <Navigate to={ROUTE_LANDING} replace />;
   if (error) {

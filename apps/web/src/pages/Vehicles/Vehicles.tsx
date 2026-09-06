@@ -1,44 +1,52 @@
-import { Button, Card, Flex } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { GridTable } from '@forgedevstack/grid-table';
 import { useNavigate } from 'react-router-dom';
-import { CARD_RADIUS_XL, FLEX_GAP_LG, ROUTE_VEHICLE, ZERO } from '@const';
-import { EmptyState } from '@components/EmptyState';
+import { ONE, ROUTE_ONBOARDING, ROUTE_VEHICLE, SVG_EMPTY_VEHICLE, SVG_NAV_VEHICLES, ZERO } from '@const';
+import { ClmButton, ClmEmpty, ClmList, ClmPageHead, ClmPlate, ClmRow } from '@common';
 import { useAppState } from '@hooks';
-import { asTableRows } from '../table.utils';
-import { vehicleColumns } from './Vehicles.utils';
 
 export function Vehicles() {
   const { vehicles, select } = useAppState();
   const t = useTranslate();
   const navigate = useNavigate();
 
-  if (vehicles.length === ZERO) {
-    return (
-      <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
-        <EmptyState title={t('noVehicles')} body={t('noVehiclesBody')} />
-      </Card>
-    );
+  function openVehicle(id: string) {
+    void select(id);
+    navigate(ROUTE_VEHICLE);
   }
 
   return (
-    <Card className="Bear-Vehicles bear-overflow-x-auto light" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
-      <Flex direction="column" gap={FLEX_GAP_LG}>
-        <Button
-          variant="primary"
-          onClick={() => {
-            if (vehicles[ZERO]) void select(vehicles[ZERO].id);
-            navigate(ROUTE_VEHICLE);
-          }}
-        >
-          {t('viewVehicle')}
-        </Button>
-        <GridTable
-          data={asTableRows(vehicles)}
-          getRowId={(row) => row.id}
-          columns={vehicleColumns(t)}
+    <div className="Bear-Vehicles">
+      <ClmPageHead title={t('vehicles')} subtitle={t('pageSubVehicles')} />
+      {vehicles.length === ZERO ? (
+        <ClmEmpty
+          iconSrc={SVG_EMPTY_VEHICLE}
+          title={t('noVehicles')}
+          body={t('noVehiclesBody')}
+          action={<ClmButton onClick={() => navigate(ROUTE_ONBOARDING)}>{t('addVehicle')}</ClmButton>}
         />
-      </Flex>
-    </Card>
+      ) : (
+        <>
+          <ClmList>
+            {vehicles.map((vehicle) => (
+              <ClmRow
+                key={vehicle.id}
+                iconSrc={SVG_NAV_VEHICLES}
+                title={[vehicle.make, vehicle.model].filter(Boolean).join(' ') || t('unknown')}
+                subtitle={<ClmPlate plate={vehicle.formattedRegistrationNumber} compact />}
+                action={<ClmButton kind="outline" onClick={() => openVehicle(vehicle.id)}>{t('viewVehicle')}</ClmButton>}
+              />
+            ))}
+          </ClmList>
+          {vehicles.length === ONE && (
+            <ClmEmpty
+              iconSrc={SVG_EMPTY_VEHICLE}
+              title={t('oneVehicle')}
+              body={t('oneVehicleBody')}
+              action={<ClmButton onClick={() => navigate(ROUTE_ONBOARDING)}>{t('addVehicle')}</ClmButton>}
+            />
+          )}
+        </>
+      )}
+    </div>
   );
 }

@@ -20,6 +20,7 @@ import { logger } from '@logger';
 import { AUTH_ERROR_QUERY, AUTH_MODE_LOGIN, AUTH_MODE_REGISTER } from './Auth.const';
 import type { AuthMode } from './Auth.types';
 import { afterAuthPath, authErrorKey, nextAuthMode } from './Auth.utils';
+import { AuthGoogleButton } from './helpers/AuthGoogleButton';
 
 export function Auth() {
   const { user, vehicles, loading, authReady, googleEnabled, refresh } = useAppState();
@@ -36,13 +37,7 @@ export function Auth() {
   const isRegister = mode === AUTH_MODE_REGISTER;
 
   if (!authReady || loading) {
-    return (
-      <Box bg={COLOR_BG} className="Bear-Auth bear-min-h-screen">
-        <Flex className="bear-min-h-screen" align="center" justify="center">
-          <Typography>{t('loading')}</Typography>
-        </Flex>
-      </Box>
-    );
+    return null;
   }
 
   if (user) return <Navigate to={afterAuthPath(vehicles.length)} replace />;
@@ -65,65 +60,41 @@ export function Auth() {
 
   return (
     <Box bg={COLOR_BG} className="Bear-Auth bear-min-h-screen">
-      <Flex className="bear-min-h-screen bear-p-3" align="center" justify="center">
+      <Box bg={COLOR_NAVY_DEEP} className="bear-px-4 bear-py-4">
+        <Flex justify="between" align="center">
+          <Logo onDark />
+          <LocaleSelect />
+        </Flex>
+      </Box>
+      <Flex className="bear-min-h-screen bear-p-4" align="center" justify="center">
         <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL} className="bear-w-full bear-max-w-xl">
           <Flex direction="column" gap={FLEX_GAP_LG}>
-            <Box bg={COLOR_NAVY_DEEP} p={4} rounded="lg">
-              <Logo onDark />
-            </Box>
-            <Typography variant={TYPO_PAGE_TITLE}>
+            <Typography variant={TYPO_PAGE_TITLE} color={COLOR_NAVY_DEEP}>
               {isRegister ? t('registerTitle') : t('loginTitle')}
             </Typography>
             <Typography color={COLOR_MUTED}>{t('authHelp')}</Typography>
-            {isRegister && (
-              <Input
-                label={t('name')}
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                fullWidth
-              />
-            )}
-            <Input
-              label={t('email')}
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              fullWidth
+            <AuthGoogleButton
+              enabled={googleEnabled}
+              label={t('connectWithGoogle')}
+              unavailableText={t('authGoogleUnavailable')}
+              onUnavailable={() => setErrorKey('authGoogleUnavailable')}
             />
-            <Input
-              label={t('password')}
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              fullWidth
-            />
+            <Flex direction="column" gap={FLEX_GAP_LG}>
+              {isRegister && (
+                <Input label={t('name')} value={name} onChange={(event) => setName(event.target.value)} fullWidth />
+              )}
+              <Input label={t('email')} type="email" value={email} onChange={(event) => setEmail(event.target.value)} fullWidth />
+              <Input label={t('password')} type="password" value={password} onChange={(event) => setPassword(event.target.value)} fullWidth />
+              <Button variant="primary" fullWidth loading={busy} loadingText={t('saving')} onClick={() => void submit()}>
+                {isRegister ? t('register') : t('login')}
+              </Button>
+            </Flex>
             {shownError !== EMPTY_STRING && (
               <Typography color={COLOR_DANGER} role="alert">{t(shownError)}</Typography>
-            )}
-            <Button
-              variant="primary"
-              fullWidth
-              loading={busy}
-              loadingText={t('saving')}
-              onClick={() => void submit()}
-            >
-              {isRegister ? t('register') : t('login')}
-            </Button>
-            {googleEnabled && (
-              <Button
-                variant="secondary"
-                fullWidth
-                onClick={() => {
-                  window.location.href = api.googleStart;
-                }}
-              >
-                {t('googleSignIn')}
-              </Button>
             )}
             <Button variant="ghost" fullWidth onClick={() => setMode(nextAuthMode(mode))}>
               {isRegister ? t('haveAccount') : t('needAccount')}
             </Button>
-            <LocaleSelect fullWidth />
           </Flex>
         </Card>
       </Flex>

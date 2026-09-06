@@ -1,4 +1,3 @@
-import { Button } from '@forgedevstack/bear';
 import { WINDOW_BLANK, WINDOW_NOREFERRER } from '@const';
 import { resolveBearId, useBearId } from '@hooks';
 import type { OfficialLinkProps } from './OfficialLink.types';
@@ -9,15 +8,15 @@ export function OfficialLink(props: OfficialLinkProps) {
   const domId = resolveBearId(id, generatedId);
 
   return (
-    <Button
+    <a
       id={domId}
       data-testid={testId}
       className="Bear-OfficialLink"
-      variant="ghost"
-      compact
-      onClick={() => window.open(href, WINDOW_BLANK, WINDOW_NOREFERRER)}
+      href={href}
+      target={WINDOW_BLANK}
+      rel={WINDOW_NOREFERRER}
     >
       {label}
-    </Button>
+    </a>
   );
 }

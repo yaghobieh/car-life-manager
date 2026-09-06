@@ -27,6 +27,20 @@ export interface GoogleUserInfo {
   email_verified?: boolean;
 }
 
+export interface Auth0TokenResponse {
+  access_token?: string;
+  id_token?: string;
+}
+
+export interface Auth0UserInfo {
+  sub?: string;
+  email?: string;
+  name?: string;
+  nickname?: string;
+  picture?: string;
+  email_verified?: boolean;
+}
+
 export interface SessionCookieOptions {
   httpOnly: boolean;
   sameSite: "lax";

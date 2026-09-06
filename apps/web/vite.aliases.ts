@@ -10,6 +10,7 @@ export const aliases = {
   '@theme': path.resolve(root, 'src/theme'),
   '@pages': path.resolve(root, 'src/pages'),
   '@components': path.resolve(root, 'src/components'),
+  '@common': path.resolve(root, 'src/common'),
   '@store': path.resolve(root, 'src/store'),
   '@locales': path.resolve(root, 'src/locales'),
   '@api': path.resolve(root, 'src/api'),

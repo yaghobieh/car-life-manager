@@ -17,12 +17,12 @@
     "@forgedevstack/grid-table": "^1.1.5",
     "@forgedevstack/lingo": "^1.0.2",
     "@forgedevstack/synapse": "^1.2.1",
+    "@vitejs/plugin-react": "^4.3.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.2.0",
-    "vue": "^3.5.13",
-    "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^6.0.7"
+    "vite": "^6.0.7",
+    "vue": "^3.5.13"
   },
   "devDependencies": {
     "@testing-library/react": "^16.2.0",

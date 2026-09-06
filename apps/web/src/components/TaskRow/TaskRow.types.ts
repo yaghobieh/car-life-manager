@@ -3,6 +3,7 @@ import type { Task } from '@clm/shared';
 export interface TaskRowProps {
   task: Task;
   onOpen?: (task: Task) => void;
+  divided?: boolean;
   id?: string;
   testId?: string;
 }
