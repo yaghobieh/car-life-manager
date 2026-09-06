@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { isGoogleAuthReady } from "../config";
+import { isEmailNotifyReady, isGoogleAuthReady, isSmsNotifyReady } from "../config";
 import { HTTP_CREATED, HTTP_OK } from "../constants/http.const";
 import { getUserId } from "../middlewares";
 import {
@@ -46,13 +46,22 @@ export async function logoutController(req: Request, res: Response): Promise<voi
 export async function meController(req: Request, res: Response): Promise<void> {
   const token = readCookie(req.headers.cookie ?? "", SESSION_COOKIE);
   const user = token ? await userFromSessionToken(token) : null;
-  res.status(HTTP_OK).json({ user, googleEnabled: isGoogleAuthReady() });
+  res.status(HTTP_OK).json({
+    user,
+    googleEnabled: isGoogleAuthReady(),
+    notificationChannels: {
+      email: isEmailNotifyReady(),
+      sms: isSmsNotifyReady(),
+    },
+  });
 }
 
 export async function updateProfileController(req: Request, res: Response): Promise<void> {
   const user = await updateProfile(getUserId(req), {
     name: req.body?.name,
     phone: req.body?.phone,
+    notifyEmail: typeof req.body?.notifyEmail === "boolean" ? req.body.notifyEmail : undefined,
+    notifySms: typeof req.body?.notifySms === "boolean" ? req.body.notifySms : undefined,
   });
   res.status(HTTP_OK).json({ user });
 }

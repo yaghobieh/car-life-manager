@@ -9,4 +9,8 @@ export { Services } from './Services';
 export { Expenses } from './Expenses';
 export { Documents } from './Documents';
 export { Reminders } from './Reminders';
+export { Landing } from './Landing';
+export { Maintenance } from './Maintenance';
+export { Reports } from './Reports';
+export { VehicleFile } from './VehicleFile';
 export { Simple } from './Simple';

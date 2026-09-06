@@ -50,6 +50,7 @@ export function Documents() {
     <Card className="Bear-Documents" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
         <Typography color={COLOR_MUTED}>{t('noDocumentsBody')}</Typography>
+        <Typography color={COLOR_MUTED}>{t('documentProcessing')}</Typography>
         <Select
           label={t('category')}
           value={type}

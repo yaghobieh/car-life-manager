@@ -1,5 +1,6 @@
-import { catalogWithTimestamp, type ProviderContext, type ServiceProviderInfo } from "@clm/shared";
+import { catalogWithTimestamp, type ConnectionStatus, type ProviderContext, type ServiceProviderInfo, type ServiceSource } from "@clm/shared";
 import {
+  CONNECTION_CONNECTED,
   CONNECTION_OFFICIAL,
   PROVIDER_CELLO,
   PROVIDER_EASYPARK,
@@ -38,13 +39,34 @@ export async function listReadyServices(
       const adapter = getProviderAdapter(provider.providerId);
       const live = await adapter.getConnectionStatus(context);
       const saved = storedById.get(provider.providerId);
+      const official = provider.status === CONNECTION_OFFICIAL;
+      const hubConnected = live === CONNECTION_CONNECTED;
+      const status = official
+        ? CONNECTION_OFFICIAL
+        : hubConnected
+          ? live
+          : userStoredStatus(saved?.status, live);
       return {
         ...provider,
-        status: provider.status === CONNECTION_OFFICIAL ? CONNECTION_OFFICIAL : live,
+        status,
         note: saved?.note ?? provider.note,
         lastCheckedAt: new Date().toISOString(),
+        source: official ? "official" : hubConnected ? "provider" : serviceSource(saved?.source, provider.source),
+        confirmedByUserAt: saved?.confirmedByUserAt ?? null,
       };
     }),
   );
+}
+
+function userStoredStatus(status: string | undefined, fallback: ConnectionStatus): ConnectionStatus {
+  if (status === "user_confirmed" || status === "not_connected" || status === "unknown") return status;
+  return fallback;
+}
+
+function serviceSource(status: string | undefined, fallback: ServiceSource): ServiceSource {
+  if (status === "official" || status === "user" || status === "provider" || status === "unknown" || status === "calculated" || status === "document") {
+    return status;
+  }
+  return fallback;
 }
 

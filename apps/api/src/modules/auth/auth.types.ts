@@ -4,11 +4,15 @@ export interface AuthUserPayload {
   name: string | null;
   phone: string | null;
   imageUrl: string | null;
+  notifyEmail: boolean;
+  notifySms: boolean;
 }
 
 export interface ProfileUpdateInput {
   name?: string;
   phone?: string;
+  notifyEmail?: boolean;
+  notifySms?: boolean;
 }
 
 export interface GoogleTokenResponse {

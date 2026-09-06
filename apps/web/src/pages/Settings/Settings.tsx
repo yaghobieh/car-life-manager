@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { Box, Button, Card, Flex, Input, Typography } from '@forgedevstack/bear';
+import { Button, Card, Flex, Input, Typography } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import { api } from '@api';
 import {
+  BOOLEAN_FALSE,
+  BOOLEAN_TRUE,
   CARD_RADIUS_XL,
-  COLOR_DANGER,
-  COLOR_GREEN,
   COLOR_MUTED,
   EMPTY_STRING,
   FLEX_GAP_LG,
@@ -17,15 +17,20 @@ import {
 import { useAppState } from '@hooks';
 import { logger } from '@logger';
 import { SETTINGS_AVATAR_SIZE } from './Settings.const';
+import { SettingsPhoto } from './helpers/SettingsPhoto';
+import { SettingsStatus } from './helpers/SettingsStatus';
+import { SettingsToggle } from './helpers/SettingsToggle';
 
 export function Settings() {
-  const { user, refresh } = useAppState();
+  const { user, refresh, emailNotifyReady, smsNotifyReady } = useAppState();
   const navigate = useNavigate();
   const t = useTranslate();
   const [name, setName] = useState(user?.name ?? EMPTY_STRING);
   const [phone, setPhone] = useState(user?.phone ?? EMPTY_STRING);
-  const [busy, setBusy] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [notifyEmail, setNotifyEmail] = useState(user?.notifyEmail ?? BOOLEAN_TRUE);
+  const [notifySms, setNotifySms] = useState(user?.notifySms ?? BOOLEAN_FALSE);
+  const [busy, setBusy] = useState(BOOLEAN_FALSE);
+  const [saved, setSaved] = useState(BOOLEAN_FALSE);
   const [errorKey, setErrorKey] = useState(EMPTY_STRING);
 
   if (!user) return <Navigate to={ROUTE_AUTH} replace />;
@@ -38,62 +43,63 @@ export function Settings() {
   }
 
   async function saveProfile() {
-    setBusy(true);
-    setSaved(false);
+    setBusy(BOOLEAN_TRUE);
+    setSaved(BOOLEAN_FALSE);
     setErrorKey(EMPTY_STRING);
     try {
-      await api.updateProfile(name, phone);
+      await api.updateProfile({ name, phone, notifyEmail, notifySms });
       logger.info('profile updated');
       await refresh();
-      setSaved(true);
+      setSaved(BOOLEAN_TRUE);
     } catch {
       setErrorKey('invalidPhone');
     } finally {
-      setBusy(false);
+      setBusy(BOOLEAN_FALSE);
     }
   }
 
   const displayName = user.name ?? t('unknown');
+  const emailReadyLabel = emailNotifyReady ? t('notifyEmailReady') : t('notifyEmailMissing');
+  const smsReadyLabel = smsNotifyReady ? t('notifySmsReady') : t('notifySmsMissing');
 
   return (
     <Card className="Bear-Settings" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
         <Typography variant={TYPO_SECTION_TITLE}>{t('account')}</Typography>
         <Flex align="center" gap={FLEX_GAP_MD}>
-          {user.imageUrl && (
-            <Box className="Bear-Settings__photo" rounded="full">
-              <img src={user.imageUrl} alt={displayName} width={SETTINGS_AVATAR_SIZE} height={SETTINGS_AVATAR_SIZE} />
-            </Box>
-          )}
+          <SettingsPhoto imageUrl={user.imageUrl} displayName={displayName} size={SETTINGS_AVATAR_SIZE} />
           <Flex direction="column" gap={FLEX_GAP_MD}>
             <Typography weight="bold">{displayName}</Typography>
             <Typography color={COLOR_MUTED}>{user.email ?? t('unknown')}</Typography>
           </Flex>
         </Flex>
         <Typography variant={TYPO_SECTION_TITLE}>{t('editProfile')}</Typography>
-        <Input
-          label={t('name')}
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          fullWidth
+        <Input label={t('name')} value={name} onChange={(event) => setName(event.target.value)} fullWidth />
+        <Input label={t('phone')} type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} fullWidth />
+        <Typography variant={TYPO_SECTION_TITLE}>{t('notifications')}</Typography>
+        <Typography color={COLOR_MUTED}>{t('notifyHelp')}</Typography>
+        <Flex gap={FLEX_GAP_MD} wrap="wrap">
+          <SettingsToggle
+            active={notifyEmail}
+            label={t('notifyEmail')}
+            onClick={() => setNotifyEmail(!notifyEmail)}
+          />
+          <SettingsToggle
+            active={notifySms}
+            label={t('notifySms')}
+            onClick={() => setNotifySms(!notifySms)}
+          />
+        </Flex>
+        <Typography color={COLOR_MUTED}>{emailReadyLabel}</Typography>
+        <Typography color={COLOR_MUTED}>{smsReadyLabel}</Typography>
+        <Typography color={COLOR_MUTED}>{t('calendarHelp')}</Typography>
+        <SettingsStatus
+          errorKey={errorKey}
+          saved={saved}
+          errorText={t(errorKey || 'invalidPhone')}
+          savedText={t('profileSaved')}
         />
-        <Input
-          label={t('phone')}
-          type="tel"
-          value={phone}
-          onChange={(event) => setPhone(event.target.value)}
-          fullWidth
-        />
-        {errorKey !== EMPTY_STRING && (
-          <Typography color={COLOR_DANGER} role="alert">{t(errorKey)}</Typography>
-        )}
-        {saved && <Typography color={COLOR_GREEN}>{t('profileSaved')}</Typography>}
-        <Button
-          variant="primary"
-          loading={busy}
-          loadingText={t('saving')}
-          onClick={() => void saveProfile()}
-        >
+        <Button variant="primary" loading={busy} loadingText={t('saving')} onClick={() => void saveProfile()}>
           {t('save')}
         </Button>
         <Button variant="ghost" onClick={() => void logout()}>{t('logout')}</Button>
