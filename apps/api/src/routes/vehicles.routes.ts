@@ -1,7 +1,6 @@
 import { Router } from "express";
-import { rateLimit } from "@forgedevstack/harbor";
 import { RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS } from "../constants/http.const";
-import { asyncRoute } from "../middlewares";
+import { asyncRoute, rateLimit } from "../middlewares";
 import {
   addExpenseController,
   addVehicleController,
@@ -18,7 +17,7 @@ import {
 export function registerVehicleRoutes(router: Router): void {
   router.get(
     "/vehicles/lookup/:registrationNumber",
-    rateLimit({ windowMs: RATE_LIMIT_WINDOW_MS, max: RATE_LIMIT_MAX }),
+    rateLimit(RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX),
     asyncRoute(lookupVehicleController),
   );
   router.get("/vehicles", asyncRoute(listVehiclesController));

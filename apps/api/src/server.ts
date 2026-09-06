@@ -1,18 +1,15 @@
 import { config } from "./config";
-import { prisma } from "./db";
 import { logger } from "./logger";
-import { clmServer } from "./app";
+import app from "./app";
 
-async function bootstrap() {
-  await clmServer.start();
+const server = app.listen(config.port, config.host, () => {
   logger.info(`Car Life Manager API http://${config.host}:${config.port}`, {
     version: config.appVersion,
     build: config.buildSha,
   });
-}
+});
 
-bootstrap().catch(async (error) => {
+server.on("error", (error) => {
   logger.error(error);
-  await prisma.$disconnect();
   process.exit(1);
 });

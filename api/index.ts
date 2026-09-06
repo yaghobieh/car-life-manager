@@ -1,1 +1,3 @@
-export { default } from "../apps/api/src/app";
+import app from "../apps/api/src/app";
+
+export default app;

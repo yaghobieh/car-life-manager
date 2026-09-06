@@ -3,8 +3,11 @@
   "installCommand": "bash ../../scripts/vercel-install.sh",
   "buildCommand": "npx prisma generate && npm run build",
   "functions": {
+    "api/index.ts": {
+      "includeFiles": "{prisma/**,../../node_modules/.prisma/client/**,../../packages/shared/**}"
+    },
     "src/app.ts": {
-      "includeFiles": "prisma/**"
+      "includeFiles": "{prisma/**,../../node_modules/.prisma/client/**,../../packages/shared/**}"
     }
   },
   "rewrites": [
