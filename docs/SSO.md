@@ -30,4 +30,4 @@ Users must sign in. Email + password register/login is live. Google/Gmail is liv
 
 Step-by-step Gmail + Vercel redirect setup: `docs/GMAIL.md`.
 
-There is no Auth0 connection. Identity is Clerk when `VITE_CLERK_PUBLISHABLE_KEY` (web) and `CLERK_SECRET_KEY` + `CLERK_PUBLISHABLE_KEY` (API) are set. Email/password stays as a fallback until those keys exist. The Clerk app id from setup must exist in your Clerk workspace — `app_3IxppTukz2MI8NwWAdR0jQfdOj6` returned 404 for this account. Create or link an app in the Clerk Dashboard, then add the keys. Never put `CLERK_SECRET_KEY` in the web app.
+Clerk is removed. Sign-in is email/password plus Google when `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set. Auth0 is not used on the login page.

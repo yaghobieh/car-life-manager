@@ -15,8 +15,6 @@ import {
 } from '@const';
 import { LocaleSelect } from '@components/LocaleSelect';
 import { Logo } from '@components/Logo';
-import { ClerkSignedOutActions } from '../../auth/ClerkAuthControls';
-import { isClerkBrowserReady } from '../../auth/clerk.utils';
 import { useAppState } from '@hooks';
 import { LandingFeatures } from './helpers/LandingFeatures';
 import { LandingHow } from './helpers/LandingHow';
@@ -27,7 +25,6 @@ export function Landing() {
   const { user, authReady, loading } = useAppState();
   const navigate = useNavigate();
   const t = useTranslate();
-  const clerkReady = isClerkBrowserReady();
 
   if (!authReady || loading) {
     return <LandingLoading label={t('loading')} />;
@@ -43,7 +40,6 @@ export function Landing() {
             <Logo onDark />
             <Flex align="center" gap={FLEX_GAP_MD}>
               <LocaleSelect />
-              <ClerkSignedOutActions />
             </Flex>
           </Flex>
         </Box>
@@ -56,7 +52,7 @@ export function Landing() {
               <Typography color={COLOR_MUTED}>{t('landingSub')}</Typography>
               <Flex gap={FLEX_GAP_MD} wrap="wrap">
                 <Button variant="primary" onClick={() => navigate(ROUTE_AUTH)}>{t('addCar')}</Button>
-                <LandingSecondaryCta hidden={clerkReady} label={t('howItWorksCta')} onClick={() => navigate(ROUTE_AUTH)} />
+                <LandingSecondaryCta hidden={false} label={t('howItWorksCta')} onClick={() => navigate(ROUTE_AUTH)} />
               </Flex>
             </Flex>
           </Card>

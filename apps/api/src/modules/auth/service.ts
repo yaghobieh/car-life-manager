@@ -1,4 +1,4 @@
-import { config, isGoogleAuthReady } from "../../config";
+import { config, isAuth0Ready, isGoogleAuthReady } from "../../config";
 import {
   HTTP_BAD_REQUEST,
   HTTP_CONFLICT,
@@ -9,7 +9,15 @@ import { prisma } from "../../db";
 import { HttpError } from "../../errors/http-error";
 import { logger } from "../../logger";
 import {
-  PROVIDER_CLERK,
+  AUTH0_AUDIENCE_PARAM,
+  AUTH0_AUTHORIZE_PATH,
+  AUTH0_FAILED_CODE,
+  AUTH0_SCOPE,
+  AUTH0_SCREEN_HINT,
+  AUTH0_TOKEN_PATH,
+  AUTH0_UNAVAILABLE_CODE,
+  AUTH0_USERINFO_PATH,
+  JWT_PARTS_MIN,
   GOOGLE_AUTH_URL,
   GOOGLE_SCOPE,
   GOOGLE_TOKEN_URL,
@@ -18,11 +26,19 @@ import {
   NAME_MAX_LENGTH,
   OAUTH_RESPONSE_TYPE,
   PASSWORD_MIN_LENGTH,
+  PROVIDER_AUTH0,
   PROVIDER_EMAIL,
   PROVIDER_GOOGLE,
   SESSION_MAX_AGE_MS,
 } from "./auth.const";
-import type { AuthUserPayload, GoogleTokenResponse, GoogleUserInfo, ProfileUpdateInput } from "./auth.types";
+import type {
+  Auth0TokenResponse,
+  Auth0UserInfo,
+  AuthUserPayload,
+  GoogleTokenResponse,
+  GoogleUserInfo,
+  ProfileUpdateInput,
+} from "./auth.types";
 import {
   hashPassword,
   isValidEmail,
@@ -84,45 +100,6 @@ export async function createSession(userId: string): Promise<string> {
 export async function userById(userId: string): Promise<AuthUserPayload | null> {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   return user ? serializeAuthUser(user) : null;
-}
-
-export async function userFromClerkId(clerkUserId: string): Promise<AuthUserPayload | null> {
-  const identity = await prisma.authIdentity.findUnique({
-    where: { provider_providerAccountId: { provider: PROVIDER_CLERK, providerAccountId: clerkUserId } },
-    include: { user: true },
-  });
-  return identity ? serializeAuthUser(identity.user) : null;
-}
-
-export async function loginWithClerk(input: {
-  clerkUserId: string;
-  email: string | null;
-  name: string | null;
-  imageUrl: string | null;
-}): Promise<AuthUserPayload> {
-  const existing = await userFromClerkId(input.clerkUserId);
-  if (existing) return existing;
-  const email = input.email ? normalizeEmail(input.email) : null;
-  const byEmail = email ? await prisma.user.findUnique({ where: { email } }) : null;
-  const user = byEmail
-    ? await prisma.user.update({
-        where: { id: byEmail.id },
-        data: {
-          name: byEmail.name ?? input.name,
-          imageUrl: byEmail.imageUrl ?? input.imageUrl,
-          identities: { create: { provider: PROVIDER_CLERK, providerAccountId: input.clerkUserId } },
-        },
-      })
-    : await prisma.user.create({
-        data: {
-          email,
-          name: input.name,
-          imageUrl: input.imageUrl,
-          identities: { create: { provider: PROVIDER_CLERK, providerAccountId: input.clerkUserId } },
-        },
-      });
-  logger.info("clerk login user", user.id);
-  return serializeAuthUser(user);
 }
 
 export async function userFromSessionToken(token: string): Promise<AuthUserPayload | null> {
@@ -208,6 +185,102 @@ export async function loginWithGoogleCode(code: string): Promise<AuthUserPayload
         },
       });
   logger.info("google login user", user.id);
+  return serializeAuthUser(user);
+}
+
+function auth0Origin(): string {
+  return `https://${config.auth0Domain}`;
+}
+
+function readAuth0IdToken(idToken: string): Auth0UserInfo | null {
+  const parts = idToken.split(".");
+  if (parts.length < JWT_PARTS_MIN) return null;
+  try {
+    return JSON.parse(Buffer.from(parts[1], "base64url").toString("utf8")) as Auth0UserInfo;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchAuth0UserInfo(accessToken: string): Promise<Auth0UserInfo | null> {
+  const profileResponse = await fetch(`${auth0Origin()}${AUTH0_USERINFO_PATH}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!profileResponse.ok) return null;
+  return (await profileResponse.json()) as Auth0UserInfo;
+}
+
+export function auth0AuthorizeUrl(state: string, screenHint?: string): string {
+  if (!isAuth0Ready()) {
+    throw new HttpError("Auth0 sign-in is not configured", HTTP_UNAVAILABLE, AUTH0_UNAVAILABLE_CODE);
+  }
+  const params = new URLSearchParams({
+    client_id: config.auth0ClientId,
+    redirect_uri: config.auth0RedirectUri,
+    response_type: OAUTH_RESPONSE_TYPE,
+    scope: AUTH0_SCOPE,
+    state,
+  });
+  if (config.auth0Audience) params.set(AUTH0_AUDIENCE_PARAM, config.auth0Audience);
+  if (screenHint) params.set(AUTH0_SCREEN_HINT, screenHint);
+  return `${auth0Origin()}${AUTH0_AUTHORIZE_PATH}?${params.toString()}`;
+}
+
+export async function loginWithAuth0Code(code: string): Promise<AuthUserPayload> {
+  if (!isAuth0Ready()) {
+    throw new HttpError("Auth0 sign-in is not configured", HTTP_UNAVAILABLE, AUTH0_UNAVAILABLE_CODE);
+  }
+  const tokenResponse = await fetch(`${auth0Origin()}${AUTH0_TOKEN_PATH}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      code,
+      client_id: config.auth0ClientId,
+      client_secret: config.auth0ClientSecret,
+      redirect_uri: config.auth0RedirectUri,
+      grant_type: GRANT_AUTHORIZATION_CODE,
+    }),
+  });
+  const tokens = (await tokenResponse.json()) as Auth0TokenResponse;
+  if (!tokenResponse.ok || !tokens.access_token) {
+    logger.warn("auth0 token exchange failed", tokenResponse.status);
+    throw new HttpError("Auth0 sign-in failed", HTTP_UNAUTHORIZED, AUTH0_FAILED_CODE);
+  }
+  const profile = tokens.id_token
+    ? readAuth0IdToken(tokens.id_token)
+    : await fetchAuth0UserInfo(tokens.access_token);
+  if (!profile?.sub || !profile.email) {
+    throw new HttpError("Auth0 profile is incomplete", HTTP_UNAUTHORIZED, AUTH0_FAILED_CODE);
+  }
+  const email = normalizeEmail(profile.email);
+  const identity = await prisma.authIdentity.findUnique({
+    where: { provider_providerAccountId: { provider: PROVIDER_AUTH0, providerAccountId: profile.sub } },
+    include: { user: true },
+  });
+  if (identity) return serializeAuthUser(identity.user);
+
+  const existing = await prisma.user.findUnique({ where: { email } });
+  const displayName = profile.name ?? profile.nickname ?? null;
+  const user = existing
+    ? await prisma.user.update({
+        where: { id: existing.id },
+        data: {
+          name: existing.name ?? displayName,
+          imageUrl: existing.imageUrl ?? profile.picture ?? null,
+          emailVerifiedAt: profile.email_verified ? new Date() : existing.emailVerifiedAt,
+          identities: { create: { provider: PROVIDER_AUTH0, providerAccountId: profile.sub } },
+        },
+      })
+    : await prisma.user.create({
+        data: {
+          email,
+          name: displayName,
+          imageUrl: profile.picture ?? null,
+          emailVerifiedAt: profile.email_verified ? new Date() : null,
+          identities: { create: { provider: PROVIDER_AUTH0, providerAccountId: profile.sub } },
+        },
+      });
+  logger.info("auth0 login user", user.id);
   return serializeAuthUser(user);
 }
 

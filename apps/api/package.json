@@ -15,7 +15,6 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@clerk/express": "^2.1.66",
     "@clm/shared": "1.0.2",
     "@forgedevstack/harbor": "^1.6.4",
     "@prisma/client": "^6.7.0",

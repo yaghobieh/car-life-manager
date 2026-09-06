@@ -1,5 +1,5 @@
 import { Box, Typography } from '@forgedevstack/bear';
-import { COLOR_INK, COLOR_PLATE, FONT_FAMILY_MONO } from '@const';
+import { COLOR_PLATE, COLOR_PLATE_INK, FONT_FAMILY_MONO } from '@const';
 import { resolveBearId, useBearId } from '@hooks';
 import type { PlateBadgeProps } from './PlateBadge.types';
 
@@ -18,7 +18,7 @@ export function PlateBadge(props: PlateBadgeProps) {
       py={1}
       rounded="sm"
     >
-      <Typography color={COLOR_INK} weight="bold" style={{ fontFamily: FONT_FAMILY_MONO, letterSpacing: '0.08em' }}>
+      <Typography color={COLOR_PLATE_INK} weight="bold" style={{ fontFamily: FONT_FAMILY_MONO, letterSpacing: '0.08em' }}>
         {plate}
       </Typography>
     </Box>

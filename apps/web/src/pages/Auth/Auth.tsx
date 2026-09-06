@@ -15,13 +15,12 @@ import {
 } from '@const';
 import { LocaleSelect } from '@components/LocaleSelect';
 import { Logo } from '@components/Logo';
-import { isClerkBrowserReady } from '../../auth/clerk.utils';
 import { useAppState } from '@hooks';
 import { logger } from '@logger';
 import { AUTH_ERROR_QUERY, AUTH_MODE_LOGIN, AUTH_MODE_REGISTER } from './Auth.const';
 import type { AuthMode } from './Auth.types';
 import { afterAuthPath, authErrorKey, nextAuthMode } from './Auth.utils';
-import { ClerkAuthPanel } from './helpers/ClerkAuthPanel';
+import { AuthGoogleButton } from './helpers/AuthGoogleButton';
 
 export function Auth() {
   const { user, vehicles, loading, authReady, googleEnabled, refresh } = useAppState();
@@ -36,7 +35,6 @@ export function Auth() {
   const queryError = params.get(AUTH_ERROR_QUERY);
   const shownError = errorKey !== EMPTY_STRING ? errorKey : queryError ? authErrorKey(queryError) : EMPTY_STRING;
   const isRegister = mode === AUTH_MODE_REGISTER;
-  const clerkReady = isClerkBrowserReady();
 
   if (!authReady || loading) {
     return null;
@@ -75,25 +73,24 @@ export function Auth() {
               {isRegister ? t('registerTitle') : t('loginTitle')}
             </Typography>
             <Typography color={COLOR_MUTED}>{t('authHelp')}</Typography>
-            {clerkReady ? <ClerkAuthPanel mode={mode} /> : (
-              <Flex direction="column" gap={FLEX_GAP_LG}>
-                {isRegister && (
-                  <Input label={t('name')} value={name} onChange={(event) => setName(event.target.value)} fullWidth />
-                )}
-                <Input label={t('email')} type="email" value={email} onChange={(event) => setEmail(event.target.value)} fullWidth />
-                <Input label={t('password')} type="password" value={password} onChange={(event) => setPassword(event.target.value)} fullWidth />
-                {shownError !== EMPTY_STRING && (
-                  <Typography color={COLOR_DANGER} role="alert">{t(shownError)}</Typography>
-                )}
-                <Button variant="primary" fullWidth loading={busy} loadingText={t('saving')} onClick={() => void submit()}>
-                  {isRegister ? t('register') : t('login')}
-                </Button>
-                {googleEnabled && (
-                  <Button variant="secondary" fullWidth onClick={() => { window.location.href = api.googleStart; }}>
-                    {t('googleSignIn')}
-                  </Button>
-                )}
-              </Flex>
+            <AuthGoogleButton
+              enabled={googleEnabled}
+              label={t('connectWithGoogle')}
+              unavailableText={t('authGoogleUnavailable')}
+              onUnavailable={() => setErrorKey('authGoogleUnavailable')}
+            />
+            <Flex direction="column" gap={FLEX_GAP_LG}>
+              {isRegister && (
+                <Input label={t('name')} value={name} onChange={(event) => setName(event.target.value)} fullWidth />
+              )}
+              <Input label={t('email')} type="email" value={email} onChange={(event) => setEmail(event.target.value)} fullWidth />
+              <Input label={t('password')} type="password" value={password} onChange={(event) => setPassword(event.target.value)} fullWidth />
+              <Button variant="primary" fullWidth loading={busy} loadingText={t('saving')} onClick={() => void submit()}>
+                {isRegister ? t('register') : t('login')}
+              </Button>
+            </Flex>
+            {shownError !== EMPTY_STRING && (
+              <Typography color={COLOR_DANGER} role="alert">{t(shownError)}</Typography>
             )}
             <Button variant="ghost" fullWidth onClick={() => setMode(nextAuthMode(mode))}>
               {isRegister ? t('haveAccount') : t('needAccount')}

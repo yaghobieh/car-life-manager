@@ -1,98 +1,98 @@
-import { useState } from 'react';
-import { Badge, Card, Flex, Typography } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { useNavigate } from 'react-router-dom';
-import type { ServiceAnswer } from '@clm/shared';
-import { api } from '@api';
 import {
-  CARD_RADIUS_XL,
-  COLOR_MUTED,
-  EMPTY_STRING,
-  FLEX_GAP_LG,
   PROVIDER_STATUS_OFFICIAL,
-  PROVIDER_STATUS_USER_CONFIRMED,
-  QUERY_CATEGORY,
-  ROUTE_EXPENSES,
+  SVG_STATUS_ALERT,
   WINDOW_BLANK,
   WINDOW_NOREFERRER,
   ZERO,
 } from '@const';
-import { EmptyState } from '@components/EmptyState';
-import { PageHeader } from '@components/PageHeader';
+import { ClmButton, ClmEmpty, ClmList, ClmPageHead, ClmRow, ClmSectionTitle, ClmStatusPill } from '@common';
+import { OfficialLink } from '@components/OfficialLink';
 import { useAppState } from '@hooks';
-import { serviceBadgeVariant, serviceStatusKey, translatedService } from '@locales';
-import { ServiceItem } from './components/ServiceItem';
-import { connectedServiceCount, receiptCategory, SERVICE_ANSWERS } from './Services.utils';
+import { translatedService } from '@locales';
+import { serviceTone, serviceToneLabelKey } from './Services.utils';
 
 export function Services() {
-  const { dashboard, currentId, refresh } = useAppState();
+  const { dashboard } = useAppState();
   const t = useTranslate();
-  const navigate = useNavigate();
-  const [busyId, setBusyId] = useState(EMPTY_STRING);
   const services = dashboard?.services ?? [];
   const official = services.filter((service) => service.status === PROVIDER_STATUS_OFFICIAL);
-  const others = services.filter((service) => service.status !== PROVIDER_STATUS_OFFICIAL);
+  const roads = services.filter((service) => service.category === 'toll' || service.category === 'parking');
+  const insurance = services.filter((service) => service.category === 'insurance');
 
-  async function confirm(providerId: string, answer: ServiceAnswer) {
-    if (!currentId) return;
-    setBusyId(providerId);
-    try {
-      await api.confirmService(currentId, providerId, answer);
-      await refresh();
-    } finally {
-      setBusyId(EMPTY_STRING);
-    }
+  function openOfficial(url: string | null) {
+    if (!url) return;
+    window.open(url, WINDOW_BLANK, WINDOW_NOREFERRER);
   }
 
   if (services.length === ZERO) {
     return (
-      <Card className="Bear-Services" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
-        <EmptyState title={t('noServices')} body={t('noServicesBody')} />
-      </Card>
+      <div className="Bear-Services">
+        <ClmPageHead title={t('services')} subtitle={t('pageSubServices')} />
+        <ClmEmpty iconSrc={SVG_STATUS_ALERT} title={t('noServices')} body={t('noServicesBody')} />
+      </div>
     );
   }
 
   return (
-    <Flex className="Bear-Services" direction="column" gap={FLEX_GAP_LG}>
-      <PageHeader title={t('services')} subtitle={t('pageSubServices')} />
-    <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
-      <Flex direction="column" gap={FLEX_GAP_LG}>
-        <Flex justify="between" align="center" wrap="wrap" gap={FLEX_GAP_LG}>
-          <Typography color={COLOR_MUTED}>{t('connectedNone')}</Typography>
-          <Badge variant="neutral" pill>
-            {connectedServiceCount(services)} {t('connections')}
-          </Badge>
-        </Flex>
-        <Typography color={COLOR_MUTED}>{t('servicesHubHelp')}</Typography>
-        {[...official, ...others].map((service) => {
+    <div className="Bear-Services">
+      <ClmPageHead title={t('services')} subtitle={t('pageSubServices')} />
+      <ClmSectionTitle title={t('officialAuthorities')} />
+      <div className="Clm-grid">
+        {official.map((service) => {
           const item = translatedService(service, t);
           return (
-            <ServiceItem
+            <article key={`pill-${service.providerId}`} className="Clm-card">
+              <div className="Clm-card-head">
+                <span className="Clm-card-title">{item.name}</span>
+                <ClmStatusPill tone={serviceTone(service.status, service.category)} label={t(serviceToneLabelKey(service.status, service.category))} />
+              </div>
+              <div className="Clm-card-note">{item.note}</div>
+            </article>
+          );
+        })}
+      </div>
+      <ClmSectionTitle title={t('tollAndParking')} />
+      <div className="Clm-grid">
+        {roads.map((service) => {
+          const item = translatedService(service, t);
+          const tone = serviceTone(service.status, service.category);
+          return (
+            <article key={service.providerId} className="Clm-card">
+              <div className="Clm-card-head">
+                <span className="Clm-card-title">{item.name}</span>
+                <ClmStatusPill tone={tone} label={t(serviceToneLabelKey(service.status, service.category))} />
+              </div>
+              <div className={tone === 'bad' ? 'Clm-card-note Clm-card-note--bad' : 'Clm-card-note'}>{item.note}</div>
+            </article>
+          );
+        })}
+      </div>
+      <ClmSectionTitle title={t('insurance')} />
+      <ClmList>
+        {insurance.map((service) => {
+          const item = translatedService(service, t);
+          return (
+            <ClmRow
               key={service.providerId}
-              service={service}
-              name={item.name}
-              note={item.note}
-              statusLabel={t(serviceStatusKey(service.status))}
-              statusVariant={serviceBadgeVariant(service.status)}
-              busy={busyId === service.providerId}
-              isOfficial={service.status === PROVIDER_STATUS_OFFICIAL}
-              confirmed={service.status === PROVIDER_STATUS_USER_CONFIRMED}
-              officialSiteLabel={t('officialSite')}
-              logReceiptLabel={t('logReceipt')}
-              confirmedHelp={t('userConfirmedHelp')}
-              notVerifiedHelp={t('notVerifiedAuto')}
-              confirmLabel={t('confirmService')}
-              checkLaterLabel={t('checkLater')}
-              savingLabel={t('saving')}
-              answers={SERVICE_ANSWERS.map((answer) => ({ value: answer.value, label: t(answer.labelKey) }))}
-              onConfirm={(answer) => void confirm(service.providerId, answer)}
-              onOfficialSite={() => window.open(service.officialUrl ?? EMPTY_STRING, WINDOW_BLANK, WINDOW_NOREFERRER)}
-              onLogReceipt={() => navigate(`${ROUTE_EXPENSES}?${QUERY_CATEGORY}=${receiptCategory(service.category)}`)}
+              iconSrc={SVG_STATUS_ALERT}
+              title={item.name}
+              subtitle={(
+                <>
+                  {item.note}
+                  {service.officialUrl ? (
+                    <>
+                      {' · '}
+                      <OfficialLink href={service.officialUrl} label={t('officialSite')} />
+                    </>
+                  ) : null}
+                </>
+              )}
+              action={<ClmButton onClick={() => openOfficial(service.officialUrl)}>{t('connect')}</ClmButton>}
             />
           );
         })}
-      </Flex>
-    </Card>
-    </Flex>
+      </ClmList>
+    </div>
   );
 }

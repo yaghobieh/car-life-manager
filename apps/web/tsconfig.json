@@ -19,6 +19,7 @@
       "@pages": ["src/pages"],
       "@components/*": ["src/components/*"],
       "@components": ["src/components"],
+      "@common": ["src/common"],
       "@store": ["src/store"],
       "@locales": ["src/locales"],
       "@api": ["src/api"],

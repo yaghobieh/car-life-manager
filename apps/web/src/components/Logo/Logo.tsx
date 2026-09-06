@@ -1,7 +1,7 @@
 import { Flex, Typography } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { COLOR_BLUE, COLOR_INK, COLOR_MUTED_2, COLOR_WHITE, FLEX_GAP_SM } from '@const';
-import { LogoMarkSvg } from './helpers/LogoMarkSvg';
+import { COLOR_BLUE, COLOR_INK, COLOR_MUTED_2, COLOR_WHITE, FLEX_GAP_SM, SVG_LOGO_MARK, SVG_LOGO_SIZE } from '@const';
+import { SvgAsset } from '@components/SvgAsset';
 import type { LogoProps } from './Logo.types';
 
 export function Logo({ compact = false, onDark = false }: LogoProps) {
@@ -9,7 +9,7 @@ export function Logo({ compact = false, onDark = false }: LogoProps) {
   const wordColor = onDark ? COLOR_WHITE : COLOR_INK;
   return (
     <Flex className="Bear-Logo" align="center" gap={FLEX_GAP_SM} aria-label={t('brand')}>
-      <LogoMarkSvg />
+      <SvgAsset src={SVG_LOGO_MARK} alt={t('brand')} width={SVG_LOGO_SIZE} height={SVG_LOGO_SIZE} />
       {!compact && (
         <Flex direction="column">
           <Flex align="center">

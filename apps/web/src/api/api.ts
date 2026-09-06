@@ -1,7 +1,6 @@
 import type { Expense, MaintenanceRecord, Reminder, ServiceAnswer, Task, VehicleDocument, VehicleLookupResult } from '@clm/shared';
 import { HTTP_METHOD_PATCH, HTTP_METHOD_POST, ICS_PATH_SUFFIX } from '@const';
 import {
-  AUTH_CLERK_PATH,
   AUTH_GOOGLE_PATH,
   AUTH_LOGIN_PATH,
   AUTH_LOGOUT_PATH,
@@ -28,8 +27,6 @@ export const api = {
     }),
   logout: () =>
     apiClient.request<{ user: null }>(AUTH_LOGOUT_PATH, { method: HTTP_METHOD_POST }),
-  syncClerk: () =>
-    apiClient.request<AuthUserPayload>(AUTH_CLERK_PATH, { method: HTTP_METHOD_POST }),
   updateProfile: (input: ProfileUpdateInput) =>
     apiClient.request<AuthUserPayload>(AUTH_ME_PATH, {
       method: HTTP_METHOD_PATCH,

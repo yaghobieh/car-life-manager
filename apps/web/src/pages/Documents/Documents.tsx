@@ -1,21 +1,15 @@
 import { useState } from 'react';
-import { Button, Card, Flex, Input, Select, Typography } from '@forgedevstack/bear';
+import { Input, Select } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import type { DocumentType } from '@clm/shared';
 import { api } from '@api';
 import {
-  CARD_RADIUS_XL,
-  COLOR_MUTED,
   DOCUMENT_TYPE_LICENSE,
-  EMPTY_ICON_DOCUMENT,
   EMPTY_STRING,
-  FLEX_GAP_LG,
-  FLEX_GAP_MD,
-  FLEX_GAP_SM,
+  SVG_EMPTY_DOCUMENT,
   ZERO,
 } from '@const';
-import { EmptyState } from '@components/EmptyState';
-import { PageHeader } from '@components/PageHeader';
+import { ClmButton, ClmEmpty, ClmList, ClmPageHead, ClmRow } from '@common';
 import { useAppState } from '@hooks';
 import { DOCUMENT_TYPE_OPTIONS } from './Documents.const';
 
@@ -23,6 +17,7 @@ export function Documents() {
   const { dashboard, currentId, refresh } = useAppState();
   const t = useTranslate();
   const documents = dashboard?.documents ?? [];
+  const [showForm, setShowForm] = useState(documents.length > ZERO);
   const [type, setType] = useState<string>(DOCUMENT_TYPE_LICENSE);
   const [title, setTitle] = useState(EMPTY_STRING);
   const [expiresAt, setExpiresAt] = useState(EMPTY_STRING);
@@ -49,39 +44,47 @@ export function Documents() {
   }
 
   return (
-    <Flex className="Bear-Documents" direction="column" gap={FLEX_GAP_LG}>
-      <PageHeader title={t('documents')} subtitle={t('pageSubDocuments')} />
-    <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
-      <Flex direction="column" gap={FLEX_GAP_LG}>
-        <Typography color={COLOR_MUTED}>{t('noDocumentsBody')}</Typography>
-        <Typography color={COLOR_MUTED}>{t('documentProcessing')}</Typography>
-        <Select
-          label={t('category')}
-          value={type}
-          onChange={setType}
-          fullWidth
-          options={DOCUMENT_TYPE_OPTIONS.map((value) => ({
-            value,
-            label: t(`documentType_${value}`),
-          }))}
+    <div className="Bear-Documents">
+      <ClmPageHead title={t('documents')} subtitle={t('pageSubDocuments')} />
+      {documents.length === ZERO && !showForm ? (
+        <ClmEmpty
+          iconSrc={SVG_EMPTY_DOCUMENT}
+          title={t('noDocumentsTitle')}
+          body={t('noDocumentsBody')}
+          action={<ClmButton onClick={() => setShowForm(true)}>{t('uploadDocument')}</ClmButton>}
         />
-        <Input label={t('title')} value={title} onChange={(event) => setTitle(event.target.value)} fullWidth />
-        <Input label={t('expiresAt')} type="date" value={expiresAt} onChange={(event) => setExpiresAt(event.target.value)} fullWidth />
-        <Input label={t('notes')} value={notes} onChange={(event) => setNotes(event.target.value)} fullWidth />
-        <Button variant="primary" loading={busy} loadingText={t('saving')} onClick={() => void submit()}>
-          {t('addDocument')}
-        </Button>
-        {documents.length === ZERO && <EmptyState title={t('noDocuments')} body={t('noDocumentsBody')} icon={EMPTY_ICON_DOCUMENT} />}
-        {documents.map((document) => (
-          <Flex key={document.id} direction="column" gap={FLEX_GAP_SM}>
-            <Typography weight="bold">{document.title}</Typography>
-            <Typography color={COLOR_MUTED}>{t(`documentType_${document.type}`)}</Typography>
-            {document.expiresAt && <Typography color={COLOR_MUTED}>{document.expiresAt}</Typography>}
-            {document.notes && <Typography color={COLOR_MUTED}>{document.notes}</Typography>}
-          </Flex>
-        ))}
-      </Flex>
-    </Card>
-    </Flex>
+      ) : (
+        <>
+          {documents.length > ZERO && (
+            <ClmList>
+              {documents.map((document) => (
+                <ClmRow
+                  key={document.id}
+                  iconSrc={SVG_EMPTY_DOCUMENT}
+                  title={document.title}
+                  subtitle={[t(`documentType_${document.type}`), document.expiresAt].filter(Boolean).join(' · ')}
+                />
+              ))}
+            </ClmList>
+          )}
+          <div className="Clm-form">
+            <Select
+              label={t('category')}
+              value={type}
+              onChange={setType}
+              fullWidth
+              options={DOCUMENT_TYPE_OPTIONS.map((value) => ({
+                value,
+                label: t(`documentType_${value}`),
+              }))}
+            />
+            <Input label={t('title')} value={title} onChange={(event) => setTitle(event.target.value)} fullWidth />
+            <Input label={t('expiresAt')} type="date" value={expiresAt} onChange={(event) => setExpiresAt(event.target.value)} fullWidth />
+            <Input label={t('notes')} value={notes} onChange={(event) => setNotes(event.target.value)} fullWidth />
+            <ClmButton disabled={busy} onClick={() => void submit()}>{busy ? t('saving') : t('uploadDocument')}</ClmButton>
+          </div>
+        </>
+      )}
+    </div>
   );
 }

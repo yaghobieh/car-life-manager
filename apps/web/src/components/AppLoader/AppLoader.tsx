@@ -1,7 +1,7 @@
 import { Box, Flex, Typography } from '@forgedevstack/bear';
-import { COLOR_INK, COLOR_MUTED_2, COLOR_WHITE, FLEX_GAP_MD, LOADER_Z } from '@const';
+import { COLOR_INK, COLOR_WHITE, FLEX_GAP_MD, LOADER_Z, SVG_LOADER_HEIGHT, SVG_LOADER_SCENE, SVG_LOADER_WIDTH } from '@const';
+import { SvgAsset } from '@components/SvgAsset';
 import { resolveBearId, useBearId } from '@hooks';
-import { LoaderCarSvg } from './helpers/LoaderCarSvg';
 import type { AppLoaderProps } from './AppLoader.types';
 
 export function AppLoader(props: AppLoaderProps) {
@@ -18,24 +18,7 @@ export function AppLoader(props: AppLoaderProps) {
       style={{ zIndex: LOADER_Z }}
     >
       <Flex className="bear-min-h-screen" align="center" justify="center" direction="column" gap={FLEX_GAP_MD}>
-        <Box className="Bear-AppLoader__road" style={{ width: 280, height: 64, position: 'relative', overflow: 'hidden' }}>
-          <Box
-            className="Bear-AppLoader__lane"
-            style={{
-              position: 'absolute',
-              top: '50%',
-              insetInline: 0,
-              height: 6,
-              borderRadius: 3,
-              backgroundImage: `repeating-linear-gradient(to left, ${COLOR_MUTED_2} 0 22px, transparent 22px 40px)`,
-              opacity: 0.5,
-              transform: 'translateY(-50%)',
-            }}
-          />
-          <Box className="Bear-AppLoader__car" style={{ position: 'absolute', top: 18 }}>
-            <LoaderCarSvg />
-          </Box>
-        </Box>
+        <SvgAsset src={SVG_LOADER_SCENE} alt={label} width={SVG_LOADER_WIDTH} height={SVG_LOADER_HEIGHT} />
         <Typography color={COLOR_WHITE}>{label}</Typography>
       </Flex>
     </Box>

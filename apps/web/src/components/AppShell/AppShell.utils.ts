@@ -51,6 +51,10 @@ export function vehicleOptionLabel(vehicle: Vehicle): string {
   return `${vehicle.formattedRegistrationNumber}${TITLE_SEPARATOR}${officialName}`;
 }
 
+export function vehicleShortName(vehicle: Vehicle): string {
+  return [vehicle.make, vehicle.model].filter(Boolean).join(SPACE) || vehicle.formattedRegistrationNumber;
+}
+
 export function activeNavId(pathname: string, items: NavItem[]): string {
   const match = items.find((item) => item.to !== ROUTE_HOME && pathname.startsWith(item.to));
   return match?.id ?? NAV_OVERVIEW;

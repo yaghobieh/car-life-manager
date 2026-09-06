@@ -5,7 +5,6 @@ import type { ClmWindowApi } from './logger/logger.types';
 interface ImportMetaEnv {
   readonly VITE_APP_VERSION: string;
   readonly VITE_BUILD_SHA: string;
-  readonly VITE_CLERK_PUBLISHABLE_KEY?: string;
 }
 
 interface ImportMeta {

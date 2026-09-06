@@ -1,5 +1,5 @@
 import { ROUTE_HOME, ROUTE_ONBOARDING, ZERO } from '@const';
-import { AUTH_MODE_LOGIN, AUTH_MODE_REGISTER } from './Auth.const';
+import { AUTH_ERROR_KEYS, AUTH_MODE_LOGIN, AUTH_MODE_REGISTER } from './Auth.const';
 import type { AuthMode } from './Auth.types';
 
 export function nextAuthMode(mode: AuthMode): AuthMode {
@@ -11,10 +11,6 @@ export function afterAuthPath(vehicleCount: number): string {
 }
 
 export function authErrorKey(code?: string): string {
-  if (code === 'email_taken') return 'authEmailTaken';
-  if (code === 'password_short') return 'authPasswordShort';
-  if (code === 'invalid_email') return 'authInvalidEmail';
-  if (code === 'google_unavailable') return 'authGoogleUnavailable';
-  if (code === 'google_failed') return 'authGoogleFailed';
-  return 'authFailed';
+  if (!code) return 'authFailed';
+  return AUTH_ERROR_KEYS[code] ?? 'authFailed';
 }

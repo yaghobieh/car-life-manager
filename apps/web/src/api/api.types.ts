@@ -52,7 +52,6 @@ export interface NotificationChannels {
 export interface AuthMePayload {
   user: AuthUser | null;
   googleEnabled: boolean;
-  clerkEnabled?: boolean;
   notificationChannels: NotificationChannels;
 }
 

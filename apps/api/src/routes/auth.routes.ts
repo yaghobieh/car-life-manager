@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { asyncRoute } from "../middlewares";
 import {
+  auth0CallbackController,
+  auth0StartController,
   googleCallbackController,
   googleStartController,
-  clerkSyncController,
   loginController,
   logoutController,
   meController,
@@ -17,7 +18,8 @@ export function registerAuthRoutes(router: Router): void {
   router.post("/auth/logout", asyncRoute(logoutController));
   router.get("/auth/me", asyncRoute(meController));
   router.patch("/auth/me", asyncRoute(updateProfileController));
-  router.post("/auth/clerk", asyncRoute(clerkSyncController));
   router.get("/auth/google", asyncRoute(googleStartController));
   router.get("/auth/google/callback", asyncRoute(googleCallbackController));
+  router.get("/auth/auth0", asyncRoute(auth0StartController));
+  router.get("/auth/auth0/callback", asyncRoute(auth0CallbackController));
 }

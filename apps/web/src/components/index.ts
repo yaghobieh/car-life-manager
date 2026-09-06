@@ -9,6 +9,7 @@ export { PageHeader } from './PageHeader';
 export { PlateBadge } from './PlateBadge';
 export { ProviderMark } from './ProviderMark';
 export { StatusBadge } from './StatusBadge';
+export { SvgAsset } from './SvgAsset';
 export { TaskRow } from './TaskRow';
 export { SourceBadge } from './SourceBadge';
 export { TaskDrawer } from './TaskDrawer';
