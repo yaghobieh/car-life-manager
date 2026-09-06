@@ -1,0 +1,17 @@
+---
+description: Car Life Manager structure — Bear file layout, aliases, no project CSS, no magic numbers
+alwaysApply: true
+---
+
+# CLM structure
+
+- Pages live at `pages/Name/Name.tsx`, `index.ts`, `Name.types.ts`, `Name.const.ts`, `Name.utils.ts`.
+- Components use the same Bear folder layout. Named exports only.
+- Shared tokens live in `src/constants` (`numbers.const.ts`, `generals.const.ts`, `keys.const.ts`).
+- Do not add a project CSS file. Use Bear primitives (`Box`, `Flex`, `Grid`, `Card`, `Badge`, `Button`, `Sidebar`, `Input`, `Typography`).
+- Do not put CSS class strings in const files.
+- Imports more than one level up (`../../`) must use aliases: `@const`, `@hooks`, `@pages`, `@components`, `@store`, `@locales`, `@api`.
+- State is Synapse (`createNucleus` / `useNucleus`), not React context or Redux.
+- Copy is Lingo (`@forgedevstack/lingo`). Default locale is Hebrew.
+- Tags such as חשוב use Bear `Badge`. Do not invent custom tag components with CSS.
+- Official data only. Do not mark Pango, CelloPark, or Highway 6 as connected without a real API.

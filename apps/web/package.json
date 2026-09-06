@@ -1,0 +1,35 @@
+{
+  "name": "@clm/web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.json && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@clm/shared": "1.0.0",
+    "@forgedevstack/bear": "^1.3.2",
+    "@forgedevstack/bear-icons": "^1.0.1",
+    "@forgedevstack/grid-table": "^1.1.5",
+    "@forgedevstack/lingo": "^1.0.2",
+    "@forgedevstack/synapse": "^1.2.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.2.0",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.2.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^26.0.0",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.7",
+    "vitest": "^3.0.5"
+  }
+}

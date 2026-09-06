@@ -1,0 +1,23 @@
+{
+  "name": "car-life-manager",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Israeli vehicle ownership platform — everything you need for your car, in one place.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "dev:web": "npm run dev -w @clm/web",
+    "dev:api": "npm run dev -w @clm/api",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "db:generate": "npm run db:generate -w @clm/api",
+    "db:migrate": "npm run db:migrate -w @clm/api"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

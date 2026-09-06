@@ -1,0 +1,1 @@
+export const ONBOARDING_CARD_MAX_WIDTH = 560;
