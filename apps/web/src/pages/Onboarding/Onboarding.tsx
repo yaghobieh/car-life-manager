@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Box, Button, Card, Flex, Input, Typography } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import type { VehicleLookupResult } from '@clm/shared';
@@ -15,13 +15,15 @@ import {
   ONBOARDING_STEP_CONFIRM,
   ONBOARDING_STEP_PLATE,
   ONBOARDING_STEP_WELCOME,
+  ROUTE_AUTH,
   ROUTE_HOME,
   TITLE_SEPARATOR,
   TYPO_PAGE_TITLE,
+  ZERO,
 } from '@const';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
-import { lookupTitle, sliceDate } from './Onboarding.utils';
+import { lookupTitle, resolveOnboardingStep, sliceDate } from './Onboarding.utils';
 
 export function Onboarding() {
   const [step, setStep] = useState(ONBOARDING_STEP_WELCOME);
@@ -29,8 +31,22 @@ export function Onboarding() {
   const [lookup, setLookup] = useState<VehicleLookupResult | null>(null);
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
-  const { refresh } = useAppState();
+  const { user, vehicles, loading, authReady, refresh } = useAppState();
   const t = useTranslate();
+  const hasVehicles = vehicles.length > ZERO;
+  const viewStep = resolveOnboardingStep(step, hasVehicles);
+
+  if (!authReady || loading) {
+    return (
+      <Box bg={COLOR_BG} className="Bear-Onboarding bear-min-h-screen">
+        <Flex className="bear-min-h-screen" align="center" justify="center">
+          <Typography>{t('loading')}</Typography>
+        </Flex>
+      </Box>
+    );
+  }
+
+  if (!user) return <Navigate to={ROUTE_AUTH} replace />;
 
   async function findVehicle() {
     setBusy(true);
@@ -55,22 +71,22 @@ export function Onboarding() {
 
   return (
     <Box bg={COLOR_BG} className="Bear-Onboarding bear-min-h-screen">
-      <Flex className="bear-min-h-screen" align="center" justify="center">
+      <Flex className="bear-min-h-screen bear-p-3" align="center" justify="center">
         <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL} className="bear-w-full bear-max-w-xl">
           <Flex direction="column" gap={FLEX_GAP_LG}>
           <Box bg={COLOR_NAVY_DEEP} p={4} rounded="lg">
             <Logo onDark />
           </Box>
-          {step === ONBOARDING_STEP_WELCOME && (
+          {viewStep === ONBOARDING_STEP_WELCOME && (
             <div>
               <Typography variant={TYPO_PAGE_TITLE}>{t('welcomeTitle')}</Typography>
               <Typography color={COLOR_MUTED}>{t('tagline')}</Typography>
-              <Button variant="primary" onClick={() => setStep(ONBOARDING_STEP_PLATE)}>
+              <Button variant="primary" fullWidth onClick={() => setStep(ONBOARDING_STEP_PLATE)}>
                 {t('addCar')}
               </Button>
             </div>
           )}
-          {step === ONBOARDING_STEP_PLATE && (
+          {viewStep === ONBOARDING_STEP_PLATE && (
             <div>
               <Typography variant={TYPO_PAGE_TITLE}>{t('plateTitle')}</Typography>
               <Typography color={COLOR_MUTED}>{t('plateHelp')}</Typography>
@@ -81,15 +97,22 @@ export function Onboarding() {
                 placeholder={t('platePlaceholder')}
                 fullWidth
               />
-              <Button variant="primary" loading={busy} loadingText={t('checking')} onClick={() => void findVehicle()}>
+              <Button variant="primary" fullWidth loading={busy} loadingText={t('checking')} onClick={() => void findVehicle()}>
                 {t('continue')}
               </Button>
-              <Button variant="ghost" onClick={() => setStep(ONBOARDING_STEP_WELCOME)}>
+              <Button
+                variant="ghost"
+                fullWidth
+                onClick={() => {
+                  if (hasVehicles) navigate(ROUTE_HOME);
+                  else setStep(ONBOARDING_STEP_WELCOME);
+                }}
+              >
                 {t('back')}
               </Button>
             </div>
           )}
-          {step === ONBOARDING_STEP_CONFIRM && lookup && (
+          {viewStep === ONBOARDING_STEP_CONFIRM && lookup && (
             <div>
               <Typography variant={TYPO_PAGE_TITLE}>{t('vehicleFound')}</Typography>
               <Typography>
@@ -106,8 +129,11 @@ export function Onboarding() {
               <Typography>{t('lastTest')}: {sliceDate(lookup.vehicle.lastTestDate, t('unknown'))}</Typography>
               <Typography color={COLOR_MUTED}>{t('identityUnavailable')}</Typography>
               <Typography>{t('preparing')}</Typography>
-              <Button variant="primary" loading={busy} loadingText={t('saving')} onClick={() => void save()}>
+              <Button variant="primary" fullWidth loading={busy} loadingText={t('saving')} onClick={() => void save()}>
                 {t('goDashboard')}
+              </Button>
+              <Button variant="ghost" fullWidth onClick={() => setStep(ONBOARDING_STEP_PLATE)}>
+                {t('back')}
               </Button>
             </div>
           )}

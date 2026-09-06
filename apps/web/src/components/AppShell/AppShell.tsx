@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -7,24 +8,29 @@ import {
   Typography,
   useIsDesktop,
 } from '@forgedevstack/bear';
-import { LocaleSwitcher, useTranslate } from '@forgedevstack/lingo/react';
+import { useTranslate } from '@forgedevstack/lingo/react';
+import { BearIcons, MenuIcon, UserIcon } from '@forgedevstack/bear-icons';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
+  BOOLEAN_FALSE,
+  BOOLEAN_TRUE,
   COLOR_BG,
   COLOR_CARD,
   COLOR_NAVY_DEEP,
   COLOR_WHITE,
   FLEX_GAP_MD,
   FLEX_GAP_SM,
-  MOBILE_NAV_COUNT,
   ROUTE_ONBOARDING,
+  ROUTE_SETTINGS,
   SIDEBAR_WIDTH,
   ZERO,
 } from '@const';
+import { LocaleSelect } from '@components/LocaleSelect';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
 import { NAV_ITEMS } from './AppShell.const';
-import { activeNavId, navButtonVariant } from './AppShell.utils';
+import { AppShellMenu } from './AppShellMenu';
+import { activeNavId, isMoreNavActive, mobilePrimaryItems, navButtonVariant } from './AppShell.utils';
 
 export function AppShell() {
   const { vehicles, currentId, select } = useAppState();
@@ -32,8 +38,16 @@ export function AppShell() {
   const { pathname } = useLocation();
   const t = useTranslate();
   const isDesktop = useIsDesktop();
+  const [menuOpen, setMenuOpen] = useState(BOOLEAN_FALSE);
   const current = vehicles.find((item) => item.id === currentId);
   const activeId = activeNavId(pathname, NAV_ITEMS);
+  const primaryItems = mobilePrimaryItems(NAV_ITEMS);
+  const moreActive = isMoreNavActive(activeId);
+
+  function goTo(to: string) {
+    setMenuOpen(BOOLEAN_FALSE);
+    navigate(to);
+  }
 
   return (
     <Box bg={COLOR_BG} className="Bear-AppShell bear-min-h-screen">
@@ -67,59 +81,102 @@ export function AppShell() {
           </Box>
         )}
         <Flex direction="column" className="bear-flex-1">
-          <Box as="header" bg={COLOR_CARD} px={6} py={4} shadow="sm">
-            <Flex align="center" justify="between" gap={FLEX_GAP_MD}>
-              {!isDesktop && <Logo compact />}
-              <Input aria-label={t('search')} placeholder={t('search')} radius="pill" fullWidth />
-              <Flex align="center" gap={FLEX_GAP_MD}>
-                <LocaleSwitcher />
-                <Button variant="ghost" iconOnly aria-label={t('notifications')}>
-                  🔔
-                </Button>
-                <Button variant="ghost" iconOnly aria-label={t('account')}>
-                  👤
-                </Button>
+          <Box as="header" bg={COLOR_CARD} px={isDesktop ? 6 : 3} py={isDesktop ? 4 : 3} shadow="sm">
+            {isDesktop ? (
+              <Flex align="center" justify="between" gap={FLEX_GAP_MD}>
+                <Input aria-label={t('search')} placeholder={t('search')} radius="pill" fullWidth />
+                <Flex align="center" gap={FLEX_GAP_MD}>
+                  <LocaleSelect />
+                  <Button variant="ghost" iconOnly aria-label={t('notifications')}>
+                    <BearIcons.Communication.BellIcon />
+                  </Button>
+                  <Button variant="ghost" iconOnly aria-label={t('account')} onClick={() => navigate(ROUTE_SETTINGS)}>
+                    <UserIcon />
+                  </Button>
+                </Flex>
               </Flex>
-            </Flex>
+            ) : (
+              <Flex direction="column" gap={FLEX_GAP_SM}>
+                <Flex align="center" justify="between" gap={FLEX_GAP_SM}>
+                  <Logo compact />
+                  <Flex align="center" gap={FLEX_GAP_SM}>
+                    <Button variant="ghost" iconOnly aria-label={t('menu')} onClick={() => setMenuOpen(BOOLEAN_TRUE)}>
+                      <MenuIcon />
+                    </Button>
+                    <Button variant="ghost" iconOnly aria-label={t('notifications')}>
+                      <BearIcons.Communication.BellIcon />
+                    </Button>
+                    <Button variant="ghost" iconOnly aria-label={t('account')} onClick={() => navigate(ROUTE_SETTINGS)}>
+                      <UserIcon />
+                    </Button>
+                  </Flex>
+                </Flex>
+                <Input aria-label={t('search')} placeholder={t('search')} radius="pill" fullWidth />
+              </Flex>
+            )}
           </Box>
-          <Box as="main" p={6} className="bear-flex-1">
-            <Flex justify="between" align="center" gap={FLEX_GAP_MD} className="bear-mb-4">
+          <Box as="main" p={isDesktop ? 6 : 3} className="bear-flex-1">
+            <Flex
+              direction={isDesktop ? 'row' : 'column'}
+              justify="between"
+              align={isDesktop ? 'center' : 'stretch'}
+              gap={FLEX_GAP_MD}
+              className="bear-mb-4"
+            >
               {current && (
                 <Select
                   aria-label={t('selectVehicle')}
                   value={current.id}
                   onChange={select}
+                  fullWidth={!isDesktop}
                   options={vehicles.map((vehicle) => ({
                     value: vehicle.id,
                     label: vehicle.formattedRegistrationNumber,
                   }))}
                 />
               )}
-              <Button variant="primary" onClick={() => navigate(ROUTE_ONBOARDING)}>
+              <Button variant="primary" fullWidth={!isDesktop} onClick={() => navigate(ROUTE_ONBOARDING)}>
                 {t('addVehicle')}
               </Button>
             </Flex>
             <Outlet />
           </Box>
           {!isDesktop && (
-            <Box as="nav" bg={COLOR_NAVY_DEEP} p={2}>
-              <Flex justify="around">
-                {NAV_ITEMS.slice(ZERO, MOBILE_NAV_COUNT).map((item) => (
+            <Box as="nav" bg={COLOR_NAVY_DEEP} px={2} py={2} className="bear-sticky bear-bottom-0">
+              <Flex justify="around" align="center">
+                {primaryItems.map((item) => (
                   <Button
                     key={item.id}
                     variant={navButtonVariant(item.id === activeId)}
                     compact
                     disableElevation
-                    onClick={() => navigate(item.to)}
+                    style={{ borderWidth: ZERO }}
+                    onClick={() => goTo(item.to)}
                   >
-                    <Typography color={COLOR_WHITE}>{t(item.labelKey)}</Typography>
+                    <Typography color={COLOR_WHITE}>{t(item.shortLabelKey ?? item.labelKey)}</Typography>
                   </Button>
                 ))}
+                <Button
+                  variant={navButtonVariant(moreActive)}
+                  compact
+                  disableElevation
+                  style={{ borderWidth: ZERO }}
+                  onClick={() => setMenuOpen(BOOLEAN_TRUE)}
+                >
+                  <Typography color={COLOR_WHITE}>{t('more')}</Typography>
+                </Button>
               </Flex>
             </Box>
           )}
         </Flex>
       </Flex>
+      <AppShellMenu
+        isOpen={menuOpen}
+        items={NAV_ITEMS}
+        activeId={activeId}
+        onClose={() => setMenuOpen(BOOLEAN_FALSE)}
+        onNavigate={goTo}
+      />
     </Box>
   );
 }

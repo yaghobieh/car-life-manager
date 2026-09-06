@@ -1,0 +1,17 @@
+export const SESSION_COOKIE = "clm_session";
+export const OAUTH_STATE_COOKIE = "clm_oauth_state";
+export const SESSION_DAYS = 30;
+export const SESSION_MAX_AGE_MS = SESSION_DAYS * 24 * 60 * 60 * 1000;
+export const PASSWORD_MIN_LENGTH = 8;
+export const TOKEN_BYTES = 32;
+export const SCRYPT_KEYLEN = 64;
+export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
+export const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
+export const GOOGLE_USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo";
+export const GOOGLE_SCOPE = "openid email profile";
+export const OAUTH_RESPONSE_TYPE = "code";
+export const GRANT_AUTHORIZATION_CODE = "authorization_code";
+export const PROVIDER_EMAIL = "email";
+export const PROVIDER_GOOGLE = "google";
+export const HASH_SEPARATOR = ":";

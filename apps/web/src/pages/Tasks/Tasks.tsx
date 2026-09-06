@@ -21,7 +21,7 @@ export function Tasks() {
   }
 
   return (
-    <Card className="Bear-Tasks" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+    <Card className="Bear-Tasks bear-overflow-x-auto" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <GridTable
         data={asTableRows(tasks)}
         getRowId={(row) => row.id}

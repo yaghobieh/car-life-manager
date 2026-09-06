@@ -13,4 +13,5 @@ export const aliases = {
   '@store': path.resolve(root, 'src/store'),
   '@locales': path.resolve(root, 'src/locales'),
   '@api': path.resolve(root, 'src/api'),
+  '@logger': path.resolve(root, 'src/logger'),
 };

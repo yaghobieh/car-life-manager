@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: clm-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: clm
+      POSTGRES_USER: clm
+      POSTGRES_PASSWORD: clm
+    volumes:
+      - clm-postgres:/var/lib/postgresql/data
+
+volumes:
+  clm-postgres:

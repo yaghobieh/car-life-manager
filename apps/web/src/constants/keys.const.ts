@@ -1,4 +1,6 @@
 export const LINGO_STORAGE_KEY = 'clm_lingo_locale';
+export const LOGS_STORAGE_KEY = 'clm_logs';
+export const LOGS_ENABLED_VALUE = '1';
 export const SYNAPSE_APP_KEY = 'clm-app';
 export const NAV_OVERVIEW = 'overview';
 export const NAV_VEHICLES = 'vehicles';
@@ -10,6 +12,7 @@ export const NAV_MAINTENANCE = 'maintenance';
 export const NAV_REMINDERS = 'reminders';
 export const NAV_REPORTS = 'reports';
 export const NAV_SETTINGS = 'settings';
+export const NAV_MORE = 'more';
 export const TASK_PRIORITY_OVERDUE = 'overdue';
 export const TASK_PRIORITY_IMPORTANT = 'important';
 export const TASK_PRIORITY_NORMAL = 'normal';

@@ -21,7 +21,8 @@
       "@components": ["src/components"],
       "@store": ["src/store"],
       "@locales": ["src/locales"],
-      "@api": ["src/api"]
+      "@api": ["src/api"],
+      "@logger": ["src/logger"]
     },
     "types": ["vite/client"]
   },

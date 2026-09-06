@@ -12,7 +12,7 @@ export function Services() {
     <Card className="Bear-Services" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <EmptyState title={t('noServices')} body={t('noServicesBody')} />
       {(dashboard?.services ?? []).map((service) => (
-        <Flex key={service.providerId} justify="between" align="center" gap={FLEX_GAP_SM}>
+        <Flex key={service.providerId} justify="between" align="center" wrap="wrap" gap={FLEX_GAP_SM}>
           <Flex align="center" gap={FLEX_GAP_SM}>
             <ProviderMark providerId={service.providerId} name={service.name} />
             <div>

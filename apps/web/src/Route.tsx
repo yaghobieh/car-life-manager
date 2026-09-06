@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import {
+  ROUTE_AUTH,
   ROUTE_DOCUMENTS,
   ROUTE_EXPENSES,
   ROUTE_HOME,
@@ -12,11 +13,12 @@ import {
   ROUTE_TASKS,
   ROUTE_VEHICLES,
 } from '@const';
-import { Expenses, Gate, Onboarding, Overview, Services, Simple, Tasks, Vehicles } from '@pages';
+import { Auth, Expenses, Gate, Onboarding, Overview, Services, Settings, Simple, Tasks, Vehicles } from '@pages';
 
 export function AppRoutes() {
   return (
     <Routes>
+      <Route path={ROUTE_AUTH} element={<Auth />} />
       <Route path={ROUTE_ONBOARDING} element={<Onboarding />} />
       <Route path={ROUTE_HOME} element={<Gate />}>
         <Route index element={<Overview />} />
@@ -28,7 +30,7 @@ export function AppRoutes() {
         <Route path={ROUTE_MAINTENANCE.slice(1)} element={<Simple titleKey="maintenance" bodyKey="noMaintenance" />} />
         <Route path={ROUTE_REMINDERS.slice(1)} element={<Simple titleKey="reminders" bodyKey="noReminders" />} />
         <Route path={ROUTE_REPORTS.slice(1)} element={<Simple titleKey="reports" bodyKey="reportsBody" />} />
-        <Route path={ROUTE_SETTINGS.slice(1)} element={<Simple titleKey="settings" bodyKey="settingsBody" />} />
+        <Route path={ROUTE_SETTINGS.slice(1)} element={<Settings />} />
       </Route>
     </Routes>
   );

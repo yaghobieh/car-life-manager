@@ -1,3 +1,10 @@
 export { api } from './api';
 export { apiClient, ApiError } from './ApiClient';
-export type { DashboardPayload, VehicleListPayload, ApiClientError } from './api.types';
+export type {
+  AuthMePayload,
+  AuthUser,
+  AuthUserPayload,
+  DashboardPayload,
+  VehicleListPayload,
+  ApiClientError,
+} from './api.types';

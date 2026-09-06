@@ -23,14 +23,16 @@ import {
 import type { NavItem } from './AppShell.types';
 
 export const NAV_ITEMS: NavItem[] = [
-  { id: NAV_OVERVIEW, to: ROUTE_HOME, labelKey: 'overview' },
-  { id: NAV_VEHICLES, to: ROUTE_VEHICLES, labelKey: 'vehicles' },
-  { id: NAV_TASKS, to: ROUTE_TASKS, labelKey: 'tasks' },
+  { id: NAV_OVERVIEW, to: ROUTE_HOME, labelKey: 'overview', shortLabelKey: 'overviewShort' },
+  { id: NAV_VEHICLES, to: ROUTE_VEHICLES, labelKey: 'vehicles', shortLabelKey: 'vehiclesShort' },
+  { id: NAV_TASKS, to: ROUTE_TASKS, labelKey: 'tasks', shortLabelKey: 'tasksShort' },
   { id: NAV_SERVICES, to: ROUTE_SERVICES, labelKey: 'services' },
-  { id: NAV_EXPENSES, to: ROUTE_EXPENSES, labelKey: 'expenses' },
+  { id: NAV_EXPENSES, to: ROUTE_EXPENSES, labelKey: 'expenses', shortLabelKey: 'expensesShort' },
   { id: NAV_DOCUMENTS, to: ROUTE_DOCUMENTS, labelKey: 'documents' },
   { id: NAV_MAINTENANCE, to: ROUTE_MAINTENANCE, labelKey: 'maintenance' },
   { id: NAV_REMINDERS, to: ROUTE_REMINDERS, labelKey: 'reminders' },
   { id: NAV_REPORTS, to: ROUTE_REPORTS, labelKey: 'reports' },
   { id: NAV_SETTINGS, to: ROUTE_SETTINGS, labelKey: 'settings' },
 ];
+
+export const MOBILE_PRIMARY_NAV_IDS = [NAV_OVERVIEW, NAV_VEHICLES, NAV_TASKS, NAV_EXPENSES];

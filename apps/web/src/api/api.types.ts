@@ -26,8 +26,25 @@ export interface VehicleListPayload {
   vehicles: Vehicle[];
 }
 
+export interface AuthUser {
+  id: string;
+  email: string | null;
+  name: string | null;
+  imageUrl: string | null;
+}
+
+export interface AuthMePayload {
+  user: AuthUser | null;
+  googleEnabled: boolean;
+}
+
+export interface AuthUserPayload {
+  user: AuthUser;
+}
+
 export interface ApiErrorBody {
   error?: string;
+  code?: string;
 }
 
 export type ErrorPresentation =
@@ -42,5 +59,6 @@ export interface ApiErrorHandler {
 export interface ApiClientError {
   message: string;
   status: number;
+  code?: string;
   presentation: ErrorPresentation;
 }

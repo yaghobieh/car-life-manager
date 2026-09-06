@@ -1,8 +1,10 @@
 import { createNucleus } from '@forgedevstack/synapse';
+import { api } from '@api';
 import { BOOLEAN_FALSE, BOOLEAN_TRUE } from '@const';
+import { logger } from '@logger';
 import { fetchDashboard, fetchVehicleList } from './App.apis';
 import { APP_NUCLEUS_NAME } from './App.consts';
-import { beginRefresh, refreshFailed, refreshSucceeded } from './App.reducers';
+import { beginRefresh, refreshFailed, refreshSucceeded, refreshUnauthenticated } from './App.reducers';
 import type { AppNucleusState } from './App.types';
 import { resolveSelectedVehicleId } from './App.utils';
 
@@ -10,6 +12,9 @@ const bootstrap = { started: BOOLEAN_FALSE };
 
 export const appNucleus = createNucleus<AppNucleusState>(
   (set, get) => ({
+    user: null,
+    googleEnabled: BOOLEAN_FALSE,
+    authReady: BOOLEAN_FALSE,
     vehicles: [],
     currentId: null,
     dashboard: null,
@@ -18,11 +23,18 @@ export const appNucleus = createNucleus<AppNucleusState>(
     refresh: async () => {
       set(beginRefresh());
       try {
+        const session = await api.me();
+        if (!session.user) {
+          logger.info('session empty');
+          set(refreshUnauthenticated(session.googleEnabled));
+          return;
+        }
         const { vehicles } = await fetchVehicleList();
         const selected = resolveSelectedVehicleId(get().currentId, vehicles);
         const dashboard = selected ? await fetchDashboard(selected) : null;
-        set(refreshSucceeded(vehicles, selected, dashboard));
+        set(refreshSucceeded(session.user, session.googleEnabled, vehicles, selected, dashboard));
       } catch (err) {
+        logger.error(err);
         set(refreshFailed(err instanceof Error ? err.message : String(err)));
       }
     },

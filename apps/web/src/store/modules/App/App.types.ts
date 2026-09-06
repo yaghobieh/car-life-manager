@@ -1,7 +1,10 @@
 import type { Vehicle } from '@clm/shared';
-import type { DashboardPayload } from '@api';
+import type { AuthUser, DashboardPayload } from '@api';
 
 export interface AppNucleusState {
+  user: AuthUser | null;
+  googleEnabled: boolean;
+  authReady: boolean;
   vehicles: Vehicle[];
   currentId: string | null;
   dashboard: DashboardPayload | null;

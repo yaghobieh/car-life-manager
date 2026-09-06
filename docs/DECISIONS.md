@@ -2,7 +2,7 @@
 
 ## ADR-001 Persistence
 
-Prisma is the TypeScript ORM (schema → generated client → typed queries). Local database is **SQLite** (`file:./dev.db`). Production should use PostgreSQL by changing `DATABASE_URL`. Harbor’s Mongo ODM is not used.
+Prisma is the TypeScript ORM only. It is not the database. The database is **PostgreSQL** (`docker compose up -d` locally, Neon / Supabase / RDS in production). Harbor’s Mongo ODM is not used.
 
 ## ADR-007 Integrations are adapters, not microservices
 

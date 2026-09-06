@@ -1,11 +1,12 @@
-import { Box } from '@forgedevstack/bear';
-import { CAR_ART_HEIGHT, COLOR_CAR_ART_END, COLOR_CAR_ART_START } from '@const';
+import { Box, useIsDesktop } from '@forgedevstack/bear';
+import { CAR_ART_HEIGHT, CAR_ART_HEIGHT_MOBILE, COLOR_CAR_ART_END, COLOR_CAR_ART_START } from '@const';
 import { CarArtSvg } from './helpers/CarArtSvg';
 import type { CarArtProps } from './CarArt.types';
 import { vehicleImageSrc } from './CarArt.utils';
 
 export function CarArt({ make, model }: CarArtProps) {
   const src = vehicleImageSrc(make);
+  const isDesktop = useIsDesktop();
 
   return (
     <Box
@@ -13,7 +14,7 @@ export function CarArt({ make, model }: CarArtProps) {
       rounded="lg"
       aria-hidden="true"
       style={{
-        height: CAR_ART_HEIGHT,
+        height: isDesktop ? CAR_ART_HEIGHT : CAR_ART_HEIGHT_MOBILE,
         background: `linear-gradient(180deg, ${COLOR_CAR_ART_START} 0%, ${COLOR_CAR_ART_END} 100%)`,
         display: 'grid',
         placeItems: 'end center',

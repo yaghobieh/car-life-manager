@@ -20,7 +20,7 @@ export function Vehicles() {
   }
 
   return (
-    <Card className="Bear-Vehicles" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+    <Card className="Bear-Vehicles bear-overflow-x-auto" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <GridTable
         data={asTableRows(vehicles)}
         getRowId={(row) => row.id}

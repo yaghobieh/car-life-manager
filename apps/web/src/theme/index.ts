@@ -4,3 +4,4 @@ export {
   CLM_BEAR_DEFAULT_PROPS,
   CLM_BEAR_THEME,
 } from './bear.theme';
+export { DirectedBear } from './DirectedBear';

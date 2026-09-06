@@ -23,7 +23,7 @@ export function Expenses() {
   }
 
   return (
-    <Card className="Bear-Expenses" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+    <Card className="Bear-Expenses bear-overflow-x-auto" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
         <GridTable
           data={asTableRows(expenses)}

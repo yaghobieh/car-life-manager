@@ -1,31 +1,21 @@
 import type { Request, Response, NextFunction } from "express";
-import { prisma } from "../db";
+import { HTTP_UNAUTHORIZED } from "../constants/http.const";
+import { HttpError } from "../errors/http-error";
+import { SESSION_COOKIE } from "../modules/auth/auth.const";
+import { userFromSessionToken } from "../modules/auth/service";
+import { readCookie } from "../modules/auth/auth.utils";
 
 export interface AuthedRequest extends Request {
-  userId: string;
+  userId?: string;
 }
 
-export async function sessionMiddleware(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function sessionMiddleware(req: Request, _res: Response, next: NextFunction): Promise<void> {
   try {
-    const cookie = req.headers.cookie ?? "";
-    const match = cookie.match(/(?:^|;\s*)clm_user=([^;]+)/);
-    let userId = match?.[1];
-
-    if (userId) {
-      const existing = await prisma.user.findUnique({ where: { id: userId } });
-      if (!existing) userId = undefined;
+    const token = readCookie(req.headers.cookie ?? "", SESSION_COOKIE);
+    if (token) {
+      const user = await userFromSessionToken(token);
+      if (user) (req as AuthedRequest).userId = user.id;
     }
-
-    if (!userId) {
-      const user = await prisma.user.create({ data: {} });
-      userId = user.id;
-      res.setHeader(
-        "Set-Cookie",
-        `clm_user=${userId}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000`,
-      );
-    }
-
-    (req as AuthedRequest).userId = userId;
     next();
   } catch (error) {
     next(error);
@@ -34,6 +24,6 @@ export async function sessionMiddleware(req: Request, res: Response, next: NextF
 
 export function getUserId(req: Request): string {
   const userId = (req as AuthedRequest).userId;
-  if (!userId) throw new Error("Missing session");
+  if (!userId) throw new HttpError("Authentication required", HTTP_UNAUTHORIZED, "auth_required");
   return userId;
 }

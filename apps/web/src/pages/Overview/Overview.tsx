@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Card, Flex, Grid, GridItem, Typography } from '@forgedevstack/bear';
+import { Badge, Box, Button, Card, Flex, Grid, GridItem, Typography, useIsDesktop } from '@forgedevstack/bear';
 import { useLingoFormat, useTranslate } from '@forgedevstack/lingo/react';
 import { useNavigate } from 'react-router-dom';
 import { vehicleStatusFromDates } from '@clm/shared';
@@ -16,6 +16,7 @@ import {
   HERO_CAR_SPAN,
   HERO_META_SPAN,
   META_COLS,
+  ONE,
   ROUTE_DOCUMENTS,
   ROUTE_SERVICES,
   ROUTE_TASKS,
@@ -50,7 +51,17 @@ export function Overview() {
   const navigate = useNavigate();
   const t = useTranslate();
   const { locale } = useLingoFormat();
+  const isDesktop = useIsDesktop();
   const view = resolveOverviewView(loading, dashboard, vehicles);
+  const pageCols = isDesktop ? GRID_COLS : ONE;
+  const heroSpan = isDesktop ? HERO_META_SPAN : ONE;
+  const carSpan = isDesktop ? HERO_CAR_SPAN : ONE;
+  const metaSpan = isDesktop ? HERO_META_SPAN : ONE;
+  const statusSpan = isDesktop ? STATUS_SPAN : ONE;
+  const expenseSpan = isDesktop ? EXPENSE_SPAN : ONE;
+  const taskSpan = isDesktop ? TASK_SPAN : ONE;
+  const serviceSpan = isDesktop ? SERVICE_SPAN : ONE;
+  const metaCols = isDesktop ? META_COLS : STATUS_TILE_COLS;
 
   if (view === OVERVIEW_VIEW_LOADING) {
     return (
@@ -75,14 +86,14 @@ export function Overview() {
 
   return (
     <Flex className="Bear-Overview" direction="column" gap={GRID_GAP}>
-      <Grid cols={GRID_COLS} gap={GRID_GAP}>
-        <GridItem colSpan={HERO_META_SPAN}>
+      <Grid cols={pageCols} gap={GRID_GAP}>
+        <GridItem colSpan={heroSpan}>
           <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
-            <Grid cols={GRID_COLS} gap={GRID_GAP}>
-              <GridItem colSpan={HERO_CAR_SPAN}>
+            <Grid cols={pageCols} gap={GRID_GAP}>
+              <GridItem colSpan={carSpan}>
                 <CarArt make={vehicle.make} model={vehicle.model} />
               </GridItem>
-              <GridItem colSpan={HERO_META_SPAN}>
+              <GridItem colSpan={metaSpan}>
                 <Flex direction="column" gap={FLEX_GAP_SM}>
                   <Typography color={COLOR_MUTED}>{vehicle.formattedRegistrationNumber}</Typography>
                   <Typography variant={TYPO_PAGE_TITLE} color={COLOR_INK}>
@@ -94,7 +105,7 @@ export function Overview() {
                   <Badge variant="success" pill>
                     {t('active')}
                   </Badge>
-                  <Grid cols={META_COLS} gap={FLEX_GAP_SM}>
+                  <Grid cols={metaCols} gap={FLEX_GAP_SM}>
                     <div>
                       <Typography color={COLOR_MUTED}>{t('year')}</Typography>
                       <Typography>{vehicle.modelYear ?? t('unknown')}</Typography>
@@ -124,7 +135,7 @@ export function Overview() {
             </Grid>
           </Card>
         </GridItem>
-        <GridItem colSpan={STATUS_SPAN}>
+        <GridItem colSpan={statusSpan}>
           <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
             <Flex direction="column" gap={FLEX_GAP_MD}>
               <Typography variant={TYPO_SECTION_TITLE}>{t('generalStatus')}</Typography>
@@ -164,11 +175,11 @@ export function Overview() {
         </GridItem>
       </Grid>
 
-      <Grid cols={GRID_COLS} gap={GRID_GAP}>
-        <GridItem colSpan={EXPENSE_SPAN}>
+      <Grid cols={pageCols} gap={GRID_GAP}>
+        <GridItem colSpan={expenseSpan}>
           <OverviewExpenses expenseSummary={expenseSummary} />
         </GridItem>
-        <GridItem colSpan={TASK_SPAN}>
+        <GridItem colSpan={taskSpan}>
           <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
             <Flex direction="column" gap={FLEX_GAP_MD}>
               <Flex justify="between" align="center" wrap="wrap" gap={FLEX_GAP_SM}>
@@ -180,7 +191,7 @@ export function Overview() {
                 </Flex>
               </Flex>
               {visibleTasks.map((task) => (
-                <Flex key={task.id} justify="between" align="center" gap={FLEX_GAP_SM}>
+                <Flex key={task.id} justify="between" align="center" wrap="wrap" gap={FLEX_GAP_SM}>
                   <div>
                     <Typography weight="bold">{task.title}</Typography>
                     <Typography color={COLOR_MUTED}>{task.description}</Typography>
@@ -194,12 +205,12 @@ export function Overview() {
             </Flex>
           </Card>
         </GridItem>
-        <GridItem colSpan={SERVICE_SPAN}>
+        <GridItem colSpan={serviceSpan}>
           <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
             <Flex direction="column" gap={FLEX_GAP_MD}>
               <Typography variant={TYPO_SECTION_TITLE}>{t('services')}</Typography>
               {services.map((service) => (
-                <Flex key={service.providerId} justify="between" align="center" gap={FLEX_GAP_SM}>
+                <Flex key={service.providerId} justify="between" align="center" wrap="wrap" gap={FLEX_GAP_SM}>
                   <Flex align="center" gap={FLEX_GAP_SM}>
                     <ProviderMark providerId={service.providerId} name={service.name} />
                     <div>

@@ -1,4 +1,5 @@
 export { AppShell } from './AppShell';
+export { LocaleSelect } from './LocaleSelect';
 export { CarArt } from './CarArt';
 export { EmptyState } from './EmptyState';
 export { Logo } from './Logo';

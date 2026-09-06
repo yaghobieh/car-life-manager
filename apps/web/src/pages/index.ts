@@ -1,6 +1,8 @@
+export { Auth } from './Auth';
 export { Gate } from './Gate';
 export { Overview } from './Overview';
 export { Onboarding } from './Onboarding';
+export { Settings } from './Settings';
 export { Vehicles } from './Vehicles';
 export { Tasks } from './Tasks';
 export { Services } from './Services';

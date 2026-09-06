@@ -1,22 +1,19 @@
-import { createServer } from "@forgedevstack/harbor";
 import { config } from "./config";
 import { prisma } from "./db";
-import { registerServerRoutes } from "./routes/register.utils";
+import { logger } from "./logger";
+import { createClmServer } from "./app";
 
 async function bootstrap() {
-  const server = createServer({
-    port: config.port,
-    host: config.host,
-  });
-
-  registerServerRoutes(server);
-
+  const server = createClmServer();
   await server.start();
-  console.log(`Car Life Manager API http://${config.host}:${config.port}`);
+  logger.info(`Car Life Manager API http://${config.host}:${config.port}`, {
+    version: config.appVersion,
+    build: config.buildSha,
+  });
 }
 
 bootstrap().catch(async (error) => {
-  console.error(error);
+  logger.error(error);
   await prisma.$disconnect();
   process.exit(1);
 });

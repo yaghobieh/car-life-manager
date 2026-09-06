@@ -2,9 +2,16 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
   "installCommand": "npm install",
-  "buildCommand": "npm run build -w @clm/web",
+  "buildCommand": "npm run db:generate && npm run build -w @clm/web",
   "outputDirectory": "apps/web/dist",
+  "functions": {
+    "api/index.ts": {
+      "includeFiles": "apps/api/prisma/**"
+    }
+  },
   "rewrites": [
+    { "source": "/api/:path*", "destination": "/api" },
+    { "source": "/health", "destination": "/api" },
     { "source": "/((?!assets/).*)", "destination": "/index.html" }
   ]
 }

@@ -9,12 +9,14 @@ import type { ApiClientError, ApiErrorBody, ApiErrorHandler } from './api.types'
 
 export class ApiError extends Error implements ApiClientError {
   status: number;
+  code?: string;
   presentation: ApiClientError['presentation'];
 
-  constructor(message: string, status: number) {
+  constructor(message: string, status: number, code?: string) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
+    this.code = code;
     this.presentation = presentationForStatus(status);
   }
 }
@@ -45,7 +47,7 @@ export class ApiClient {
     });
     const body = (await response.json().catch(() => ({}))) as ApiErrorBody;
     if (response.status < HTTP_STATUS_OK || !response.ok) {
-      const error = new ApiError(body.error ?? `Request failed (${response.status})`, response.status);
+      const error = new ApiError(body.error ?? `Request failed (${response.status})`, response.status, body.code);
       this.onError?.(error);
       throw error;
     }
