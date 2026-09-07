@@ -12,6 +12,12 @@ export interface AppShellSidebarProps {
   activeId: string;
   onNavigate: (to: string) => void;
   footer: string;
+  brandLead: string;
+  brandAccent: string;
+  tagline: string;
+  onBrandClick: () => void;
+  productsLabel: string;
+  onProductsClick: () => void;
 }
 
 export interface SearchHit {
@@ -34,4 +40,6 @@ export interface AppShellMenuProps {
   activeId: string;
   onClose: () => void;
   onNavigate: (to: string) => void;
+  productsLabel?: string;
+  onProductsClick?: () => void;
 }

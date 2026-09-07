@@ -1,5 +1,11 @@
 export const SESSION_COOKIE = "clm_session";
 export const OAUTH_STATE_COOKIE = "clm_oauth_state";
+export const AUTH_NEXT_COOKIE = "clm_auth_next";
+export const AUTH_NEXT_QUERY = "next";
+export const SAFE_PATH_CAR = "/car";
+export const SAFE_PATH_PROPERTY = "/property";
+export const SAFE_PATH_CARLIFE = "/carlife";
+export const SAFE_PATH_APARTMENT = "/apartment";
 export const SESSION_DAYS = 30;
 export const SESSION_MAX_AGE_MS = SESSION_DAYS * 24 * 60 * 60 * 1000;
 export const PASSWORD_MIN_LENGTH = 8;

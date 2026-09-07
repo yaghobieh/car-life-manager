@@ -30,4 +30,14 @@ Users must sign in. Email + password register/login is live. Google/Gmail is liv
 
 Step-by-step Gmail + Vercel redirect setup: `docs/GMAIL.md`.
 
-Clerk is removed. Sign-in is email/password plus Google when `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set. Auth0 is not used on the login page.
+Clerk is removed. One login serves CarLife and NadLife (same `User` row in Postgres).
+
+Sign-in options:
+
+- Email / password
+- Google when `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set
+- Auth0 when `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, and `AUTH0_CLIENT_SECRET` are set
+
+Auth0 dashboard: https://manage.auth0.com/ — Allowed Callback URLs must include `{WEB_ORIGIN}/api/auth/auth0/callback` exactly.
+
+`?next=/car` or `?next=/property` is stored for Google and Auth0 so both products return to the site that asked for login.

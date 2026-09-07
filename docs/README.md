@@ -1,5 +1,8 @@
 # Documentation
 
+- [PROJECT-AUDIT.md](./PROJECT-AUDIT.md) — Sprint 0.1 audit; Sprint 0.2 is the platform shell
+- [DOMAINS.md](./DOMAINS.md) — HomeLife hosts and product routes
+- [AWS.md](./AWS.md) — Route 53 / one-API rule
 - [PRODUCT.md](./PRODUCT.md)
 - [ARCHITECTURE.md](./ARCHITECTURE.md)
 - [DOMAIN-MODEL.md](./DOMAIN-MODEL.md)

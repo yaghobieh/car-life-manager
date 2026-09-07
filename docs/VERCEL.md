@@ -32,7 +32,9 @@ If `DATABASE_URL` is missing at build time, migrate is skipped and Production wi
 
 ## After deploy
 
-1. Open `/welcome` then `/auth`
+1. Open `/` then `/auth` (or `/car`, `/carlife`, `/property`, `/apartment`, which send you to auth with `next`)
+2. Add custom domains `homelife.app`, `car.homelife.app`, `apartment.homelife.app` when purchased
+3. Set Google + Auth0 callback URLs to this Vercel origin
 2. Register or use Gmail
 3. Add a vehicle
 4. Open Reminders and confirm ICS downloads

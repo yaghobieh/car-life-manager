@@ -8,4 +8,5 @@ export const AUTH_LOGIN_PATH = `${API_PREFIX}/auth/login`;
 export const AUTH_REGISTER_PATH = `${API_PREFIX}/auth/register`;
 export const AUTH_LOGOUT_PATH = `${API_PREFIX}/auth/logout`;
 export const AUTH_GOOGLE_PATH = `${API_PREFIX}/auth/google`;
+export const AUTH_AUTH0_PATH = `${API_PREFIX}/auth/auth0`;
 export const META_PATH = `${API_PREFIX}/meta`;

@@ -1,5 +1,7 @@
 export { Auth } from './Auth';
 export { Gate } from './Gate';
+export { Platform } from './Platform';
+export { PropertyGate, PropertyHome, PropertySaved, PropertySearch } from './Property';
 export { Overview } from './Overview';
 export { Onboarding } from './Onboarding';
 export { Settings } from './Settings';

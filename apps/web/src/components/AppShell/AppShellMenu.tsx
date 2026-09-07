@@ -7,7 +7,7 @@ import type { AppShellMenuProps } from './AppShell.types';
 import { navButtonVariant } from './AppShell.utils';
 
 export function AppShellMenu(props: AppShellMenuProps) {
-  const { isOpen, items, activeId, onClose, onNavigate } = props;
+  const { isOpen, items, activeId, onClose, onNavigate, productsLabel, onProductsClick } = props;
   const t = useTranslate();
 
   if (!isOpen) return null;
@@ -18,6 +18,11 @@ export function AppShellMenu(props: AppShellMenuProps) {
       <Box as="nav" bg={COLOR_NAVY_DEEP} p={4} className="bear-absolute bear-bottom-0 bear-left-0 bear-right-0">
         <Flex direction="column" gap={FLEX_GAP_MD}>
           <Typography color={COLOR_WHITE} weight="bold">{t('menu')}</Typography>
+          {productsLabel && onProductsClick ? (
+            <Button variant="ghost" fullWidth disableElevation onClick={onProductsClick}>
+              <Typography color={COLOR_WHITE}>{productsLabel}</Typography>
+            </Button>
+          ) : null}
           {items.map((item) => (
             <Button
               key={item.id}

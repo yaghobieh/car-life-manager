@@ -1,6 +1,7 @@
 import type { Expense, MaintenanceRecord, Reminder, ServiceAnswer, Task, VehicleDocument, VehicleLookupResult } from '@clm/shared';
 import { HTTP_METHOD_PATCH, HTTP_METHOD_POST, ICS_PATH_SUFFIX } from '@const';
 import {
+  AUTH_AUTH0_PATH,
   AUTH_GOOGLE_PATH,
   AUTH_LOGIN_PATH,
   AUTH_LOGOUT_PATH,
@@ -34,6 +35,7 @@ export const api = {
     }),
   calendarUrl: (vehicleId: string) => `${VEHICLES_PATH}/${vehicleId}${ICS_PATH_SUFFIX}`,
   googleStart: AUTH_GOOGLE_PATH,
+  auth0Start: AUTH_AUTH0_PATH,
   lookup: (plate: string) =>
     apiClient.request<VehicleLookupResult>(`${LOOKUP_PATH}/${encodeURIComponent(plate)}`),
   listVehicles: () => apiClient.request<VehicleListPayload>(VEHICLES_PATH),

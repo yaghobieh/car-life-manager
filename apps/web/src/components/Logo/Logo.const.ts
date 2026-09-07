@@ -1,0 +1,18 @@
+import {
+  BRAND_CAR_ACCENT,
+  BRAND_CAR_LEAD,
+  BRAND_PLATFORM_ACCENT,
+  BRAND_PLATFORM_LEAD,
+  BRAND_PROPERTY_ACCENT,
+  BRAND_PROPERTY_LEAD,
+  LOGO_PRODUCT_CAR,
+  LOGO_PRODUCT_PLATFORM,
+  LOGO_PRODUCT_PROPERTY,
+} from '@const';
+import type { LogoProduct } from './Logo.types';
+
+export const LOGO_WORD: Record<LogoProduct, { lead: string; accent: string }> = {
+  [LOGO_PRODUCT_PLATFORM]: { lead: BRAND_PLATFORM_LEAD, accent: BRAND_PLATFORM_ACCENT },
+  [LOGO_PRODUCT_CAR]: { lead: BRAND_CAR_LEAD, accent: BRAND_CAR_ACCENT },
+  [LOGO_PRODUCT_PROPERTY]: { lead: BRAND_PROPERTY_LEAD, accent: BRAND_PROPERTY_ACCENT },
+};

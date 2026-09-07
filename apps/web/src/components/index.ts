@@ -1,4 +1,5 @@
 export { AppShell } from './AppShell';
+export { PropertyShell } from './PropertyShell';
 export { AppLoader, isAppBootLoading } from './AppLoader';
 export { ClmGridTable } from './ClmGridTable';
 export { LocaleSelect } from './LocaleSelect';

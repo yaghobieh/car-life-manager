@@ -8,5 +8,6 @@ describe('isAppBootLoading', () => {
     expect(isAppBootLoading(true, true, true, false)).toBe(true);
     expect(isAppBootLoading(true, true, true, true)).toBe(false);
     expect(isAppBootLoading(true, false, true, true)).toBe(false);
+    expect(isAppBootLoading(true, true, true, false, false)).toBe(false);
   });
 });

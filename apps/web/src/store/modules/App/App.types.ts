@@ -4,6 +4,7 @@ import type { AuthUser, DashboardPayload } from '@api';
 export interface AppNucleusState {
   user: AuthUser | null;
   googleEnabled: boolean;
+  auth0Enabled: boolean;
   emailNotifyReady: boolean;
   smsNotifyReady: boolean;
   authReady: boolean;

@@ -7,4 +7,6 @@ export const AUTH_ERROR_KEYS: Record<string, string> = {
   invalid_email: 'authInvalidEmail',
   google_unavailable: 'authGoogleUnavailable',
   google_failed: 'authGoogleFailed',
+  auth0_unavailable: 'authAuth0Unavailable',
+  auth0_failed: 'authAuth0Failed',
 };

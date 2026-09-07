@@ -3,9 +3,10 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Input } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import { api } from '@api';
-import { BOOLEAN_FALSE, BOOLEAN_TRUE, EMPTY_STRING, ROUTE_AUTH } from '@const';
+import { BOOLEAN_FALSE, BOOLEAN_TRUE, EMPTY_STRING, ROUTE_AUTH, TWILIO_SIGNUP_URL } from '@const';
 import { ClmButton, ClmList, ClmPageHead, ClmRow, ClmStatusPill } from '@common';
 import { LocaleSelect } from '@components/LocaleSelect';
+import { OfficialLink } from '@components/OfficialLink';
 import { useAppState } from '@hooks';
 import { logger } from '@logger';
 import { SettingsStatus } from './helpers/SettingsStatus';
@@ -74,6 +75,7 @@ export function Settings() {
       <div className="Clm-form">
         <Input label={t('name')} value={name} onChange={(event) => setName(event.target.value)} fullWidth />
         <Input label={t('phone')} type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} fullWidth />
+        <ClmRow title={t('notifySms')} subtitle={t('smsSignupHelp')} action={<OfficialLink href={TWILIO_SIGNUP_URL} label={t('smsSignupCta')} />} />
         <ClmButton kind="outline" onClick={() => setNotifySms(!notifySms)}>
           {t('notifySms')}: {notifySms ? t('active') : t('change')}
         </ClmButton>

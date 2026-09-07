@@ -16,6 +16,7 @@ Use these skills to keep Bear work consistent. Reference by skill name when star
 | **car-js-fundamentals** | Component logic — Promises, event loop, when to avoid `useEffect` / `useCallback` / `useMemo` |
 | **car-code-review** | Structured review — hooks, SVG helpers, props pattern, portal PropsTable, `/car-code-review` |
 | **car-code-quality** | Code review — types in type files, constants in const files, no magic numbers/strings, logic-first |
+| **apartment-code-quality** | Property / NadLife pages — official-or-nothing, no fake listings, same file rules as car |
 | **car-release-workflow** | Version bumps, CHANGELOG, build, publish |
 
 ## How to invoke
@@ -23,6 +24,7 @@ Use these skills to keep Bear work consistent. Reference by skill name when star
 - "Follow car-ui-standards when refactoring Select"
 - "Use car-component-workflow to add ToggleButton"
 - "Run /car-code-review on FormControl"
+- "Run /apartment-code-quality on PropertySearch"
 - "Prepare 1.2.4 per car-release-workflow"
 
 ## Legacy rule

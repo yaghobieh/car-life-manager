@@ -5,8 +5,11 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   BOOLEAN_FALSE,
   BOOLEAN_TRUE,
+  BRAND_CAR_ACCENT,
+  BRAND_CAR_LEAD,
   EMPTY_STRING,
   FLEX_GAP_SM,
+  ROUTE_PLATFORM,
   ROUTE_SERVICES,
   ROUTE_SETTINGS,
   SVG_BELL,
@@ -62,6 +65,12 @@ export function AppShell() {
           activeId={activeId}
           onNavigate={goTo}
           footer={t('officialFooter')}
+          brandLead={BRAND_CAR_LEAD}
+          brandAccent={BRAND_CAR_ACCENT}
+          tagline={t('tagline')}
+          onBrandClick={() => goTo(ROUTE_PLATFORM)}
+          productsLabel={t('allProducts')}
+          onProductsClick={() => goTo(ROUTE_PLATFORM)}
         />
       )}
       <div className="Clm-main">
@@ -99,9 +108,9 @@ export function AppShell() {
             </>
           ) : (
             <>
-              <div className="Clm-logo">
-                <img src={SVG_LOGO_MARK} alt={t('brand')} width={SVG_LOGO_SIZE} height={SVG_LOGO_SIZE} />
-              </div>
+              <button type="button" className="Clm-logo Clm-logo-btn" onClick={() => goTo(ROUTE_PLATFORM)}>
+                <img src={SVG_LOGO_MARK} alt={t('platformBrand')} width={SVG_LOGO_SIZE} height={SVG_LOGO_SIZE} />
+              </button>
               <div className="Clm-topbar-spacer" />
               <button type="button" className="Clm-icon-btn" aria-label={t('menu')} onClick={() => setMenuOpen(BOOLEAN_TRUE)}>☰</button>
               <button type="button" className="Clm-icon-btn" aria-label={t('notifications')} onClick={() => navigate(ROUTE_SETTINGS)}>
@@ -145,6 +154,8 @@ export function AppShell() {
         activeId={activeId}
         onClose={() => setMenuOpen(BOOLEAN_FALSE)}
         onNavigate={goTo}
+        productsLabel={t('allProducts')}
+        onProductsClick={() => goTo(ROUTE_PLATFORM)}
       />
     </div>
   );

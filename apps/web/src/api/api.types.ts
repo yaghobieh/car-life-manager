@@ -52,6 +52,7 @@ export interface NotificationChannels {
 export interface AuthMePayload {
   user: AuthUser | null;
   googleEnabled: boolean;
+  auth0Enabled: boolean;
   notificationChannels: NotificationChannels;
 }
 
