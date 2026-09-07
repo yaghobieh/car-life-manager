@@ -7,6 +7,7 @@ export interface AppNucleusState {
   auth0Enabled: boolean;
   emailNotifyReady: boolean;
   smsNotifyReady: boolean;
+  smsAccountReady: boolean;
   authReady: boolean;
   vehicles: Vehicle[];
   currentId: string | null;

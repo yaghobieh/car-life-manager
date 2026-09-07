@@ -47,6 +47,7 @@ export interface AuthUser {
 export interface NotificationChannels {
   email: boolean;
   sms: boolean;
+  smsAccount: boolean;
 }
 
 export interface AuthMePayload {

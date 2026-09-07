@@ -3,16 +3,19 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Input } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import { api } from '@api';
-import { BOOLEAN_FALSE, BOOLEAN_TRUE, EMPTY_STRING, ROUTE_AUTH, TWILIO_SIGNUP_URL } from '@const';
+import { BOOLEAN_FALSE, BOOLEAN_TRUE, EMPTY_STRING, ROUTE_AUTH } from '@const';
 import { ClmButton, ClmList, ClmPageHead, ClmRow, ClmStatusPill } from '@common';
 import { LocaleSelect } from '@components/LocaleSelect';
 import { OfficialLink } from '@components/OfficialLink';
 import { useAppState } from '@hooks';
 import { logger } from '@logger';
 import { SettingsStatus } from './helpers/SettingsStatus';
+import { smsActionHref, smsActionLabelKey, smsHelpKey } from './Settings.utils';
 
 export function Settings() {
-  const { user, refresh, emailNotifyReady, smsNotifyReady } = useAppState();
+  const { user, refresh, emailNotifyReady, smsNotifyReady, smsAccountReady = BOOLEAN_FALSE } = useAppState();
+  const smsHref = smsActionHref(smsNotifyReady, smsAccountReady);
+  const smsLabelKey = smsActionLabelKey(smsNotifyReady, smsAccountReady);
   const navigate = useNavigate();
   const t = useTranslate();
   const [name, setName] = useState(user?.name ?? EMPTY_STRING);
@@ -77,8 +80,8 @@ export function Settings() {
         <Input label={t('phone')} type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} fullWidth />
         <ClmRow
           title={t('notifySms')}
-          subtitle={smsNotifyReady ? t('notifySmsReady') : t('smsSignupHelp')}
-          action={<OfficialLink href={TWILIO_SIGNUP_URL} label={t('smsSignupCta')} />}
+          subtitle={t(smsHelpKey(smsNotifyReady, smsAccountReady))}
+          action={smsHref && smsLabelKey ? <OfficialLink href={smsHref} label={t(smsLabelKey)} /> : undefined}
         />
         <ClmButton kind="outline" onClick={() => setNotifySms(!notifySms)}>
           {t('notifySms')}: {notifySms ? t('active') : t('change')}

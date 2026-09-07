@@ -17,6 +17,7 @@ export const appNucleus = createNucleus<AppNucleusState>(
     auth0Enabled: BOOLEAN_FALSE,
     emailNotifyReady: BOOLEAN_FALSE,
     smsNotifyReady: BOOLEAN_FALSE,
+    smsAccountReady: BOOLEAN_FALSE,
     authReady: BOOLEAN_FALSE,
     vehicles: [],
     currentId: null,
@@ -34,6 +35,7 @@ export const appNucleus = createNucleus<AppNucleusState>(
             session.auth0Enabled ?? BOOLEAN_FALSE,
             session.notificationChannels?.email ?? BOOLEAN_FALSE,
             session.notificationChannels?.sms ?? BOOLEAN_FALSE,
+            session.notificationChannels?.smsAccount ?? BOOLEAN_FALSE,
           ));
           return;
         }
@@ -46,6 +48,7 @@ export const appNucleus = createNucleus<AppNucleusState>(
           session.auth0Enabled ?? BOOLEAN_FALSE,
           session.notificationChannels?.email ?? BOOLEAN_FALSE,
           session.notificationChannels?.sms ?? BOOLEAN_FALSE,
+          session.notificationChannels?.smsAccount ?? BOOLEAN_FALSE,
           vehicles,
           selected,
           dashboard,

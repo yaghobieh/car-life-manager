@@ -15,6 +15,7 @@ export function refreshUnauthenticated(
   auth0Enabled: boolean,
   emailNotifyReady: boolean,
   smsNotifyReady: boolean,
+  smsAccountReady: boolean,
 ) {
   return {
     user: null,
@@ -22,6 +23,7 @@ export function refreshUnauthenticated(
     auth0Enabled,
     emailNotifyReady,
     smsNotifyReady,
+    smsAccountReady,
     vehicles: [],
     currentId: null,
     dashboard: null,
@@ -37,6 +39,7 @@ export function refreshSucceeded(
   auth0Enabled: boolean,
   emailNotifyReady: boolean,
   smsNotifyReady: boolean,
+  smsAccountReady: boolean,
   vehicles: Vehicle[],
   currentId: string | null,
   dashboard: DashboardPayload | null,
@@ -47,6 +50,7 @@ export function refreshSucceeded(
     auth0Enabled,
     emailNotifyReady,
     smsNotifyReady,
+    smsAccountReady,
     vehicles,
     currentId,
     dashboard,

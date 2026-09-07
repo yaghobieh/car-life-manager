@@ -38,6 +38,8 @@ TWILIO_AUTH_TOKEN=...
 TWILIO_FROM_NUMBER=+972...
 ```
 
+SID and token alone are not enough. Buy or verify a sending number and set `TWILIO_FROM_NUMBER`. Until that exists, Settings says the sender is missing and SMS stays `skipped`.
+
 Put the user’s mobile in Settings. Without Twilio, SMS stays `skipped`.
 
 ## Calendar

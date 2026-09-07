@@ -44,6 +44,7 @@ export const ADDRESS_QUERY_PARAM = 'q';
 export const PROPERTY_SOURCE_OFFICIAL = 'official';
 export const PROPERTY_SOURCE_USER = 'user';
 export const TWILIO_SIGNUP_URL = 'https://www.twilio.com/try-twilio';
+export const TWILIO_NUMBERS_URL = 'https://console.twilio.com/us1/develop/phone-numbers/manage/search';
 export const INSURANCE_OFFICIAL_URL = 'https://www.gov.il/he/departments/capital_market_authority';
 export const AUTH0_DASHBOARD_URL = 'https://manage.auth0.com/';
 export const RESEND_SIGNUP_URL = 'https://resend.com/signup';

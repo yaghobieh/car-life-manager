@@ -57,6 +57,10 @@ export function isEmailNotifyReady(): boolean {
   return Boolean(config.resendApiKey);
 }
 
+export function isSmsAccountReady(): boolean {
+  return Boolean(config.twilioAccountSid && config.twilioAuthToken);
+}
+
 export function isSmsNotifyReady(): boolean {
-  return Boolean(config.twilioAccountSid && config.twilioAuthToken && config.twilioFromNumber);
+  return isSmsAccountReady() && Boolean(config.twilioFromNumber);
 }

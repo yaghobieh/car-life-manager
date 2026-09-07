@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { isAuth0Ready, isEmailNotifyReady, isGoogleAuthReady, isSmsNotifyReady } from "../config";
+import { isAuth0Ready, isEmailNotifyReady, isGoogleAuthReady, isSmsAccountReady, isSmsNotifyReady } from "../config";
 import { HTTP_CREATED, HTTP_OK } from "../constants/http.const";
 import { getUserId, type AuthedRequest } from "../middlewares";
 import {
@@ -77,6 +77,7 @@ export async function meController(req: Request, res: Response): Promise<void> {
     notificationChannels: {
       email: isEmailNotifyReady(),
       sms: isSmsNotifyReady(),
+      smsAccount: isSmsAccountReady(),
     },
   });
 }
