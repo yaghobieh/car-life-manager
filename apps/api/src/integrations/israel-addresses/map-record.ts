@@ -1,6 +1,6 @@
-import type { OfficialAddress } from "@clm/shared";
+import type { AreaPrice, OfficialAddress } from "@clm/shared";
 import { ADDRESS_KIND_CITY, ADDRESS_KIND_STREET, ADDRESS_SOURCE_OFFICIAL } from "./addresses.const";
-import type { IsraelCityRecord, IsraelStreetRecord } from "./types";
+import type { HousingLotteryRecord, IsraelCityRecord, IsraelStreetRecord } from "./types";
 
 function text(value: string | number | undefined): string | null {
   if (value === undefined || value === null) return null;
@@ -38,6 +38,19 @@ export function mapStreetRecord(record: IsraelStreetRecord): OfficialAddress | n
     cityCode,
     streetCode,
     region: text(record.region_name),
+    source: ADDRESS_SOURCE_OFFICIAL,
+  };
+}
+
+export function mapLotteryRecord(record: HousingLotteryRecord): AreaPrice | null {
+  const city = text(record.LamasName);
+  if (!city) return null;
+  return {
+    id: `lottery-${record._id ?? city}`,
+    city,
+    neighborhood: text(record.Neighborhood),
+    projectName: text(record.ProjectName),
+    pricePerMeter: text(record.PriceForMeter),
     source: ADDRESS_SOURCE_OFFICIAL,
   };
 }

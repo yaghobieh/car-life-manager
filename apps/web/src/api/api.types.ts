@@ -42,6 +42,7 @@ export interface AuthUser {
   imageUrl: string | null;
   notifyEmail: boolean;
   notifySms: boolean;
+  role: string;
 }
 
 export interface NotificationChannels {

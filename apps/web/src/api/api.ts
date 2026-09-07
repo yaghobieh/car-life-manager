@@ -1,9 +1,14 @@
 import type {
   Expense,
+  Home,
+  HomeInput,
   Lawyer,
   LawyerInput,
   MaintenanceRecord,
   OfficialAddress,
+  AreaPrice,
+  PropertyExpense,
+  PropertyExpenseInput,
   Reminder,
   SavedAddress,
   SavedAddressInput,
@@ -22,6 +27,9 @@ import {
   AUTH_REGISTER_PATH,
   LOOKUP_PATH,
   PROPERTY_ADDRESSES_PATH,
+  PROPERTY_AREA_PRICES_PATH,
+  PROPERTY_EXPENSES_PATH,
+  PROPERTY_HOMES_PATH,
   PROPERTY_LAWYERS_PATH,
   PROPERTY_SAVED_PATH,
   TASKS_PATH,
@@ -37,10 +45,10 @@ export const api = {
       method: HTTP_METHOD_POST,
       body: JSON.stringify({ email, password }),
     }),
-  register: (email: string, password: string, name: string) =>
+  register: (email: string, password: string, name: string, role: string) =>
     apiClient.request<AuthUserPayload>(AUTH_REGISTER_PATH, {
       method: HTTP_METHOD_POST,
-      body: JSON.stringify({ email, password, name }),
+      body: JSON.stringify({ email, password, name, role }),
     }),
   logout: () =>
     apiClient.request<{ user: null }>(AUTH_LOGOUT_PATH, { method: HTTP_METHOD_POST }),
@@ -95,6 +103,10 @@ export const api = {
     apiClient.request<{ addresses: OfficialAddress[] }>(
       `${PROPERTY_ADDRESSES_PATH}?${ADDRESS_QUERY_PARAM}=${encodeURIComponent(query)}`,
     ),
+  searchAreaPrices: (query: string) =>
+    apiClient.request<{ prices: AreaPrice[] }>(
+      `${PROPERTY_AREA_PRICES_PATH}?${ADDRESS_QUERY_PARAM}=${encodeURIComponent(query)}`,
+    ),
   listSavedAddresses: () => apiClient.request<{ addresses: SavedAddress[] }>(PROPERTY_SAVED_PATH),
   saveAddress: (input: SavedAddressInput) =>
     apiClient.request<{ address: SavedAddress }>(PROPERTY_SAVED_PATH, {
@@ -104,6 +116,18 @@ export const api = {
   listLawyers: () => apiClient.request<{ lawyers: Lawyer[] }>(PROPERTY_LAWYERS_PATH),
   addLawyer: (input: LawyerInput) =>
     apiClient.request<{ lawyer: Lawyer }>(PROPERTY_LAWYERS_PATH, {
+      method: HTTP_METHOD_POST,
+      body: JSON.stringify(input),
+    }),
+  listHomes: () => apiClient.request<{ homes: Home[] }>(PROPERTY_HOMES_PATH),
+  addHome: (input: HomeInput) =>
+    apiClient.request<{ home: Home }>(PROPERTY_HOMES_PATH, {
+      method: HTTP_METHOD_POST,
+      body: JSON.stringify(input),
+    }),
+  listPropertyExpenses: () => apiClient.request<{ expenses: PropertyExpense[] }>(PROPERTY_EXPENSES_PATH),
+  addPropertyExpense: (input: PropertyExpenseInput) =>
+    apiClient.request<{ expense: PropertyExpense }>(PROPERTY_EXPENSES_PATH, {
       method: HTTP_METHOD_POST,
       body: JSON.stringify(input),
     }),

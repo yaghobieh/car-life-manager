@@ -1,7 +1,19 @@
 export { Auth } from './Auth';
 export { Gate } from './Gate';
 export { Platform } from './Platform';
-export { PropertyGate, PropertyHome, PropertyLawyers, PropertySaved, PropertySearch } from './Property';
+export {
+  PropertyDocuments,
+  PropertyExpenses,
+  PropertyGate,
+  PropertyHome,
+  PropertyHomeDetail,
+  PropertyHomes,
+  PropertyLawyers,
+  PropertyLookup,
+  PropertySaved,
+  PropertySearch,
+  PropertySettings,
+} from './Property';
 export { Overview } from './Overview';
 export { Onboarding } from './Onboarding';
 export { Settings } from './Settings';

@@ -42,7 +42,7 @@ afterEach(() => {
 describe('AppRoutes', () => {
   it('shows the platform at /', () => {
     renderPath(ROUTE_PLATFORM);
-    expect(screen.getByText('ניהול הבית והרכב. במקום אחד.')).toBeTruthy();
+    expect(screen.getByText('רכב ודירה. במקום אחד.')).toBeTruthy();
   });
 
   it('sends unsigned /car and /property to auth', () => {
@@ -54,7 +54,7 @@ describe('AppRoutes', () => {
 
   it('redirects /welcome to the platform', () => {
     renderPath(ROUTE_WELCOME);
-    expect(screen.getByText('ניהול הבית והרכב. במקום אחד.')).toBeTruthy();
+    expect(screen.getByText('רכב ודירה. במקום אחד.')).toBeTruthy();
   });
 
   it('maps named product routes onto the apps', () => {

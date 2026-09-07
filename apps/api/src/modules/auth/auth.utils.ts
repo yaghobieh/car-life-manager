@@ -68,6 +68,7 @@ export function serializeAuthUser(user: {
   imageUrl: string | null;
   notifyEmail: boolean;
   notifySms: boolean;
+  role: string;
 }): AuthUserPayload {
   return {
     id: user.id,
@@ -77,6 +78,7 @@ export function serializeAuthUser(user: {
     imageUrl: user.imageUrl,
     notifyEmail: user.notifyEmail,
     notifySms: user.notifySms,
+    role: user.role,
   };
 }
 

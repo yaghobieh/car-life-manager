@@ -1,5 +1,38 @@
+import {
+  ROLE_BROKER,
+  ROLE_CAR_SELLER,
+  ROLE_LAWYER,
+  ROLE_OWNER,
+  ROLE_RENTER,
+  ROLE_SELLER,
+} from '@const';
+
 export const AUTH_MODE_LOGIN = 'login';
 export const AUTH_MODE_REGISTER = 'register';
+export const AUTH_ROLE_OPTIONS = [
+  ROLE_OWNER,
+  ROLE_SELLER,
+  ROLE_RENTER,
+  ROLE_BROKER,
+  ROLE_LAWYER,
+  ROLE_CAR_SELLER,
+] as const;
+export const PROPERTY_AUTH_ROLES = [
+  ROLE_OWNER,
+  ROLE_SELLER,
+  ROLE_RENTER,
+  ROLE_BROKER,
+  ROLE_LAWYER,
+] as const;
+
+export const ROLE_LABEL_KEYS: Record<string, string> = {
+  [ROLE_OWNER]: 'roleOwner',
+  [ROLE_SELLER]: 'roleSeller',
+  [ROLE_RENTER]: 'roleRenter',
+  [ROLE_BROKER]: 'roleBroker',
+  [ROLE_LAWYER]: 'roleLawyer',
+  [ROLE_CAR_SELLER]: 'roleCarSeller',
+};
 export const AUTH_ERROR_QUERY = 'error';
 export const AUTH_ERROR_KEYS: Record<string, string> = {
   email_taken: 'authEmailTaken',

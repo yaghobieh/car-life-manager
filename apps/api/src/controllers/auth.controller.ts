@@ -49,7 +49,12 @@ function redirectAfterAuth(req: Request, res: Response): void {
 }
 
 export async function registerController(req: Request, res: Response): Promise<void> {
-  const user = await registerUser(String(req.body?.email ?? ""), String(req.body?.password ?? ""), req.body?.name);
+  const user = await registerUser(
+    String(req.body?.email ?? ""),
+    String(req.body?.password ?? ""),
+    req.body?.name,
+    req.body?.role,
+  );
   attachSession(res, await createSession(user.id));
   res.status(HTTP_CREATED).json({ user });
 }

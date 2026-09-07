@@ -16,7 +16,7 @@ import type { ChannelResult, NotifyUser, ReminderDispatchInput } from "./notific
 import { reminderBody, reminderSourceKey } from "./notifications.utils";
 import { sendSms } from "./sms.adapter";
 
-async function persist(userId: string, vehicleId: string, title: string, body: string, sourceKey: string, result: ChannelResult): Promise<void> {
+async function persist(userId: string, vehicleId: string | null, title: string, body: string, sourceKey: string, result: ChannelResult): Promise<void> {
   const sentAt = result.status === STATUS_SENT ? new Date() : null;
   await prisma.notification.upsert({
     where: { userId_sourceKey_channel: { userId, sourceKey, channel: result.channel } },
@@ -97,5 +97,32 @@ export async function dispatchDueReminders(userId: string, vehicleId: string): P
 export function queueDueReminders(userId: string, vehicleId: string): void {
   void dispatchDueReminders(userId, vehicleId).catch((error) => {
     logger.warn("notification dispatch skipped", error instanceof Error ? error.message : error);
+  });
+}
+
+export async function dispatchHomeDues(userId: string): Promise<void> {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) return;
+  const today = new Date().toISOString().slice(0, ISO_DATE_LENGTH);
+  const homes = await prisma.home.findMany({
+    where: {
+      userId,
+      nextDueDate: { not: null, lte: today },
+    },
+  });
+  for (const home of homes) {
+    if (!home.nextDueDate) continue;
+    await dispatchReminder(user, {
+      id: home.id,
+      title: home.nextDueTitle || home.city,
+      dueDate: home.nextDueDate,
+      vehicleId: null,
+    });
+  }
+}
+
+export function queueHomeDues(userId: string): void {
+  void dispatchHomeDues(userId).catch((error) => {
+    logger.warn("home due dispatch skipped", error instanceof Error ? error.message : error);
   });
 }

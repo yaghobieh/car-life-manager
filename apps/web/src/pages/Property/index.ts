@@ -1,5 +1,11 @@
 export { PropertyGate } from './PropertyGate';
 export { PropertyHome } from './PropertyHome';
+export { PropertyHomeDetail } from './PropertyHomeDetail';
+export { PropertyHomes } from './PropertyHomes';
 export { PropertySearch } from './PropertySearch';
+export { PropertyLookup } from './PropertyLookup';
+export { PropertyExpenses } from './PropertyExpenses';
+export { PropertyDocuments } from './PropertyDocuments';
+export { PropertySettings } from './PropertySettings';
 export { PropertySaved } from './PropertySaved';
 export { PropertyLawyers } from './PropertyLawyers';

@@ -1,12 +1,17 @@
-import type { OfficialAddress } from "@clm/shared";
+import type { AreaPrice, OfficialAddress } from "@clm/shared";
 import { config } from "../../config";
 import {
   ACCEPT_JSON,
   ADDRESS_SEARCH_LIMIT,
   DATASTORE_TIMEOUT_MS,
 } from "./addresses.const";
-import { mapCityRecord, mapStreetRecord } from "./map-record";
-import type { DatastoreSearchResponse, IsraelCityRecord, IsraelStreetRecord } from "./types";
+import { mapCityRecord, mapLotteryRecord, mapStreetRecord } from "./map-record";
+import type {
+  DatastoreSearchResponse,
+  HousingLotteryRecord,
+  IsraelCityRecord,
+  IsraelStreetRecord,
+} from "./types";
 
 export class IsraelAddressError extends Error {
   constructor(
@@ -70,4 +75,10 @@ export async function searchOfficialAddresses(query: string): Promise<OfficialAd
     merged.push(item);
   }
   return merged;
+}
+
+export async function searchOfficialAreaPrices(query: string): Promise<AreaPrice[]> {
+  const trimmed = query.trim();
+  const records = await datastoreSearch<HousingLotteryRecord>(config.housingLotteryResourceId, trimmed);
+  return records.map(mapLotteryRecord).filter((item): item is AreaPrice => Boolean(item));
 }

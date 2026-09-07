@@ -1,23 +1,50 @@
 import {
   NAV_GROUP_GENERAL,
+  NAV_GROUP_MANAGE,
+  NAV_PROPERTY_DOCUMENTS,
+  NAV_PROPERTY_EXPENSES,
+  NAV_PROPERTY_HOMES,
   NAV_PROPERTY_LAWYERS,
+  NAV_PROPERTY_LOOKUP,
   NAV_PROPERTY_OVERVIEW,
   NAV_PROPERTY_SAVED,
   NAV_PROPERTY_SEARCH,
+  NAV_PROPERTY_SETTINGS,
   ROUTE_PROPERTY,
+  ROUTE_PROPERTY_DOCUMENTS,
+  ROUTE_PROPERTY_EXPENSES,
+  ROUTE_PROPERTY_HOMES,
   ROUTE_PROPERTY_LAWYERS,
+  ROUTE_PROPERTY_LOOKUP,
   ROUTE_PROPERTY_SAVED,
   ROUTE_PROPERTY_SEARCH,
+  ROUTE_PROPERTY_SETTINGS,
+  SVG_NAV_DOCUMENTS,
+  SVG_NAV_EXPENSES,
   SVG_NAV_LAWYERS,
   SVG_NAV_OVERVIEW,
+  SVG_NAV_REPORTS,
   SVG_NAV_SAVED,
   SVG_NAV_SEARCH,
+  SVG_NAV_SETTINGS,
 } from '@const';
 import type { NavItem } from '../AppShell/AppShell.types';
 
 export const PROPERTY_NAV_ITEMS: NavItem[] = [
   { id: NAV_PROPERTY_OVERVIEW, to: ROUTE_PROPERTY, labelKey: 'propertyOverview', shortLabelKey: 'propertyOverviewShort', group: NAV_GROUP_GENERAL, iconSrc: SVG_NAV_OVERVIEW },
+  { id: NAV_PROPERTY_HOMES, to: ROUTE_PROPERTY_HOMES, labelKey: 'propertyHomes', shortLabelKey: 'propertyHomesShort', group: NAV_GROUP_GENERAL, iconSrc: SVG_NAV_REPORTS },
   { id: NAV_PROPERTY_SEARCH, to: ROUTE_PROPERTY_SEARCH, labelKey: 'propertySearch', shortLabelKey: 'propertySearchShort', group: NAV_GROUP_GENERAL, iconSrc: SVG_NAV_SEARCH },
+  { id: NAV_PROPERTY_LOOKUP, to: ROUTE_PROPERTY_LOOKUP, labelKey: 'propertyLookup', shortLabelKey: 'propertyLookupShort', group: NAV_GROUP_GENERAL, iconSrc: SVG_NAV_SAVED },
+  { id: NAV_PROPERTY_EXPENSES, to: ROUTE_PROPERTY_EXPENSES, labelKey: 'propertyExpenses', shortLabelKey: 'propertyExpensesShort', group: NAV_GROUP_GENERAL, iconSrc: SVG_NAV_EXPENSES },
   { id: NAV_PROPERTY_LAWYERS, to: ROUTE_PROPERTY_LAWYERS, labelKey: 'propertyLawyers', shortLabelKey: 'propertyLawyersShort', group: NAV_GROUP_GENERAL, iconSrc: SVG_NAV_LAWYERS },
-  { id: NAV_PROPERTY_SAVED, to: ROUTE_PROPERTY_SAVED, labelKey: 'propertySaved', shortLabelKey: 'propertySavedShort', group: NAV_GROUP_GENERAL, iconSrc: SVG_NAV_SAVED },
+  { id: NAV_PROPERTY_DOCUMENTS, to: ROUTE_PROPERTY_DOCUMENTS, labelKey: 'propertyDocuments', shortLabelKey: 'propertyDocumentsShort', group: NAV_GROUP_MANAGE, iconSrc: SVG_NAV_DOCUMENTS },
+  { id: NAV_PROPERTY_SETTINGS, to: ROUTE_PROPERTY_SETTINGS, labelKey: 'settings', shortLabelKey: 'settings', group: NAV_GROUP_MANAGE, iconSrc: SVG_NAV_SETTINGS },
+  { id: NAV_PROPERTY_SAVED, to: ROUTE_PROPERTY_SAVED, labelKey: 'propertySaved', shortLabelKey: 'propertySavedShort', group: NAV_GROUP_MANAGE, iconSrc: SVG_NAV_SAVED },
+];
+
+export const PROPERTY_MOBILE_NAV_IDS = [
+  NAV_PROPERTY_OVERVIEW,
+  NAV_PROPERTY_HOMES,
+  NAV_PROPERTY_LOOKUP,
+  NAV_PROPERTY_LAWYERS,
 ];

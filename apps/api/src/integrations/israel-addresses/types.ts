@@ -14,6 +14,14 @@ export interface IsraelStreetRecord {
   street_name_status?: string;
 }
 
+export interface HousingLotteryRecord {
+  _id?: number;
+  LamasName?: string;
+  Neighborhood?: string;
+  ProjectName?: string;
+  PriceForMeter?: string;
+}
+
 export interface DatastoreSearchResponse<T> {
   success?: boolean;
   result?: {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ROUTE_CAR, ROUTE_ONBOARDING, ROUTE_PLATFORM, ROUTE_PROPERTY } from '@const';
-import { afterAuthPath, authErrorKey } from './Auth.utils';
+import { ROLE_CAR_SELLER, ROLE_OWNER, ROLE_SELLER, ROUTE_CAR, ROUTE_ONBOARDING, ROUTE_PLATFORM, ROUTE_PROPERTY } from '@const';
+import { afterAuthPath, authErrorKey, roleLabelKey } from './Auth.utils';
 
 const REJECTED_NEXT = '/evil';
 
@@ -26,5 +26,19 @@ describe('afterAuthPath', () => {
 
   it('keeps a safe property next path', () => {
     expect(afterAuthPath(0, ROUTE_PROPERTY)).toBe(ROUTE_PROPERTY);
+  });
+
+  it('sends property roles to NadLife and car sellers to onboarding', () => {
+    expect(afterAuthPath(0, null, ROLE_OWNER)).toBe(ROUTE_PROPERTY);
+    expect(afterAuthPath(0, null, ROLE_SELLER)).toBe(ROUTE_PROPERTY);
+    expect(afterAuthPath(0, null, ROLE_CAR_SELLER)).toBe(ROUTE_ONBOARDING);
+    expect(afterAuthPath(1, null, ROLE_CAR_SELLER)).toBe(ROUTE_CAR);
+  });
+});
+
+describe('roleLabelKey', () => {
+  it('maps register roles', () => {
+    expect(roleLabelKey(ROLE_OWNER)).toBe('roleOwner');
+    expect(roleLabelKey(ROLE_CAR_SELLER)).toBe('roleCarSeller');
   });
 });

@@ -12,6 +12,7 @@ import {
   COLOR_NAVY_DEEP,
   EMPTY_STRING,
   FLEX_GAP_LG,
+  ROLE_OWNER,
   TYPO_PAGE_TITLE,
 } from '@const';
 import { LocaleSelect } from '@components/LocaleSelect';
@@ -24,6 +25,7 @@ import { oauthStartHref } from '../../Route.utils';
 import { afterAuthPath, authErrorKey, nextAuthMode } from './Auth.utils';
 import { AuthGoogleButton } from './helpers/AuthGoogleButton';
 import { AuthProviderButton } from './helpers/AuthProviderButton';
+import { AuthRegisterExtras } from './helpers/AuthRegisterExtras';
 
 export function Auth() {
   const { user, vehicles, loading, authReady, googleEnabled, auth0Enabled, refresh } = useAppState();
@@ -32,6 +34,8 @@ export function Auth() {
   const [email, setEmail] = useState(EMPTY_STRING);
   const [password, setPassword] = useState(EMPTY_STRING);
   const [name, setName] = useState(EMPTY_STRING);
+  const [role, setRole] = useState(ROLE_OWNER);
+  const [city, setCity] = useState(EMPTY_STRING);
   const [busy, setBusy] = useState(false);
   const [errorKey, setErrorKey] = useState(EMPTY_STRING);
   const [params] = useSearchParams();
@@ -43,13 +47,13 @@ export function Auth() {
     return null;
   }
 
-  if (user) return <Navigate to={afterAuthPath(vehicles.length, params.get(AUTH_NEXT_QUERY))} replace />;
+  if (user) return <Navigate to={afterAuthPath(vehicles.length, params.get(AUTH_NEXT_QUERY), user.role)} replace />;
 
   async function submit() {
     setBusy(true);
     setErrorKey(EMPTY_STRING);
     try {
-      if (isRegister) await api.register(email, password, name);
+      if (isRegister) await api.register(email, password, name, role);
       else await api.login(email, password);
       logger.info('auth success', mode);
       await refresh();
@@ -93,6 +97,14 @@ export function Auth() {
             <Flex direction="column" gap={FLEX_GAP_LG}>
               {isRegister && (
                 <Input label={t('name')} value={name} onChange={(event) => setName(event.target.value)} fullWidth />
+              )}
+              {isRegister && (
+                <AuthRegisterExtras
+                  role={role}
+                  onRoleChange={setRole}
+                  city={city}
+                  onCityChange={setCity}
+                />
               )}
               <Input label={t('email')} type="email" value={email} onChange={(event) => setEmail(event.target.value)} fullWidth />
               <Input label={t('password')} type="password" value={password} onChange={(event) => setPassword(event.target.value)} fullWidth />

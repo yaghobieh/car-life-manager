@@ -41,3 +41,17 @@ export const GOOGLE_UNAVAILABLE_CODE = "google_unavailable";
 export const PHONE_MIN_DIGITS = 9;
 export const PHONE_MAX_DIGITS = 15;
 export const NAME_MAX_LENGTH = 80;
+export const ROLE_OWNER = "owner";
+export const ROLE_LAWYER = "lawyer";
+export const ROLE_SELLER = "seller";
+export const ROLE_RENTER = "renter";
+export const ROLE_BROKER = "broker";
+export const ROLE_CAR_SELLER = "car_seller";
+export const AUTH_ROLES = [
+  ROLE_OWNER,
+  ROLE_SELLER,
+  ROLE_RENTER,
+  ROLE_BROKER,
+  ROLE_LAWYER,
+  ROLE_CAR_SELLER,
+] as const;

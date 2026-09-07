@@ -1,13 +1,9 @@
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { SVG_EMPTY_PROPERTY, TITLE_SEPARATOR, ZERO } from '@const';
-import { ClmEmpty, ClmList, ClmPageHead, ClmRow } from '@common';
+import { SVG_EMPTY_PROPERTY, ZERO } from '@const';
+import { ClmEmpty, ClmPageHead } from '@common';
 import { usePropertyState } from '@hooks';
+import { PropertyLawyerCard } from './PropertyLawyerCard';
 import { PropertyLawyersForm } from './PropertyLawyers.form';
-
-function lawyerSubtitle(city: string | null, specialty: string | null, phone: string | null): string | undefined {
-  const parts = [city, specialty, phone].filter(Boolean);
-  return parts.length ? parts.join(TITLE_SEPARATOR) : undefined;
-}
 
 export function PropertyLawyers() {
   const t = useTranslate();
@@ -16,7 +12,9 @@ export function PropertyLawyers() {
   return (
     <div className="Bear-PropertyLawyers">
       <ClmPageHead title={t('propertyLawyers')} subtitle={t('pageSubPropertyLawyers')} />
-      <PropertyLawyersForm />
+      <div className="Clm-card">
+        <PropertyLawyersForm />
+      </div>
       {lawyers.length === ZERO ? (
         <ClmEmpty
           iconSrc={SVG_EMPTY_PROPERTY}
@@ -24,15 +22,11 @@ export function PropertyLawyers() {
           body={t('lawyersEmptyBody')}
         />
       ) : (
-        <ClmList>
+        <div className="Clm-lawyers">
           {lawyers.map((lawyer) => (
-            <ClmRow
-              key={lawyer.id}
-              title={lawyer.name}
-              subtitle={lawyerSubtitle(lawyer.city, lawyer.specialty, lawyer.phone) ?? lawyer.notes ?? undefined}
-            />
+            <PropertyLawyerCard key={lawyer.id} lawyer={lawyer} />
           ))}
-        </ClmList>
+        </div>
       )}
     </div>
   );

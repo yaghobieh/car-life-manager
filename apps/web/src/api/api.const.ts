@@ -13,3 +13,6 @@ export const META_PATH = `${API_PREFIX}/meta`;
 export const PROPERTY_ADDRESSES_PATH = `${API_PREFIX}/property/addresses`;
 export const PROPERTY_SAVED_PATH = `${API_PREFIX}/property/saved-addresses`;
 export const PROPERTY_LAWYERS_PATH = `${API_PREFIX}/property/lawyers`;
+export const PROPERTY_HOMES_PATH = `${API_PREFIX}/property/homes`;
+export const PROPERTY_EXPENSES_PATH = `${API_PREFIX}/property/expenses`;
+export const PROPERTY_AREA_PRICES_PATH = `${API_PREFIX}/property/area-prices`;

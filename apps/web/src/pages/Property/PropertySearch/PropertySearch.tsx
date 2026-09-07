@@ -6,11 +6,14 @@ import type { OfficialAddress } from '@clm/shared';
 import {
   ADDRESS_QUERY_PARAM,
   EMPTY_STRING,
+  FILTER_ALL,
   SEARCH_MIN_LENGTH,
   SVG_EMPTY_PROPERTY,
   ZERO,
 } from '@const';
 import { AddressSearchBoard } from '@components/AddressSearchBoard';
+import { AreaPriceList } from '@components/AreaPriceList';
+import { HomesBoard } from '@components/HomesBoard';
 import { ClmEmpty, ClmList, ClmPageHead, ClmRow } from '@common';
 import { usePropertyState } from '@hooks';
 import { addressSubtitle, addressTitle } from '../Property.utils';
@@ -41,14 +44,25 @@ function SearchResults(props: {
 export function PropertySearch() {
   const t = useTranslate();
   const [params] = useSearchParams();
-  const { addresses, search, searching, searchError, saveAddress } = usePropertyState();
+  const {
+    addresses,
+    search,
+    searchAreaPrices,
+    searching,
+    areaSearching,
+    areaPrices,
+    areaSearchError,
+    searchError,
+    saveAddress,
+    clearSearch,
+    homes,
+  } = usePropertyState();
   const [query, setQuery] = useState(params.get(ADDRESS_QUERY_PARAM) ?? EMPTY_STRING);
   const hasResults = addresses.length > ZERO;
 
-  async function submitSearch() {
-    const next = query.trim();
+  async function submitSearch(next = query.trim()) {
     if (next.length < SEARCH_MIN_LENGTH) return;
-    await search(next);
+    await Promise.all([search(next), searchAreaPrices(next)]);
   }
 
   function SearchBody() {
@@ -92,9 +106,21 @@ export function PropertySearch() {
         query={query}
         onQueryChange={setQuery}
         onSearch={() => void submitSearch()}
+        onLiveSearch={(value) => void submitSearch(value)}
+        onClear={clearSearch}
+        onPick={(address) => {
+          setQuery(addressTitle(address));
+          void submitSearch(address.street || address.city);
+        }}
+        suggestions={addresses}
         busy={searching}
+        hint={t('propertyLiveSearchHint')}
       />
       <SearchBody />
+      <HomesBoard homes={homes} dealFilter={FILTER_ALL} city={query} street={EMPTY_STRING} />
+      {query.trim().length >= SEARCH_MIN_LENGTH ? (
+        <AreaPriceList prices={areaPrices} error={areaSearchError} busy={areaSearching} />
+      ) : null}
     </div>
   );
 }

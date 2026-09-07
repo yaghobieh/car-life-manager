@@ -18,6 +18,7 @@ model User {
   emailVerifiedAt DateTime?
   notifyEmail     Boolean  @default(true)
   notifySms       Boolean  @default(false)
+  role            String   @default("owner")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   vehicles        Vehicle[]
@@ -28,6 +29,8 @@ model User {
   notifications   Notification[]
   lawyers         Lawyer[]
   savedAddresses  SavedAddress[]
+  homes           Home[]
+  propertyExpenses PropertyExpense[]
 }
 
 model Vehicle {
@@ -243,6 +246,47 @@ model Lawyer {
   notes      String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Home {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dealType     String
+  city         String
+  street       String?
+  houseNumber  String?
+  neighborhood String?
+  rooms        Float?
+  sqm          Int?
+  floor        Int?
+  price        Float?
+  currency     String   @default("ILS")
+  features     String?
+  imageUrls    String?
+  model3dUrl   String?
+  nextDueDate  String?
+  nextDueTitle String?
+  notes        String?
+  source       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model PropertyExpense {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category    String
+  amount      Float
+  currency    String   @default("ILS")
+  occurredAt  DateTime
+  description String?
+  createdAt   DateTime @default(now())
 
   @@index([userId])
 }

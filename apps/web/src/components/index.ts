@@ -15,4 +15,9 @@ export { TaskRow } from './TaskRow';
 export { SourceBadge } from './SourceBadge';
 export { TaskDrawer } from './TaskDrawer';
 export { OfficialLink } from './OfficialLink';
+export { AddressSearchBoard } from './AddressSearchBoard';
+export { AreaPriceList } from './AreaPriceList';
+export { HomeCard } from './HomeCard';
+export { HomeCarousel } from './HomeCarousel';
+export { HomesBoard } from './HomesBoard';
 

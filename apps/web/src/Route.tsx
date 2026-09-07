@@ -10,9 +10,15 @@ import {
   CAR_SEGMENT_TASKS,
   CAR_SEGMENT_VEHICLE,
   CAR_SEGMENT_VEHICLES,
+  PROPERTY_SEGMENT_DOCUMENTS,
+  PROPERTY_SEGMENT_EXPENSES,
+  PROPERTY_SEGMENT_HOME_ID,
+  PROPERTY_SEGMENT_HOMES,
   PROPERTY_SEGMENT_LAWYERS,
+  PROPERTY_SEGMENT_LOOKUP,
   PROPERTY_SEGMENT_SAVED,
   PROPERTY_SEGMENT_SEARCH,
+  PROPERTY_SEGMENT_SETTINGS,
   ROUTE_AUTH,
   ROUTE_CAR,
   ROUTE_ONBOARDING,
@@ -27,11 +33,17 @@ import {
   Maintenance,
   Onboarding,
   Overview,
+  PropertyDocuments,
+  PropertyExpenses,
   PropertyGate,
   PropertyHome,
+  PropertyHomeDetail,
+  PropertyHomes,
   PropertyLawyers,
+  PropertyLookup,
   PropertySaved,
   PropertySearch,
+  PropertySettings,
   Reminders,
   Reports,
   Services,
@@ -64,9 +76,15 @@ export function AppRoutes() {
       </Route>
       <Route path={ROUTE_PROPERTY} element={<PropertyGate />}>
         <Route index element={<PropertyHome />} />
+        <Route path={PROPERTY_SEGMENT_HOMES} element={<PropertyHomes />} />
+        <Route path={`${PROPERTY_SEGMENT_HOMES}/${PROPERTY_SEGMENT_HOME_ID}`} element={<PropertyHomeDetail />} />
         <Route path={PROPERTY_SEGMENT_SEARCH} element={<PropertySearch />} />
+        <Route path={PROPERTY_SEGMENT_LOOKUP} element={<PropertyLookup />} />
+        <Route path={PROPERTY_SEGMENT_EXPENSES} element={<PropertyExpenses />} />
         <Route path={PROPERTY_SEGMENT_SAVED} element={<PropertySaved />} />
         <Route path={PROPERTY_SEGMENT_LAWYERS} element={<PropertyLawyers />} />
+        <Route path={PROPERTY_SEGMENT_DOCUMENTS} element={<PropertyDocuments />} />
+        <Route path={PROPERTY_SEGMENT_SETTINGS} element={<PropertySettings />} />
       </Route>
       {LEGACY_REDIRECTS.map((item) => (
         <Route key={item.from} path={item.from} element={<Navigate to={item.to} replace />} />

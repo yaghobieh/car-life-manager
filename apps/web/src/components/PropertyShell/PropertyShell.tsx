@@ -9,7 +9,7 @@ import {
   BRAND_PROPERTY_LEAD,
   ROUTE_PLATFORM,
   ROUTE_PROPERTY,
-  ROUTE_SETTINGS,
+  ROUTE_PROPERTY_SETTINGS,
   SVG_BELL,
   SVG_BELL_SIZE,
   LOGO_PROPERTY,
@@ -20,7 +20,7 @@ import { useAppState } from '@hooks';
 import { AppShellMenu } from '../AppShell/AppShellMenu';
 import { AppShellSidebar } from '../AppShell/components/AppShellSidebar';
 import { activeNavId, sidebarGroups, userInitials } from '../AppShell/AppShell.utils';
-import { PROPERTY_NAV_ITEMS } from './PropertyShell.const';
+import { PROPERTY_MOBILE_NAV_IDS, PROPERTY_NAV_ITEMS } from './PropertyShell.const';
 
 export function PropertyShell() {
   const { user } = useAppState();
@@ -60,10 +60,10 @@ export function PropertyShell() {
           {isDesktop ? (
             <>
               <div className="Clm-topbar-spacer" />
-              <button type="button" className="Clm-icon-btn" aria-label={t('notifications')} onClick={() => navigate(ROUTE_SETTINGS)}>
+              <button type="button" className="Clm-icon-btn" aria-label={t('notifications')} onClick={() => navigate(ROUTE_PROPERTY_SETTINGS)}>
                 <img src={SVG_BELL} alt="" width={SVG_BELL_SIZE} height={SVG_BELL_SIZE} />
               </button>
-              <button type="button" className="Clm-user-chip" onClick={() => navigate(ROUTE_SETTINGS)}>
+              <button type="button" className="Clm-user-chip" onClick={() => navigate(ROUTE_PROPERTY_SETTINGS)}>
                 <span>{user?.name || t('account')}</span>
                 <span className="Clm-avatar">{initials || '·'}</span>
               </button>
@@ -83,7 +83,7 @@ export function PropertyShell() {
         </div>
         {!isDesktop && (
           <nav className="Clm-mobile-bar">
-            {PROPERTY_NAV_ITEMS.map((item) => (
+            {PROPERTY_NAV_ITEMS.filter((item) => PROPERTY_MOBILE_NAV_IDS.includes(item.id)).map((item) => (
               <button key={item.id} type="button" onClick={() => goTo(item.to)}>
                 <img src={item.iconSrc} alt="" width={SVG_NAV_SIZE} height={SVG_NAV_SIZE} />
                 <div>{t(item.shortLabelKey ?? item.labelKey)}</div>
