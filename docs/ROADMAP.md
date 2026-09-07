@@ -18,11 +18,15 @@ Still required for a trustworthy car MVP:
 - Maintenance + vehicle timeline
 - Reminders + reports
 
-## Sprint 0.3+ (Property — not started)
+## Sprint 0.3 (Property — in progress)
 
-- Property models only when a real domain object exists
-- Official property data adapter only if a permitted API exists
-- No listings marketplace, lawyers, or Land Authority “connected” badges without an API
+Shipped: official city/street search from data.gov.il, saved official addresses, user-entered lawyers.
+
+Still honest:
+
+- No listings marketplace or Land Authority “connected” badge
+- No Israel Bar connection or fake lawyer cards
+- SMS stays off until Twilio credentials are set
 
 ## V2
 

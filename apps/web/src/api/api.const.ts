@@ -10,3 +10,6 @@ export const AUTH_LOGOUT_PATH = `${API_PREFIX}/auth/logout`;
 export const AUTH_GOOGLE_PATH = `${API_PREFIX}/auth/google`;
 export const AUTH_AUTH0_PATH = `${API_PREFIX}/auth/auth0`;
 export const META_PATH = `${API_PREFIX}/meta`;
+export const PROPERTY_ADDRESSES_PATH = `${API_PREFIX}/property/addresses`;
+export const PROPERTY_SAVED_PATH = `${API_PREFIX}/property/saved-addresses`;
+export const PROPERTY_LAWYERS_PATH = `${API_PREFIX}/property/lawyers`;

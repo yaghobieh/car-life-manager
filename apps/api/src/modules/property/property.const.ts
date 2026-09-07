@@ -1,0 +1,8 @@
+export const PROPERTY_SOURCE_OFFICIAL = "official";
+export const PROPERTY_SOURCE_USER = "user";
+export const QUERY_TOO_SHORT_CODE = "query_too_short";
+export const LAWYER_NAME_REQUIRED_CODE = "lawyer_name_required";
+export const INVALID_PHONE_CODE = "invalid_phone";
+export const ADDRESS_CITY_REQUIRED_CODE = "address_city_required";
+export const LAWYER_NAME_MIN = 2;
+export const NOTES_MAX_LENGTH = 240;

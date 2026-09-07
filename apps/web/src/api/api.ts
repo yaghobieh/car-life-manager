@@ -1,5 +1,18 @@
-import type { Expense, MaintenanceRecord, Reminder, ServiceAnswer, Task, VehicleDocument, VehicleLookupResult } from '@clm/shared';
-import { HTTP_METHOD_PATCH, HTTP_METHOD_POST, ICS_PATH_SUFFIX } from '@const';
+import type {
+  Expense,
+  Lawyer,
+  LawyerInput,
+  MaintenanceRecord,
+  OfficialAddress,
+  Reminder,
+  SavedAddress,
+  SavedAddressInput,
+  ServiceAnswer,
+  Task,
+  VehicleDocument,
+  VehicleLookupResult,
+} from '@clm/shared';
+import { ADDRESS_QUERY_PARAM, HTTP_METHOD_PATCH, HTTP_METHOD_POST, ICS_PATH_SUFFIX } from '@const';
 import {
   AUTH_AUTH0_PATH,
   AUTH_GOOGLE_PATH,
@@ -8,6 +21,9 @@ import {
   AUTH_ME_PATH,
   AUTH_REGISTER_PATH,
   LOOKUP_PATH,
+  PROPERTY_ADDRESSES_PATH,
+  PROPERTY_LAWYERS_PATH,
+  PROPERTY_SAVED_PATH,
   TASKS_PATH,
   VEHICLES_PATH,
 } from './api.const';
@@ -72,6 +88,22 @@ export const api = {
     }),
   addMaintenance: (vehicleId: string, input: Pick<MaintenanceRecord, 'serviceDate' | 'serviceType'> & Partial<MaintenanceRecord>) =>
     apiClient.request<{ maintenance: MaintenanceRecord }>(`${VEHICLES_PATH}/${vehicleId}/maintenance`, {
+      method: HTTP_METHOD_POST,
+      body: JSON.stringify(input),
+    }),
+  searchAddresses: (query: string) =>
+    apiClient.request<{ addresses: OfficialAddress[] }>(
+      `${PROPERTY_ADDRESSES_PATH}?${ADDRESS_QUERY_PARAM}=${encodeURIComponent(query)}`,
+    ),
+  listSavedAddresses: () => apiClient.request<{ addresses: SavedAddress[] }>(PROPERTY_SAVED_PATH),
+  saveAddress: (input: SavedAddressInput) =>
+    apiClient.request<{ address: SavedAddress }>(PROPERTY_SAVED_PATH, {
+      method: HTTP_METHOD_POST,
+      body: JSON.stringify(input),
+    }),
+  listLawyers: () => apiClient.request<{ lawyers: Lawyer[] }>(PROPERTY_LAWYERS_PATH),
+  addLawyer: (input: LawyerInput) =>
+    apiClient.request<{ lawyer: Lawyer }>(PROPERTY_LAWYERS_PATH, {
       method: HTTP_METHOD_POST,
       body: JSON.stringify(input),
     }),

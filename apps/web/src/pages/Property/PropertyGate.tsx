@@ -4,7 +4,10 @@ import { useTranslate } from '@forgedevstack/lingo/react';
 import { CARD_RADIUS_XL, COLOR_BG, FLEX_GAP_MD, ROUTE_PROPERTY } from '@const';
 import { PropertyShell } from '@components/PropertyShell';
 import { useAppState } from '@hooks';
+import { bootstrapPropertyStore } from '@store';
 import { authHref } from '../../Route.utils';
+
+bootstrapPropertyStore();
 
 export function PropertyGate() {
   const { user, authReady, error, refresh } = useAppState();

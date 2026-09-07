@@ -1,12 +1,12 @@
 # Product
 
-This repository is a **Home & Mobility** product family with one account and one trust rule: official data only.
+This repository is a **Car & Home** (רכב ודירה) product family with one account and one trust rule: official data only.
 
 | Surface | Path | Role |
 | --- | --- | --- |
-| Platform | `/` | Product picker. Hebrew kicker: בית ותנועה |
+| Platform | `/` | Product picker. Hebrew kicker: רכב ודירה |
 | Car Manager (CLM / CarLife) | `/car` | Vehicle life OS — the working product |
-| Property Manager (NadLife) | `/property` | Apartment life OS — shell and empty states only |
+| Property Manager (NadLife) | `/property` | Official address search, saved addresses, user-entered lawyers | |
 
 Car primary message: **Everything you need for your car. In one place.**
 
@@ -14,7 +14,7 @@ Hebrew: **כל מה שצריך לרכב שלך. במקום אחד.**
 
 Secondary: **קנית רכב? אנחנו נדאג שלא תשכח כלום.**
 
-Property is **not** a listings site. Do not invent apartments, lawyers, or an Israel Land Authority connection.
+Property is **not** a listings site. Address search uses official data.gov.il cities and streets. Lawyers are user-entered contacts only. Do not invent listings or an Israel Land Authority connection.
 
 The product answers three questions:
 

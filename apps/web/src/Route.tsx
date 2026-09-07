@@ -10,6 +10,7 @@ import {
   CAR_SEGMENT_TASKS,
   CAR_SEGMENT_VEHICLE,
   CAR_SEGMENT_VEHICLES,
+  PROPERTY_SEGMENT_LAWYERS,
   PROPERTY_SEGMENT_SAVED,
   PROPERTY_SEGMENT_SEARCH,
   ROUTE_AUTH,
@@ -28,6 +29,7 @@ import {
   Overview,
   PropertyGate,
   PropertyHome,
+  PropertyLawyers,
   PropertySaved,
   PropertySearch,
   Reminders,
@@ -64,6 +66,7 @@ export function AppRoutes() {
         <Route index element={<PropertyHome />} />
         <Route path={PROPERTY_SEGMENT_SEARCH} element={<PropertySearch />} />
         <Route path={PROPERTY_SEGMENT_SAVED} element={<PropertySaved />} />
+        <Route path={PROPERTY_SEGMENT_LAWYERS} element={<PropertyLawyers />} />
       </Route>
       {LEGACY_REDIRECTS.map((item) => (
         <Route key={item.from} path={item.from} element={<Navigate to={item.to} replace />} />

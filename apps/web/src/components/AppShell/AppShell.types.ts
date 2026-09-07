@@ -14,6 +14,7 @@ export interface AppShellSidebarProps {
   footer: string;
   brandLead: string;
   brandAccent: string;
+  brandMark: string;
   tagline: string;
   onBrandClick: () => void;
   productsLabel: string;

@@ -1,30 +1,100 @@
 import { useState } from 'react';
-import { Input } from '@forgedevstack/bear';
+import { useSearchParams } from 'react-router-dom';
+import { Badge, Button } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { EMPTY_STRING, SVG_EMPTY_PROPERTY } from '@const';
-import { ClmEmpty, ClmPageHead } from '@common';
+import type { OfficialAddress } from '@clm/shared';
+import {
+  ADDRESS_QUERY_PARAM,
+  EMPTY_STRING,
+  SEARCH_MIN_LENGTH,
+  SVG_EMPTY_PROPERTY,
+  ZERO,
+} from '@const';
+import { AddressSearchBoard } from '@components/AddressSearchBoard';
+import { ClmEmpty, ClmList, ClmPageHead, ClmRow } from '@common';
+import { usePropertyState } from '@hooks';
+import { addressSubtitle, addressTitle } from '../Property.utils';
+
+function SearchResults(props: {
+  addresses: OfficialAddress[];
+  onSave: (address: OfficialAddress) => void;
+}) {
+  const t = useTranslate();
+  return (
+    <ClmList>
+      {props.addresses.map((address) => (
+        <ClmRow
+          key={address.id}
+          title={addressTitle(address)}
+          subtitle={addressSubtitle(address, t('officialCity'))}
+          action={(
+            <Button variant="outline" onClick={() => props.onSave(address)}>
+              {t('propertySaveAddress')}
+            </Button>
+          )}
+        />
+      ))}
+    </ClmList>
+  );
+}
 
 export function PropertySearch() {
   const t = useTranslate();
-  const [query, setQuery] = useState(EMPTY_STRING);
+  const [params] = useSearchParams();
+  const { addresses, search, searching, searchError, saveAddress } = usePropertyState();
+  const [query, setQuery] = useState(params.get(ADDRESS_QUERY_PARAM) ?? EMPTY_STRING);
+  const hasResults = addresses.length > ZERO;
 
-  return (
-    <div className="Bear-PropertySearch">
-      <ClmPageHead title={t('propertySearch')} subtitle={t('pageSubPropertySearch')} />
-      <div className="Clm-discover">
-        <Input
-          label={t('propertySearchLabel')}
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={t('propertySearchPlaceholder')}
-          fullWidth
+  async function submitSearch() {
+    const next = query.trim();
+    if (next.length < SEARCH_MIN_LENGTH) return;
+    await search(next);
+  }
+
+  function SearchBody() {
+    if (searchError) {
+      return (
+        <ClmEmpty
+          iconSrc={SVG_EMPTY_PROPERTY}
+          title={t('propertySearchErrorTitle')}
+          body={t('propertySearchErrorBody')}
         />
-      </div>
+      );
+    }
+    if (hasResults) {
+      return (
+        <SearchResults
+          addresses={addresses}
+          onSave={(address) => void saveAddress({
+            city: address.city,
+            street: address.street,
+            cityCode: address.cityCode,
+            streetCode: address.streetCode,
+            region: address.region,
+          })}
+        />
+      );
+    }
+    return (
       <ClmEmpty
         iconSrc={SVG_EMPTY_PROPERTY}
         title={t('propertySearchEmptyTitle')}
         body={t('propertySearchEmptyBody')}
       />
+    );
+  }
+
+  return (
+    <div className="Bear-PropertySearch">
+      <ClmPageHead title={t('propertySearch')} subtitle={t('pageSubPropertySearch')} />
+      <Badge variant="success" pill>{t('officialAddress')}</Badge>
+      <AddressSearchBoard
+        query={query}
+        onQueryChange={setQuery}
+        onSearch={() => void submitSearch()}
+        busy={searching}
+      />
+      <SearchBody />
     </div>
   );
 }

@@ -2,7 +2,7 @@
   "name": "home-life",
   "version": "1.0.2",
   "private": true,
-  "description": "HomeLife — Home & Mobility platform. One account, one API, one database for CarLife and NadLife.",
+  "description": "HomeLife — Car & Home (רכב ודירה). One account, one API, one database for CarLife and NadLife.",
   "workspaces": [
     "apps/*",
     "packages/*"

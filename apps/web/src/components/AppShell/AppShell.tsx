@@ -14,7 +14,7 @@ import {
   ROUTE_SETTINGS,
   SVG_BELL,
   SVG_BELL_SIZE,
-  SVG_LOGO_MARK,
+  LOGO_CAR,
   SVG_LOGO_SIZE,
   SVG_NAV_SIZE,
 } from '@const';
@@ -67,6 +67,7 @@ export function AppShell() {
           footer={t('officialFooter')}
           brandLead={BRAND_CAR_LEAD}
           brandAccent={BRAND_CAR_ACCENT}
+          brandMark={LOGO_CAR}
           tagline={t('tagline')}
           onBrandClick={() => goTo(ROUTE_PLATFORM)}
           productsLabel={t('allProducts')}
@@ -109,7 +110,7 @@ export function AppShell() {
           ) : (
             <>
               <button type="button" className="Clm-logo Clm-logo-btn" onClick={() => goTo(ROUTE_PLATFORM)}>
-                <img src={SVG_LOGO_MARK} alt={t('platformBrand')} width={SVG_LOGO_SIZE} height={SVG_LOGO_SIZE} />
+                <img src={LOGO_CAR} alt={t('platformBrand')} width={SVG_LOGO_SIZE} height={SVG_LOGO_SIZE} />
               </button>
               <div className="Clm-topbar-spacer" />
               <button type="button" className="Clm-icon-btn" aria-label={t('menu')} onClick={() => setMenuOpen(BOOLEAN_TRUE)}>☰</button>

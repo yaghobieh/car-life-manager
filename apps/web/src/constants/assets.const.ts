@@ -1,4 +1,7 @@
 export const SVG_LOGO_MARK = '/svg/logo-mark.svg';
+export const LOGO_CAR = '/brand/logo-carlife.png';
+export const LOGO_PROPERTY = '/brand/logo-nadlife.png';
+export const SVG_NAV_LAWYERS = '/svg/nav-lawyers.svg';
 export const SVG_LOADER_CAR = '/svg/loader-car.svg';
 export const SVG_LOADER_SCENE = '/svg/loader-scene.svg';
 export const SVG_HERO_CAR = '/svg/hero-car.svg';

@@ -13,7 +13,7 @@ Follow **car-code-quality** first (types in `*.types.ts`, constants in `@const` 
 - No mock apartments, lawyers, maps, or marketplace cards
 - Do not mark Israel Land Authority, Tabu, or any commercial source as connected without a real API
 - Empty states must say there is no official source yet
-- Search inputs may exist; results stay empty until a permitted adapter exists
+- Search inputs may exist; results come only from the official data.gov.il city/street adapter, or stay empty/error if that API fails
 - Do not reuse `vehicleId` for property records
 
 ## Layout

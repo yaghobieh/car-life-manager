@@ -26,6 +26,8 @@ model User {
   sessions        AuthSession[]
   connections     ProviderConnection[]
   notifications   Notification[]
+  lawyers         Lawyer[]
+  savedAddresses  SavedAddress[]
 }
 
 model Vehicle {
@@ -228,6 +230,36 @@ model Notification {
   @@unique([userId, sourceKey, channel])
   @@index([userId])
   @@index([scheduledAt])
+}
+
+model Lawyer {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  city       String?
+  specialty  String?
+  phone      String?
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model SavedAddress {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  city       String
+  street     String?
+  cityCode   String?
+  streetCode String?
+  region     String?
+  source     String
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
 }
 
 model AuditLog {

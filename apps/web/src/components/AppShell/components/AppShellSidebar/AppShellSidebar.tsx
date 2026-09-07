@@ -1,16 +1,16 @@
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { SVG_LOGO_MARK, SVG_LOGO_SIZE, SVG_NAV_SIZE } from '@const';
+import { SVG_LOGO_SIZE, SVG_NAV_SIZE } from '@const';
 import type { AppShellSidebarProps } from '../../AppShell.types';
 
 export function AppShellSidebar(props: AppShellSidebarProps) {
-  const { groups, activeId, onNavigate, footer, brandLead, brandAccent, tagline, onBrandClick, productsLabel, onProductsClick } = props;
+  const { groups, activeId, onNavigate, footer, brandLead, brandAccent, brandMark, tagline, onBrandClick, productsLabel, onProductsClick } = props;
   const t = useTranslate();
 
   return (
     <aside className="Clm-sidebar">
       <div className="Clm-sidebar-top">
         <button type="button" className="Clm-logo Clm-logo-btn" onClick={onBrandClick}>
-          <img src={SVG_LOGO_MARK} alt={t('platformBrand')} width={SVG_LOGO_SIZE} height={SVG_LOGO_SIZE} />
+          <img src={brandMark} alt={t('platformBrand')} width={SVG_LOGO_SIZE} height={SVG_LOGO_SIZE} />
           <div>
             <div className="Clm-logo-word">{brandLead}<span>{brandAccent}</span></div>
             <div className="Clm-logo-sub">{tagline}</div>
