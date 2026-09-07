@@ -35,6 +35,7 @@ export const DOMAIN_PLATFORM = 'homelife.app';
 export const DOMAIN_CAR = 'car.homelife.app';
 export const DOMAIN_APARTMENT = 'apartment.homelife.app';
 export const TWILIO_SIGNUP_URL = 'https://www.twilio.com/try-twilio';
+export const INSURANCE_OFFICIAL_URL = 'https://www.gov.il/he/departments/capital_market_authority';
 export const AUTH0_DASHBOARD_URL = 'https://manage.auth0.com/';
 export const RESEND_SIGNUP_URL = 'https://resend.com/signup';
 export const EMPTY_ICON_VEHICLE = 'vehicle';

@@ -12,7 +12,7 @@ import { logger } from '@logger';
 import { SettingsStatus } from './helpers/SettingsStatus';
 
 export function Settings() {
-  const { user, refresh } = useAppState();
+  const { user, refresh, emailNotifyReady, smsNotifyReady } = useAppState();
   const navigate = useNavigate();
   const t = useTranslate();
   const [name, setName] = useState(user?.name ?? EMPTY_STRING);
@@ -59,7 +59,7 @@ export function Settings() {
         />
         <ClmRow
           title={t('emailAlerts')}
-          subtitle={t('emailAlertsDesc')}
+          subtitle={emailNotifyReady ? t('notifyEmailReady') : t('notifyEmailMissing')}
           action={(
             <ClmButton kind="outline" onClick={() => setNotifyEmail(!notifyEmail)}>
               {notifyEmail ? t('manage') : t('change')}
@@ -75,7 +75,11 @@ export function Settings() {
       <div className="Clm-form">
         <Input label={t('name')} value={name} onChange={(event) => setName(event.target.value)} fullWidth />
         <Input label={t('phone')} type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} fullWidth />
-        <ClmRow title={t('notifySms')} subtitle={t('smsSignupHelp')} action={<OfficialLink href={TWILIO_SIGNUP_URL} label={t('smsSignupCta')} />} />
+        <ClmRow
+          title={t('notifySms')}
+          subtitle={smsNotifyReady ? t('notifySmsReady') : t('smsSignupHelp')}
+          action={<OfficialLink href={TWILIO_SIGNUP_URL} label={t('smsSignupCta')} />}
+        />
         <ClmButton kind="outline" onClick={() => setNotifySms(!notifySms)}>
           {t('notifySms')}: {notifySms ? t('active') : t('change')}
         </ClmButton>
