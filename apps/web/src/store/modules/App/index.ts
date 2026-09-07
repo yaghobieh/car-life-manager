@@ -14,8 +14,10 @@ export const appNucleus = createNucleus<AppNucleusState>(
   (set, get) => ({
     user: null,
     googleEnabled: BOOLEAN_FALSE,
+    auth0Enabled: BOOLEAN_FALSE,
     emailNotifyReady: BOOLEAN_FALSE,
     smsNotifyReady: BOOLEAN_FALSE,
+    smsAccountReady: BOOLEAN_FALSE,
     authReady: BOOLEAN_FALSE,
     vehicles: [],
     currentId: null,
@@ -30,8 +32,10 @@ export const appNucleus = createNucleus<AppNucleusState>(
           logger.info('session empty');
           set(refreshUnauthenticated(
             session.googleEnabled,
+            session.auth0Enabled ?? BOOLEAN_FALSE,
             session.notificationChannels?.email ?? BOOLEAN_FALSE,
             session.notificationChannels?.sms ?? BOOLEAN_FALSE,
+            session.notificationChannels?.smsAccount ?? BOOLEAN_FALSE,
           ));
           return;
         }
@@ -41,8 +45,10 @@ export const appNucleus = createNucleus<AppNucleusState>(
         set(refreshSucceeded(
           session.user,
           session.googleEnabled,
+          session.auth0Enabled ?? BOOLEAN_FALSE,
           session.notificationChannels?.email ?? BOOLEAN_FALSE,
           session.notificationChannels?.sms ?? BOOLEAN_FALSE,
+          session.notificationChannels?.smsAccount ?? BOOLEAN_FALSE,
           vehicles,
           selected,
           dashboard,

@@ -29,6 +29,9 @@ import {
   PROVIDER_AUTH0,
   PROVIDER_EMAIL,
   PROVIDER_GOOGLE,
+  AUTH_ROLES,
+  ROLE_LAWYER,
+  ROLE_OWNER,
   SESSION_MAX_AGE_MS,
 } from "./auth.const";
 import type {
@@ -50,7 +53,7 @@ import {
   verifyPassword,
 } from "./auth.utils";
 
-export async function registerUser(email: string, password: string, name?: string): Promise<AuthUserPayload> {
+export async function registerUser(email: string, password: string, name?: string, role?: string): Promise<AuthUserPayload> {
   const normalized = normalizeEmail(email);
   if (!isValidEmail(normalized)) {
     throw new HttpError("Invalid email", HTTP_BAD_REQUEST, "invalid_email");
@@ -58,20 +61,28 @@ export async function registerUser(email: string, password: string, name?: strin
   if (password.length < PASSWORD_MIN_LENGTH) {
     throw new HttpError("Password is too short", HTTP_BAD_REQUEST, "password_short");
   }
+  const nextRole = AUTH_ROLES.includes(role as (typeof AUTH_ROLES)[number]) ? role as string : ROLE_OWNER;
   const existing = await prisma.user.findUnique({ where: { email: normalized } });
   if (existing) {
     throw new HttpError("Email already registered", HTTP_CONFLICT, "email_taken");
   }
+  const displayName = name?.trim() || null;
   const user = await prisma.user.create({
     data: {
       email: normalized,
-      name: name?.trim() || null,
+      name: displayName,
+      role: nextRole,
       passwordHash: hashPassword(password),
       identities: {
         create: { provider: PROVIDER_EMAIL, providerAccountId: normalized },
       },
     },
   });
+  if (nextRole === ROLE_LAWYER && displayName) {
+    await prisma.lawyer.create({
+      data: { userId: user.id, name: displayName },
+    });
+  }
   logger.info("registered user", user.id);
   return serializeAuthUser(user);
 }

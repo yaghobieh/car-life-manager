@@ -13,7 +13,7 @@ export interface ReminderDispatchInput {
   id: string;
   title: string;
   dueDate: string;
-  vehicleId: string;
+  vehicleId: string | null;
 }
 
 export interface ChannelResult {

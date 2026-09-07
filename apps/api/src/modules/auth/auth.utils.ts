@@ -2,7 +2,12 @@ import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import { config, isDevelopment } from "../../config";
 import {
   AUTH_ERROR_QUERY,
+  AUTH_NEXT_COOKIE,
   AUTH_PATH,
+  SAFE_PATH_APARTMENT,
+  SAFE_PATH_CAR,
+  SAFE_PATH_CARLIFE,
+  SAFE_PATH_PROPERTY,
   EMAIL_PATTERN,
   HASH_SEPARATOR,
   PHONE_MAX_DIGITS,
@@ -63,6 +68,7 @@ export function serializeAuthUser(user: {
   imageUrl: string | null;
   notifyEmail: boolean;
   notifySms: boolean;
+  role: string;
 }): AuthUserPayload {
   return {
     id: user.id,
@@ -72,6 +78,7 @@ export function serializeAuthUser(user: {
     imageUrl: user.imageUrl,
     notifyEmail: user.notifyEmail,
     notifySms: user.notifySms,
+    role: user.role,
   };
 }
 
@@ -87,8 +94,25 @@ export function isValidPhone(phone: string): boolean {
   return digits.length >= PHONE_MIN_DIGITS && digits.length <= PHONE_MAX_DIGITS;
 }
 
-export function appHomeUrl(): string {
-  return `${config.webOrigin}/`;
+export function isSafeAppPath(path: string): boolean {
+  if (!path.startsWith("/") || path.startsWith("//")) return false;
+  return (
+    path === SAFE_PATH_CAR
+    || path.startsWith(`${SAFE_PATH_CAR}/`)
+    || path === SAFE_PATH_PROPERTY
+    || path.startsWith(`${SAFE_PATH_PROPERTY}/`)
+    || path === SAFE_PATH_CARLIFE
+    || path === SAFE_PATH_APARTMENT
+  );
+}
+
+export function appHomeUrl(next?: string | null): string {
+  const safe = next && isSafeAppPath(next) ? next : "/";
+  return `${config.webOrigin}${safe}`;
+}
+
+export function readAuthNext(cookieHeader: string): string | null {
+  return readCookie(cookieHeader, AUTH_NEXT_COOKIE) ?? null;
 }
 
 export function authErrorUrl(code: string): string {

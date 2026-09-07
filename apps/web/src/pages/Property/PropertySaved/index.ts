@@ -1,0 +1,1 @@
+export { PropertySaved } from './PropertySaved';

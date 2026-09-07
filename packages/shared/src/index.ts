@@ -7,3 +7,4 @@ export * from "./source";
 export * from "./expense";
 export * from "./providers";
 export * from "./calendar";
+export * from "./property";

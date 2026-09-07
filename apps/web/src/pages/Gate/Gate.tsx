@@ -1,9 +1,10 @@
 import { Navigate } from 'react-router-dom';
 import { Box, Button, Card, Flex, Typography } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { CARD_RADIUS_XL, COLOR_BG, FLEX_GAP_MD, ROUTE_LANDING, ROUTE_ONBOARDING, ZERO } from '@const';
+import { CARD_RADIUS_XL, COLOR_BG, FLEX_GAP_MD, ROUTE_CAR, ROUTE_ONBOARDING, ZERO } from '@const';
 import { AppShell } from '@components/AppShell';
 import { useAppState } from '@hooks';
+import { authHref } from '../../Route.utils';
 
 export function Gate() {
   const { user, vehicles, loading, authReady, error, refresh } = useAppState();
@@ -11,7 +12,7 @@ export function Gate() {
   if (!authReady || loading) {
     return null;
   }
-  if (!user) return <Navigate to={ROUTE_LANDING} replace />;
+  if (!user) return <Navigate to={authHref(ROUTE_CAR)} replace />;
   if (error) {
     return (
       <Box bg={COLOR_BG} className="bear-min-h-screen">

@@ -1,0 +1,1 @@
+export { AddressSearchBoard } from './AddressSearchBoard';

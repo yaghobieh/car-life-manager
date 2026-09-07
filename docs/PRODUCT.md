@@ -1,12 +1,20 @@
 # Product
 
-Car Life Manager (CLM) is a **Vehicle Life Management Platform**.
+This repository is a **Car & Home** (רכב ודירה) product family with one account and one trust rule: official data only.
 
-Primary message: **Everything you need for your car. In one place.**
+| Surface | Path | Role |
+| --- | --- | --- |
+| Platform | `/` | Product picker. Hebrew kicker: רכב ודירה |
+| Car Manager (CLM / CarLife) | `/car` | Vehicle life OS — the working product |
+| Property Manager (NadLife) | `/property` | Official address search, saved addresses, user-entered lawyers | |
+
+Car primary message: **Everything you need for your car. In one place.**
 
 Hebrew: **כל מה שצריך לרכב שלך. במקום אחד.**
 
 Secondary: **קנית רכב? אנחנו נדאג שלא תשכח כלום.**
+
+Property is **not** a listings site. Address search uses official data.gov.il cities and streets. Lawyers are user-entered contacts only. Do not invent listings or an Israel Land Authority connection.
 
 The product answers three questions:
 
@@ -48,7 +56,7 @@ Official public sources in use today: Ministry of Transport vehicle registry and
 - Services: official MOT/recalls first; others open the official site and log a receipt
 - User-entered expenses, document metadata, and reminders
 - Header search and editable profile
-- Harbor is the API layer; Bear `AppShell` is the UI shell
+- Express is the API layer; Car uses `AppShell`, Property uses `PropertyShell`, both on Clm chrome + Bear primitives
 
 ## V2 product surface
 

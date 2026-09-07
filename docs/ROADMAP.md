@@ -1,10 +1,14 @@
 # Roadmap
 
+## Sprint 0.2 — Platform Shell (current)
+
+Shipped: `/` platform picker, `/car` for the existing car loop, `/property` empty shell (overview / search / saved), shared auth with safe `next=`, legacy path redirects.
+
 ## MVP / 1.x (in progress)
 
 Shipped in 1.0.1: official vehicle lookup, recalls, dashboard shell, tasks, services honesty, user expenses/documents/reminders, English locale, profile.
 
-Still required for a trustworthy MVP:
+Still required for a trustworthy car MVP:
 
 - Vehicle hero + “What’s next”
 - Manual service confirmation
@@ -13,7 +17,16 @@ Still required for a trustworthy MVP:
 - Expense dashboard from recorded data only
 - Maintenance + vehicle timeline
 - Reminders + reports
-- Landing page
+
+## Sprint 0.3 (Property — in progress)
+
+Shipped: official city/street search from data.gov.il, saved official addresses, user-entered lawyers.
+
+Still honest:
+
+- No listings marketplace or Land Authority “connected” badge
+- No Israel Bar connection or fake lawyer cards
+- SMS stays off until Twilio credentials are set
 
 ## V2
 

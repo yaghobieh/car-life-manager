@@ -26,14 +26,19 @@ Without `RESEND_API_KEY`, email stays `skipped` with `not_configured`.
 
 ## SMS (Twilio)
 
-1. Create a Twilio account and a sending number
-2. Set:
+Sign up here: https://www.twilio.com/try-twilio
+
+1. Create a Twilio account (trial is enough to test)
+2. Buy or use a sending number (Israel: `+972…`)
+3. Copy Account SID, Auth Token, and From number into Vercel and `apps/api/.env`:
 
 ```
 TWILIO_ACCOUNT_SID=AC...
 TWILIO_AUTH_TOKEN=...
 TWILIO_FROM_NUMBER=+972...
 ```
+
+SID and token alone are not enough. Buy or verify a sending number and set `TWILIO_FROM_NUMBER`. Until that exists, Settings says the sender is missing and SMS stays `skipped`.
 
 Put the user’s mobile in Settings. Without Twilio, SMS stays `skipped`.
 

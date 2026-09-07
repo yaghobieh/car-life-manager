@@ -6,6 +6,7 @@ export interface AuthUserPayload {
   imageUrl: string | null;
   notifyEmail: boolean;
   notifySms: boolean;
+  role: string;
 }
 
 export interface ProfileUpdateInput {
