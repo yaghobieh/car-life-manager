@@ -4,6 +4,7 @@ import {
   DOMAIN_CAR,
   HOST_PREFIX_APARTMENT,
   HOST_PREFIX_CAR,
+  PROPERTY_PRODUCT_ENABLED,
   ROUTE_APARTMENT,
   ROUTE_AUTH,
   ROUTE_CAR,
@@ -25,12 +26,15 @@ export function isPropertyAppPath(path: string): boolean {
 
 export function isSafeAppPath(path: string): boolean {
   if (!path.startsWith('/') || path.startsWith('//')) return false;
-  return isCarAppPath(path) || isPropertyAppPath(path);
+  if (isCarAppPath(path)) return true;
+  return PROPERTY_PRODUCT_ENABLED && isPropertyAppPath(path);
 }
 
 export function productPathForHost(hostname: string): string | null {
   if (hostname === DOMAIN_CAR || hostname.startsWith(HOST_PREFIX_CAR)) return ROUTE_CAR;
-  if (hostname === DOMAIN_APARTMENT || hostname.startsWith(HOST_PREFIX_APARTMENT)) return ROUTE_PROPERTY;
+  if (hostname === DOMAIN_APARTMENT || hostname.startsWith(HOST_PREFIX_APARTMENT)) {
+    return PROPERTY_PRODUCT_ENABLED ? ROUTE_PROPERTY : ROUTE_CAR;
+  }
   return null;
 }
 

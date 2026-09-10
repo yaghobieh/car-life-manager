@@ -1,3 +1,8 @@
+## [Unreleased]
+
+### Changed
+- Car Manager is the only live product. Property Manager stays in the tree but is hard-disabled on landing, auth, hosts, and `/property`.
+
 ## [1.0.2] - 2026-09-06
 
 ### Added

@@ -2,13 +2,14 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Box, Button, Card, Flex, Typography } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import {
+  BOOLEAN_FALSE,
   CARD_RADIUS_XL,
   COLOR_BG,
   COLOR_MUTED,
   COLOR_NAVY_DEEP,
   FLEX_GAP_LG,
   FLEX_GAP_MD,
-  ROUTE_AUTH,
+  ROUTE_CAR,
   ROUTE_HOME,
   TYPO_PAGE_TITLE,
   TYPO_SECTION_TITLE,
@@ -16,9 +17,11 @@ import {
 import { LocaleSelect } from '@components/LocaleSelect';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
+import { authHref } from '../../Route.utils';
 import { LandingFeatures } from './helpers/LandingFeatures';
 import { LandingHow } from './helpers/LandingHow';
 import { LandingLoading } from './helpers/LandingLoading';
+import { LandingProducts } from './helpers/LandingProducts';
 import { LandingSecondaryCta } from './helpers/LandingSecondaryCta';
 
 export function Landing() {
@@ -51,11 +54,12 @@ export function Landing() {
               <Typography variant={TYPO_PAGE_TITLE} color={COLOR_NAVY_DEEP}>{t('landingHero')}</Typography>
               <Typography color={COLOR_MUTED}>{t('landingSub')}</Typography>
               <Flex gap={FLEX_GAP_MD} wrap="wrap">
-                <Button variant="primary" onClick={() => navigate(ROUTE_AUTH)}>{t('addCar')}</Button>
-                <LandingSecondaryCta hidden={false} label={t('howItWorksCta')} onClick={() => navigate(ROUTE_AUTH)} />
+                <Button variant="primary" onClick={() => navigate(authHref(ROUTE_CAR))}>{t('addCar')}</Button>
+                <LandingSecondaryCta hidden={BOOLEAN_FALSE} label={t('howItWorksCta')} onClick={() => navigate(authHref(ROUTE_CAR))} />
               </Flex>
             </Flex>
           </Card>
+          <LandingProducts title={t('landingProducts')} onOpen={(to) => navigate(authHref(to))} />
           <LandingHow title={t('howItWorks')} translate={t} />
           <LandingFeatures title={t('inOnePlace')} translate={t} />
           <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>

@@ -1,13 +1,11 @@
 import { useState } from 'react';
-import { Select } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import type { AreaPrice, OfficialAddress } from '@clm/shared';
 import { api } from '@api';
 import { AddressSearchBoard } from '@components/AddressSearchBoard';
 import { AreaPriceList } from '@components/AreaPriceList';
-import { AUTH_ROLE_OPTIONS } from '../Auth.const';
-import { roleLabelKey } from '../Auth.utils';
 import type { AuthRegisterExtrasProps } from './AuthRegisterExtras.types';
+import { AuthRegisterRoleSelect } from './AuthRegisterRoleSelect';
 
 export function AuthRegisterExtras(props: AuthRegisterExtrasProps) {
   const { role, onRoleChange, city, onCityChange } = props;
@@ -43,13 +41,7 @@ export function AuthRegisterExtras(props: AuthRegisterExtrasProps) {
 
   return (
     <>
-      <Select
-        label={t('accountRole')}
-        value={role}
-        onChange={onRoleChange}
-        fullWidth
-        options={AUTH_ROLE_OPTIONS.map((value) => ({ value, label: t(roleLabelKey(value)) }))}
-      />
+      <AuthRegisterRoleSelect role={role} onRoleChange={onRoleChange} />
       <AddressSearchBoard
         query={city}
         onQueryChange={onCityChange}
