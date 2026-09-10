@@ -1,4 +1,5 @@
 import {
+  PROPERTY_PRODUCT_ENABLED,
   ROLE_BROKER,
   ROLE_CAR_SELLER,
   ROLE_LAWYER,
@@ -9,7 +10,7 @@ import {
 
 export const AUTH_MODE_LOGIN = 'login';
 export const AUTH_MODE_REGISTER = 'register';
-export const AUTH_ROLE_OPTIONS = [
+export const AUTH_ROLE_OPTIONS_PROPERTY = [
   ROLE_OWNER,
   ROLE_SELLER,
   ROLE_RENTER,
@@ -17,6 +18,9 @@ export const AUTH_ROLE_OPTIONS = [
   ROLE_LAWYER,
   ROLE_CAR_SELLER,
 ] as const;
+export const AUTH_ROLE_OPTIONS_CAR = [ROLE_OWNER, ROLE_CAR_SELLER] as const;
+export const AUTH_ROLE_OPTIONS = PROPERTY_PRODUCT_ENABLED ? AUTH_ROLE_OPTIONS_PROPERTY : AUTH_ROLE_OPTIONS_CAR;
+export const AUTH_DEFAULT_ROLE = ROLE_OWNER;
 export const PROPERTY_AUTH_ROLES = [
   ROLE_OWNER,
   ROLE_SELLER,
@@ -26,7 +30,7 @@ export const PROPERTY_AUTH_ROLES = [
 ] as const;
 
 export const ROLE_LABEL_KEYS: Record<string, string> = {
-  [ROLE_OWNER]: 'roleOwner',
+  [ROLE_OWNER]: PROPERTY_PRODUCT_ENABLED ? 'roleOwner' : 'roleCarOwner',
   [ROLE_SELLER]: 'roleSeller',
   [ROLE_RENTER]: 'roleRenter',
   [ROLE_BROKER]: 'roleBroker',

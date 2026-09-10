@@ -1,8 +1,9 @@
 import { Card, Flex, Typography } from '@forgedevstack/bear';
 import { CARD_RADIUS_XL, FLEX_GAP_MD, TYPO_SECTION_TITLE } from '@const';
 import { LANDING_FEATURES } from '../Landing.const';
+import type { LandingFeaturesProps } from '../Landing.types';
 
-export function LandingFeatures(props: { title: string; translate: (key: string) => string }) {
+export function LandingFeatures(props: LandingFeaturesProps) {
   const { title, translate } = props;
   return (
     <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>

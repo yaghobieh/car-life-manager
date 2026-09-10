@@ -12,20 +12,19 @@ import {
   COLOR_NAVY_DEEP,
   EMPTY_STRING,
   FLEX_GAP_LG,
-  ROLE_OWNER,
   TYPO_PAGE_TITLE,
 } from '@const';
 import { LocaleSelect } from '@components/LocaleSelect';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
 import { logger } from '@logger';
-import { AUTH_ERROR_QUERY, AUTH_MODE_LOGIN, AUTH_MODE_REGISTER } from './Auth.const';
+import { AUTH_DEFAULT_ROLE, AUTH_ERROR_QUERY, AUTH_MODE_LOGIN, AUTH_MODE_REGISTER } from './Auth.const';
 import type { AuthMode } from './Auth.types';
 import { oauthStartHref } from '../../Route.utils';
 import { afterAuthPath, authErrorKey, nextAuthMode } from './Auth.utils';
 import { AuthGoogleButton } from './helpers/AuthGoogleButton';
 import { AuthProviderButton } from './helpers/AuthProviderButton';
-import { AuthRegisterExtras } from './helpers/AuthRegisterExtras';
+import { AuthRegisterPanel } from './helpers/AuthRegisterPanel';
 
 export function Auth() {
   const { user, vehicles, loading, authReady, googleEnabled, auth0Enabled, refresh } = useAppState();
@@ -34,7 +33,7 @@ export function Auth() {
   const [email, setEmail] = useState(EMPTY_STRING);
   const [password, setPassword] = useState(EMPTY_STRING);
   const [name, setName] = useState(EMPTY_STRING);
-  const [role, setRole] = useState(ROLE_OWNER);
+  const [role, setRole] = useState(AUTH_DEFAULT_ROLE);
   const [city, setCity] = useState(EMPTY_STRING);
   const [busy, setBusy] = useState(false);
   const [errorKey, setErrorKey] = useState(EMPTY_STRING);
@@ -99,7 +98,7 @@ export function Auth() {
                 <Input label={t('name')} value={name} onChange={(event) => setName(event.target.value)} fullWidth />
               )}
               {isRegister && (
-                <AuthRegisterExtras
+                <AuthRegisterPanel
                   role={role}
                   onRoleChange={setRole}
                   city={city}
