@@ -1,14 +1,6 @@
 import {
-  COLOR_BG,
-  COLOR_BLUE,
-  COLOR_CARD,
   COLOR_DANGER,
   COLOR_GREEN,
-  COLOR_INK,
-  COLOR_LINE,
-  COLOR_MUTED,
-  COLOR_MUTED_2,
-  COLOR_TILE,
   COLOR_WARNING,
 } from '@const';
 import { CLM_BEAR_THEME } from './bear.theme';
@@ -17,22 +9,22 @@ export const CLM_GRID_THEME = {
   mode: 'light' as const,
   colors: {
     background: {
-      primary: COLOR_CARD,
-      secondary: COLOR_BG,
-      tertiary: COLOR_CARD,
-      hover: COLOR_TILE,
+      primary: 'var(--clm-raised)',
+      secondary: 'var(--clm-raised-2)',
+      tertiary: 'var(--clm-raised)',
+      hover: 'var(--clm-blue-soft)',
     },
     text: {
-      primary: COLOR_INK,
-      secondary: COLOR_MUTED,
-      muted: COLOR_MUTED_2,
+      primary: 'var(--clm-ink)',
+      secondary: 'var(--clm-muted)',
+      muted: 'var(--clm-muted-2)',
     },
     border: {
-      default: COLOR_LINE,
-      hover: COLOR_BLUE,
+      default: 'var(--clm-line)',
+      hover: 'var(--clm-blue)',
     },
     accent: {
-      primary: COLOR_BLUE,
+      primary: 'var(--clm-blue)',
       success: COLOR_GREEN,
       warning: COLOR_WARNING,
       error: COLOR_DANGER,

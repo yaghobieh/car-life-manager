@@ -7,3 +7,9 @@ export interface StorageProvider {
   put(key: string, bytes: Uint8Array, contentType: string): Promise<StoredObject>;
   get(key: string): Promise<Uint8Array | null>;
 }
+
+export interface CloudinaryAccount {
+  apiKey: string;
+  apiSecret: string;
+  cloudName: string;
+}

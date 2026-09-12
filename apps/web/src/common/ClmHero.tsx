@@ -4,10 +4,12 @@ import { ClmPlate } from './ClmPlate';
 import { ClmStatusPill } from './ClmStatusPill';
 
 export function ClmHero(props: ClmHeroProps) {
-  const { eyebrow, title, plate, carSrc, carAlt, pills, meta } = props;
+  const { eyebrow, title, plate, carSrc, car, carAlt, pills, meta } = props;
   return (
     <section className="Clm-hero">
-      <img className="Clm-hero-car" src={carSrc} alt={carAlt} width={SVG_HERO_SIZE} height={SVG_HERO_SIZE} />
+      <div className="Clm-hero-car">
+        {car ?? (carSrc ? <img src={carSrc} alt={carAlt} width={SVG_HERO_SIZE} height={SVG_HERO_SIZE} /> : null)}
+      </div>
       <div className="Clm-hero-info">
         <div className="Clm-hero-eyebrow">{eyebrow}</div>
         <h2 className="Clm-hero-title">{title}</h2>

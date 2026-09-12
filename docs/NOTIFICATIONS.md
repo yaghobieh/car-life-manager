@@ -12,6 +12,8 @@ Reminders are stored in PostgreSQL. Delivery is honest: a channel sends only whe
 
 Due reminders are dispatched when the dashboard loads or a reminder is created. Each reminder is sent once per channel (`userId + sourceKey + channel`).
 
+Creating a reminder also sends a **scheduled** SMS (`reminder:{id}:scheduled:sms`) when Twilio is configured, the user turned SMS on, and a phone number is saved. The later due SMS still uses `reminder:{id}:sms`. Settings can send a real test SMS (`POST /api/auth/sms/test`). Israeli numbers like `050…` are stored and sent as `+97250…`. The API never marks SMS as sent unless Twilio accepted it.
+
 ## Email (Resend)
 
 1. Create a Resend account and verify a sending domain
@@ -40,7 +42,7 @@ TWILIO_FROM_NUMBER=+972...
 
 SID and token alone are not enough. Buy or verify a sending number and set `TWILIO_FROM_NUMBER`. Until that exists, Settings says the sender is missing and SMS stays `skipped`.
 
-Put the user’s mobile in Settings. Without Twilio, SMS stays `skipped`.
+Put the user’s mobile in Settings (Israeli `05…` is stored as `+972…`). Use **Send test SMS** after Twilio is configured. Without Twilio, SMS stays `skipped`.
 
 ## Calendar
 

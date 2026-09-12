@@ -1,14 +1,9 @@
 import type { ElementType } from 'react';
 import type { BearThemeOverride } from '@forgedevstack/bear';
 import {
-  COLOR_BG,
   COLOR_BLUE,
-  COLOR_CARD,
   COLOR_DANGER,
   COLOR_GREEN,
-  COLOR_INK,
-  COLOR_LINE,
-  COLOR_MUTED,
   COLOR_NAV_HOVER,
   COLOR_NAV_TEXT,
   COLOR_NAVY,
@@ -37,26 +32,26 @@ import {
 
 export const CLM_BEAR_THEME = {
   colors: {
-    primary: COLOR_BLUE,
+    primary: 'var(--clm-blue)',
     secondary: COLOR_NAVY,
     success: COLOR_GREEN,
     warning: COLOR_WARNING,
     danger: COLOR_DANGER,
     background: {
-      primary: COLOR_BG,
-      secondary: COLOR_BG,
-      tertiary: COLOR_CARD,
+      primary: 'var(--clm-paper)',
+      secondary: 'var(--clm-paper)',
+      tertiary: 'var(--clm-raised)',
     },
     text: {
-      primary: COLOR_INK,
-      secondary: COLOR_MUTED,
-      muted: COLOR_MUTED,
+      primary: 'var(--clm-ink)',
+      secondary: 'var(--clm-muted)',
+      muted: 'var(--clm-muted)',
       inverted: COLOR_WHITE,
     },
     border: {
-      default: COLOR_LINE,
-      subtle: COLOR_LINE,
-      strong: COLOR_LINE,
+      default: 'var(--clm-line)',
+      subtle: 'var(--clm-line)',
+      strong: 'var(--clm-line-strong)',
     },
   },
   typography: {

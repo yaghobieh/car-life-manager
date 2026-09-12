@@ -10,8 +10,19 @@ import {
   type VehicleLookupResult,
   type VehicleRecall,
 } from "@clm/shared";
+import { DOCUMENT_STORAGE_MANUAL, HTTP_CONFLICT, HTTP_NOT_FOUND } from "../../constants/http.const";
 import { prisma } from "../../db";
+import { HttpError } from "../../errors/http-error";
 import { config, isDevelopment } from "../../config";
+import { resolveDocumentStorage, storageForKey } from "../../storage/resolve-storage";
+import { documentObjectKey, parseDocumentFile } from "./documents.utils";
+import {
+  DOCUMENT_FILE_MISSING_CODE,
+  DOCUMENT_FILE_MISSING_MESSAGE,
+  PLATE_TAKEN_CODE,
+  PLATE_TAKEN_MESSAGE,
+} from "./vehicles.const";
+import type { AddDocumentInput, StoredDocumentFile } from "./vehicles.types";
 import { audit } from "../../db/handlers/audit.handler";
 import { lookupOfficialVehicle, MinistryTransportError } from "../../integrations/ministry-of-transport/client";
 import { fetchOutstandingRecalls } from "../../integrations/ministry-of-transport/recalls.client";
@@ -27,7 +38,7 @@ import {
   SERVICE_ANSWER_YES,
   SERVICE_SOURCE_USER,
 } from "../../integrations/providers/providers.const";
-import { queueDueReminders } from "../../notifications/service";
+import { queueDueReminders, queueReminderCreated } from "../../notifications/service";
 import {
   serializeDocument,
   serializeExpense,
@@ -83,9 +94,14 @@ export async function addVehicle(userId: string, registrationNumber: string) {
   const plate = lookup.vehicle.registrationNumber;
 
   const existing = await prisma.vehicle.findUnique({
-    where: { userId_registrationNumber: { userId, registrationNumber: plate } },
+    where: { registrationNumber: plate },
   });
-  if (existing) return { vehicle: serializeVehicle(existing), created: false };
+  if (existing && existing.userId === userId) {
+    return { vehicle: serializeVehicle(existing), created: false };
+  }
+  if (existing) {
+    throw new HttpError(PLATE_TAKEN_MESSAGE, HTTP_CONFLICT, PLATE_TAKEN_CODE);
+  }
 
   const vehicle = await prisma.vehicle.create({
     data: {
@@ -251,7 +267,7 @@ export async function confirmService(userId: string, vehicleId: string, provider
 export async function addMaintenance(
   userId: string,
   vehicleId: string,
-  input: { serviceDate: string; serviceType: string; mileage?: number | null; garage?: string | null; cost?: number | null; notes?: string | null },
+  input: { serviceDate: string; serviceType: string; mileage?: number | null; garage?: string | null; cost?: number | null; notes?: string | null; parts?: string | null },
 ) {
   await getOwnedVehicle(userId, vehicleId);
   const serviceType = input.serviceType.trim();
@@ -267,6 +283,7 @@ export async function addMaintenance(
       garage: input.garage?.trim() || null,
       cost: input.cost ?? null,
       notes: input.notes?.trim() || null,
+      parts: input.parts?.trim() || null,
     },
   });
   await audit({ userId, vehicleId, action: "maintenance_created" });
@@ -319,11 +336,12 @@ export async function addExpense(userId: string, vehicleId: string, input: Omit<
 export async function addDocument(
   userId: string,
   vehicleId: string,
-  input: { type: string; title: string; notes?: string | null; expiresAt?: string | null },
+  input: AddDocumentInput,
 ) {
   await getOwnedVehicle(userId, vehicleId);
   const title = input.title.trim();
   if (!title) throw Object.assign(new Error("Title is required"), { status: 400, code: "invalid_title" });
+  const file = parseDocumentFile(input.file ?? null);
   const row = await prisma.vehicleDocument.create({
     data: {
       vehicleId,
@@ -331,11 +349,39 @@ export async function addDocument(
       title,
       notes: input.notes?.trim() || null,
       expiresAt: input.expiresAt || null,
-      storageKey: "manual",
+      storageKey: file ? `${userId}/pending` : DOCUMENT_STORAGE_MANUAL,
+      originalName: file?.fileName ?? null,
+      mimeType: file?.mimeType ?? null,
+      fileSize: file?.buffer.length ?? null,
     },
   });
-  await audit({ userId, vehicleId, action: "document_created", metadata: { type: input.type } });
+  if (file) {
+    const stored = await resolveDocumentStorage().put(documentObjectKey(userId, row.id), file.buffer, file.mimeType);
+    await prisma.vehicleDocument.update({
+      where: { id: row.id },
+      data: { storageKey: stored.key },
+    });
+    row.storageKey = stored.key;
+  }
+  await audit({ userId, vehicleId, action: "document_created", metadata: { type: input.type, hasFile: Boolean(file) } });
   return serializeDocument(row);
+}
+
+export async function getDocumentFile(userId: string, vehicleId: string, documentId: string): Promise<StoredDocumentFile> {
+  await getOwnedVehicle(userId, vehicleId);
+  const row = await prisma.vehicleDocument.findFirst({ where: { id: documentId, vehicleId } });
+  if (!row || row.storageKey === DOCUMENT_STORAGE_MANUAL || !row.originalName || !row.mimeType) {
+    throw new HttpError(DOCUMENT_FILE_MISSING_MESSAGE, HTTP_NOT_FOUND, DOCUMENT_FILE_MISSING_CODE);
+  }
+  const body = await storageForKey(row.storageKey).get(row.storageKey);
+  if (!body) {
+    throw new HttpError(DOCUMENT_FILE_MISSING_MESSAGE, HTTP_NOT_FOUND, DOCUMENT_FILE_MISSING_CODE);
+  }
+  return {
+    body,
+    mimeType: row.mimeType,
+    originalName: row.originalName,
+  };
 }
 
 export async function addReminder(userId: string, vehicleId: string, input: { title: string; dueDate: string }) {
@@ -353,8 +399,10 @@ export async function addReminder(userId: string, vehicleId: string, input: { ti
     },
   });
   await audit({ userId, vehicleId, action: "reminder_created" });
+  const reminder = serializeReminder(row);
+  queueReminderCreated(userId, { id: row.id, title: row.title, dueDate: row.dueDate, vehicleId });
   queueDueReminders(userId, vehicleId);
-  return serializeReminder(row);
+  return reminder;
 }
 
 export async function removeVehicle(userId: string, vehicleId: string) {

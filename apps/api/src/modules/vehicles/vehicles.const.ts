@@ -1,0 +1,12 @@
+export const PLATE_TAKEN_CODE = "plate_taken";
+export const PLATE_TAKEN_MESSAGE = "This license plate is already registered to another account";
+export const DOCUMENT_FILE_TOO_LARGE_CODE = "file_too_large";
+export const DOCUMENT_INVALID_TYPE_CODE = "invalid_file_type";
+export const DOCUMENT_FILE_MISSING_CODE = "file_missing";
+export const DOCUMENT_INVALID_FILE_CODE = "invalid_file";
+export const DOCUMENT_FILE_TOO_LARGE_MESSAGE = "File is larger than 4MB";
+export const DOCUMENT_INVALID_TYPE_MESSAGE = "Use a PDF, JPEG, PNG, or WebP file";
+export const DOCUMENT_FILE_MISSING_MESSAGE = "This document has no uploaded file";
+export const DOCUMENT_INVALID_FILE_MESSAGE = "The uploaded file is empty or unreadable";
+export const BASE64_COMMA = ",";
+export const BASE64_ENCODING = "base64";

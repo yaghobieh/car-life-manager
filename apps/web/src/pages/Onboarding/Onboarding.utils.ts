@@ -1,4 +1,9 @@
 import { DATE_SLICE_LENGTH, ONBOARDING_STEP_PLATE, ONBOARDING_STEP_WELCOME, TITLE_SEPARATOR, ZERO } from '@const';
+import { ADD_VEHICLE_FAILED_KEY, PLATE_TAKEN_CODE, PLATE_TAKEN_KEY } from './Onboarding.const';
+
+export function addVehicleErrorKey(code?: string): string {
+  return code === PLATE_TAKEN_CODE ? PLATE_TAKEN_KEY : ADD_VEHICLE_FAILED_KEY;
+}
 
 export function sliceDate(value: string | null | undefined, unknownLabel: string): string {
   return value?.slice(ZERO, DATE_SLICE_LENGTH) ?? unknownLabel;

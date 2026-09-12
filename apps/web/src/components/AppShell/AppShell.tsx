@@ -19,6 +19,8 @@ import {
   SVG_NAV_SIZE,
 } from '@const';
 import { ClmBanner, ClmPlate } from '@common';
+import { LocaleSelect } from '@components/LocaleSelect';
+import { ThemeToggle } from '@components/ThemeToggle';
 import { useAppState } from '@hooks';
 import { connectedServiceCount } from '../../pages/Services/Services.utils';
 import { NAV_ITEMS } from './AppShell.const';
@@ -99,6 +101,8 @@ export function AppShell() {
                 </div>
               )}
               <div className="Clm-topbar-spacer" />
+              <LocaleSelect showLabel={BOOLEAN_FALSE} />
+              <ThemeToggle lightLabel={t('themeLight')} darkLabel={t('themeDark')} />
               <button type="button" className="Clm-icon-btn" aria-label={t('notifications')} onClick={() => navigate(ROUTE_SETTINGS)}>
                 <img src={SVG_BELL} alt="" width={SVG_BELL_SIZE} height={SVG_BELL_SIZE} />
               </button>
@@ -113,6 +117,8 @@ export function AppShell() {
                 <img src={LOGO_CAR} alt={t('platformBrand')} width={SVG_LOGO_SIZE} height={SVG_LOGO_SIZE} />
               </button>
               <div className="Clm-topbar-spacer" />
+              <LocaleSelect showLabel={BOOLEAN_FALSE} />
+              <ThemeToggle lightLabel={t('themeLight')} darkLabel={t('themeDark')} />
               <button type="button" className="Clm-icon-btn" aria-label={t('menu')} onClick={() => setMenuOpen(BOOLEAN_TRUE)}>☰</button>
               <button type="button" className="Clm-icon-btn" aria-label={t('notifications')} onClick={() => navigate(ROUTE_SETTINGS)}>
                 <img src={SVG_BELL} alt="" width={SVG_BELL_SIZE} height={SVG_BELL_SIZE} />

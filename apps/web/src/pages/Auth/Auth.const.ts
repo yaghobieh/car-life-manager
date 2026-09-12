@@ -40,6 +40,8 @@ export const ROLE_LABEL_KEYS: Record<string, string> = {
 export const AUTH_ERROR_QUERY = 'error';
 export const AUTH_ERROR_KEYS: Record<string, string> = {
   email_taken: 'authEmailTaken',
+  username_taken: 'authUsernameTaken',
+  invalid_username: 'authInvalidUsername',
   password_short: 'authPasswordShort',
   invalid_email: 'authInvalidEmail',
   google_unavailable: 'authGoogleUnavailable',

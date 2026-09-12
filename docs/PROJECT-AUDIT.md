@@ -29,7 +29,7 @@ packages/shared   Domain types, plate rules, task engine, expenses, timeline
 docs/             Product, architecture, sources, security
 ```
 
-Workspaces: `apps/*`, `packages/*`. Root scripts: `dev`, `dev:web`, `dev:api`, `build`, `test`, `lint`, `db:migrate`. Node `>=20`. Version on disk: `1.0.2`.
+Workspaces: `apps/*`, `packages/*`. Root scripts: `dev`, `dev:web`, `dev:api`, `build`, `test`, `lint`, `db:migrate`. Node `>=20`. Version on disk: `1.0.3`.
 
 Deploy: one Vercel project serving Vite `apps/web/dist` plus Harbor-named `/api` functions (`vercel.json`). Preview recently deployed from `design/carlife-html`.
 

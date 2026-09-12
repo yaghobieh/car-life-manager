@@ -5,6 +5,8 @@ import {
   DOCUMENT_TYPE_TEST,
 } from '@const';
 
+export const DOCUMENT_MAX_BYTES = 4_000_000;
+export const DOCUMENT_ACCEPT = 'application/pdf,image/jpeg,image/png,image/webp';
 export const DOCUMENT_TYPE_OPTIONS = [
   DOCUMENT_TYPE_LICENSE,
   DOCUMENT_TYPE_INSURANCE,

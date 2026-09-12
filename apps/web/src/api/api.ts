@@ -25,6 +25,7 @@ import {
   AUTH_LOGOUT_PATH,
   AUTH_ME_PATH,
   AUTH_REGISTER_PATH,
+  AUTH_SMS_TEST_PATH,
   LOOKUP_PATH,
   PROPERTY_ADDRESSES_PATH,
   PROPERTY_AREA_PRICES_PATH,
@@ -36,19 +37,19 @@ import {
   VEHICLES_PATH,
 } from './api.const';
 import { apiClient } from './ApiClient';
-import type { AuthMePayload, AuthUserPayload, DashboardPayload, ProfileUpdateInput, VehicleListPayload } from './api.types';
+import type { AuthMePayload, AuthUserPayload, DashboardPayload, DocumentCreateInput, ProfileUpdateInput, SmsTestResult, VehicleListPayload } from './api.types';
 
 export const api = {
   me: () => apiClient.request<AuthMePayload>(AUTH_ME_PATH),
-  login: (email: string, password: string) =>
+  login: (identifier: string, password: string) =>
     apiClient.request<AuthUserPayload>(AUTH_LOGIN_PATH, {
       method: HTTP_METHOD_POST,
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ identifier, password }),
     }),
-  register: (email: string, password: string, name: string, role: string) =>
+  register: (email: string, password: string, name: string, role: string, username: string) =>
     apiClient.request<AuthUserPayload>(AUTH_REGISTER_PATH, {
       method: HTTP_METHOD_POST,
-      body: JSON.stringify({ email, password, name, role }),
+      body: JSON.stringify({ email, password, name, role, username }),
     }),
   logout: () =>
     apiClient.request<{ user: null }>(AUTH_LOGOUT_PATH, { method: HTTP_METHOD_POST }),
@@ -79,11 +80,17 @@ export const api = {
       method: HTTP_METHOD_POST,
       body: JSON.stringify(input),
     }),
-  addDocument: (vehicleId: string, input: Pick<VehicleDocument, 'type' | 'title'> & Partial<VehicleDocument>) =>
+  addDocument: (vehicleId: string, input: DocumentCreateInput) =>
     apiClient.request<{ document: VehicleDocument }>(`${VEHICLES_PATH}/${vehicleId}/documents`, {
       method: HTTP_METHOD_POST,
       body: JSON.stringify(input),
     }),
+  documentFileUrl: (vehicleId: string, documentId: string) =>
+    `${VEHICLES_PATH}/${vehicleId}/documents/${documentId}/file`,
+  downloadDocument: (vehicleId: string, documentId: string) =>
+    apiClient.requestBlob(`${VEHICLES_PATH}/${vehicleId}/documents/${documentId}/file`),
+  sendTestSms: () =>
+    apiClient.request<SmsTestResult>(AUTH_SMS_TEST_PATH, { method: HTTP_METHOD_POST }),
   addReminder: (vehicleId: string, input: Pick<Reminder, 'title' | 'dueDate'>) =>
     apiClient.request<{ reminder: Reminder }>(`${VEHICLES_PATH}/${vehicleId}/reminders`, {
       method: HTTP_METHOD_POST,

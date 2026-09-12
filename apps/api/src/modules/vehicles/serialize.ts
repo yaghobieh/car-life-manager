@@ -1,4 +1,5 @@
 import type { Expense, MaintenanceRecord, Reminder, Task, Vehicle, VehicleDocument } from "@clm/shared";
+import { DOCUMENT_STORAGE_MANUAL } from "../../constants/http.const";
 import type {
   Expense as ExpenseRow,
   MaintenanceRecord as MaintenanceRow,
@@ -78,6 +79,10 @@ export function serializeDocument(row: DocumentRow): VehicleDocument {
     notes: row.notes,
     expiresAt: row.expiresAt,
     storageKey: row.storageKey,
+    originalName: row.originalName,
+    mimeType: row.mimeType,
+    fileSize: row.fileSize,
+    hasFile: Boolean(row.originalName && row.storageKey !== DOCUMENT_STORAGE_MANUAL),
     createdAt: row.createdAt.toISOString(),
   };
 }

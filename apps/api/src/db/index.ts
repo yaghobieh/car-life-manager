@@ -1,12 +1,23 @@
 import { PrismaClient } from "@prisma/client";
-import { HTTP_UNAVAILABLE } from "../constants/http.const";
+import {
+  DB_SQLITE_UNSUPPORTED_MESSAGE,
+  DB_UNCONFIGURED_CODE,
+  DB_UNSET_MESSAGE,
+  HTTP_UNAVAILABLE,
+  POSTGRES_URL_PREFIX,
+  POSTGRES_URL_PREFIX_SHORT,
+} from "../constants/http.const";
 import { HttpError } from "../errors/http-error";
 
 const globalForPrisma = globalThis as { clmPrisma?: PrismaClient };
 
 function createPrisma(): PrismaClient {
-  if (!process.env.DATABASE_URL) {
-    throw new HttpError("DATABASE_URL is not set", HTTP_UNAVAILABLE, "db_unconfigured");
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    throw new HttpError(DB_UNSET_MESSAGE, HTTP_UNAVAILABLE, DB_UNCONFIGURED_CODE);
+  }
+  if (!url.startsWith(POSTGRES_URL_PREFIX) && !url.startsWith(POSTGRES_URL_PREFIX_SHORT)) {
+    throw new HttpError(DB_SQLITE_UNSUPPORTED_MESSAGE, HTTP_UNAVAILABLE, DB_UNCONFIGURED_CODE);
   }
   return new PrismaClient();
 }

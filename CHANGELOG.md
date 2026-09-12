@@ -1,7 +1,22 @@
 ## [Unreleased]
 
+## [1.0.3] - 2026-09-12
+
+### Added
+- Dark mode toggle on the main, landing, and auth screens (saved in the browser)
+- Language dropdown on the main app top bar
+- Document vault: upload and download PDF, JPEG, PNG, or WebP (up to 4MB) through Cloudinary (`CLOUDINARY_URL`). Prisma stores metadata only.
+- Test SMS from Settings, E.164 Israeli numbers, and a scheduled SMS when a reminder is created
+- Username on register, unique username and email, and sign-in with email or username
+- License plate is unique across accounts — adding a plate owned by another user is blocked
+- Calendar events open in the portal first, then export as ICS or a Google Calendar template
+- Overview and vehicle file show make/color car art from official MOT data
+
 ### Changed
 - Car Manager is the only live product. Property Manager stays in the tree but is hard-disabled on landing, auth, hosts, and `/property`.
+- Car pages follow the CarLife mock: blue canvas, amber plates, gradient hero, and light sidebar
+- Reminder, maintenance, document, and expense forms use a card layout with paired fields
+- Dark mode follows the CarLife mock tokens, and Bear inputs/tables follow the active theme
 
 ## [1.0.2] - 2026-09-06
 

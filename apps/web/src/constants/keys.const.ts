@@ -1,5 +1,8 @@
 export const KEY_ENTER = 'Enter';
 export const LINGO_STORAGE_KEY = 'clm_lingo_locale';
+export const THEME_STORAGE_KEY = 'clm_theme_mode';
+export const THEME_MODE_LIGHT = 'light';
+export const THEME_MODE_DARK = 'dark';
 export const LOGS_STORAGE_KEY = 'clm_logs';
 export const LOGS_ENABLED_VALUE = '1';
 export const SYNAPSE_APP_KEY = 'clm-app';

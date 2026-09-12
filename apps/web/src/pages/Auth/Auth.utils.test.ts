@@ -11,6 +11,12 @@ describe('authErrorKey', () => {
     expect(authErrorKey('auth0_unavailable')).toBe('authAuth0Unavailable');
     expect(authErrorKey('auth0_failed')).toBe('authAuth0Failed');
   });
+
+  it('maps taken username and email codes', () => {
+    expect(authErrorKey('email_taken')).toBe('authEmailTaken');
+    expect(authErrorKey('username_taken')).toBe('authUsernameTaken');
+    expect(authErrorKey('invalid_username')).toBe('authInvalidUsername');
+  });
 });
 
 describe('afterAuthPath', () => {

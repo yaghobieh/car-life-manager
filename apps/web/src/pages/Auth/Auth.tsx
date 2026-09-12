@@ -6,7 +6,6 @@ import { api, ApiError } from '@api';
 import {
   AUTH_NEXT_QUERY,
   CARD_RADIUS_XL,
-  COLOR_BG,
   COLOR_DANGER,
   COLOR_MUTED,
   COLOR_NAVY_DEEP,
@@ -15,6 +14,7 @@ import {
   TYPO_PAGE_TITLE,
 } from '@const';
 import { LocaleSelect } from '@components/LocaleSelect';
+import { ThemeToggle } from '@components/ThemeToggle';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
 import { logger } from '@logger';
@@ -30,7 +30,9 @@ export function Auth() {
   const { user, vehicles, loading, authReady, googleEnabled, auth0Enabled, refresh } = useAppState();
   const t = useTranslate();
   const [mode, setMode] = useState<AuthMode>(AUTH_MODE_LOGIN);
+  const [identifier, setIdentifier] = useState(EMPTY_STRING);
   const [email, setEmail] = useState(EMPTY_STRING);
+  const [username, setUsername] = useState(EMPTY_STRING);
   const [password, setPassword] = useState(EMPTY_STRING);
   const [name, setName] = useState(EMPTY_STRING);
   const [role, setRole] = useState(AUTH_DEFAULT_ROLE);
@@ -52,8 +54,8 @@ export function Auth() {
     setBusy(true);
     setErrorKey(EMPTY_STRING);
     try {
-      if (isRegister) await api.register(email, password, name, role);
-      else await api.login(email, password);
+      if (isRegister) await api.register(email, password, name, role, username);
+      else await api.login(identifier, password);
       logger.info('auth success', mode);
       await refresh();
     } catch (error) {
@@ -65,11 +67,14 @@ export function Auth() {
   }
 
   return (
-    <Box bg={COLOR_BG} className="Bear-Auth bear-min-h-screen">
+    <Box className="Bear-Auth bear-min-h-screen">
       <Box bg={COLOR_NAVY_DEEP} className="bear-px-4 bear-py-4">
         <Flex justify="between" align="center">
           <Logo onDark />
-          <LocaleSelect />
+          <Flex align="center" gap={FLEX_GAP_LG}>
+            <LocaleSelect />
+            <ThemeToggle lightLabel={t('themeLight')} darkLabel={t('themeDark')} />
+          </Flex>
         </Flex>
       </Box>
       <Flex className="bear-min-h-screen bear-p-4" align="center" justify="center">
@@ -98,6 +103,9 @@ export function Auth() {
                 <Input label={t('name')} value={name} onChange={(event) => setName(event.target.value)} fullWidth />
               )}
               {isRegister && (
+                <Input label={t('username')} value={username} onChange={(event) => setUsername(event.target.value)} fullWidth />
+              )}
+              {isRegister && (
                 <AuthRegisterPanel
                   role={role}
                   onRoleChange={setRole}
@@ -105,7 +113,11 @@ export function Auth() {
                   onCityChange={setCity}
                 />
               )}
-              <Input label={t('email')} type="email" value={email} onChange={(event) => setEmail(event.target.value)} fullWidth />
+              {isRegister ? (
+                <Input label={t('email')} type="email" value={email} onChange={(event) => setEmail(event.target.value)} fullWidth />
+              ) : (
+                <Input label={t('emailOrUsername')} value={identifier} onChange={(event) => setIdentifier(event.target.value)} fullWidth />
+              )}
               <Input label={t('password')} type="password" value={password} onChange={(event) => setPassword(event.target.value)} fullWidth />
               <Button variant="primary" fullWidth loading={busy} loadingText={t('saving')} onClick={() => void submit()}>
                 {isRegister ? t('register') : t('login')}

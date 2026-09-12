@@ -12,7 +12,9 @@ export interface AuthProviderButtonProps {
 export interface AuthGoogleButtonProps extends AuthProviderButtonProps {}
 
 export interface AuthFormState {
+  identifier: string;
   email: string;
+  username: string;
   password: string;
   name: string;
 }
