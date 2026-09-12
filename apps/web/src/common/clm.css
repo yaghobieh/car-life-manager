@@ -710,6 +710,13 @@ html[data-theme="dark"] .Clm-nav-item:hover img {
   margin-inline-start: auto;
 }
 
+.Clm-row-actions {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+}
+
 .Clm-empty {
   text-align: center;
   padding: 70px 20px;

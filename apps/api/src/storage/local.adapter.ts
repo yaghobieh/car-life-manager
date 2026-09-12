@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { DOCUMENT_UPLOADS_DIR } from "../constants/http.const";
@@ -24,6 +24,13 @@ export function localStorage(): StorageProvider {
         return await readFile(localDocumentPath(key));
       } catch {
         return null;
+      }
+    },
+    async remove(key: string): Promise<void> {
+      try {
+        await unlink(localDocumentPath(key));
+      } catch {
+        return;
       }
     },
   };

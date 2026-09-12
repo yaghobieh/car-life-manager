@@ -12,6 +12,7 @@ import {
 import { ClmButton, ClmEmpty, ClmList, ClmPageHead, ClmRow, ClmSectionTitle } from '@common';
 import { useAppState } from '@hooks';
 import { DOCUMENT_ACCEPT, DOCUMENT_TYPE_OPTIONS } from './Documents.const';
+import { DocumentsRowActions } from './DocumentsRowActions';
 import { fileToBase64, isAllowedDocumentSize, triggerBlobDownload } from './Documents.utils';
 
 export function Documents() {
@@ -31,6 +32,17 @@ export function Documents() {
     if (!currentId) return;
     const blob = await api.downloadDocument(currentId, documentId);
     triggerBlobDownload(blob, fileName);
+  }
+
+  async function remove(documentId: string) {
+    if (!currentId) return;
+    setBusy(true);
+    try {
+      await api.removeDocument(currentId, documentId);
+      await refresh();
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function submit() {
@@ -88,14 +100,16 @@ export function Documents() {
                     document.expiresAt,
                     document.hasFile ? t('documentHasFile') : t('documentNoFile'),
                   ].filter(Boolean).join(' · ')}
-                  action={document.hasFile ? (
-                    <ClmButton
-                      kind="outline"
-                      onClick={() => void download(document.id, document.originalName || document.title)}
-                    >
-                      {t('downloadFile')}
-                    </ClmButton>
-                  ) : undefined}
+                  action={(
+                    <DocumentsRowActions
+                      hasFile={document.hasFile}
+                      busy={busy}
+                      downloadLabel={t('downloadFile')}
+                      removeLabel={t('removeDocument')}
+                      onDownload={() => void download(document.id, document.originalName || document.title)}
+                      onRemove={() => void remove(document.id)}
+                    />
+                  )}
                 />
               ))}
             </ClmList>

@@ -3,6 +3,7 @@ import { HttpError } from "../errors/http-error";
 import { logger } from "../logger";
 import {
   CLOUDINARY_API_HOST,
+  CLOUDINARY_DESTROY_PATH,
   CLOUDINARY_FOLDER,
   CLOUDINARY_RES_HOST,
   CLOUDINARY_UPLOAD_PATH,
@@ -51,6 +52,25 @@ export function cloudinaryStorage(account: CloudinaryAccount): StorageProvider {
       const response = await fetch(url);
       if (!response.ok) return null;
       return new Uint8Array(await response.arrayBuffer());
+    },
+    async remove(key: string): Promise<void> {
+      const parsed = parseCloudinaryKey(key);
+      if (!parsed) return;
+      const timestamp = String(Math.floor(Date.now() / 1000));
+      const params = { public_id: parsed.publicId, timestamp };
+      const signature = signCloudinaryParams(params, account.apiSecret);
+      const body = new FormData();
+      body.append("api_key", account.apiKey);
+      body.append("public_id", parsed.publicId);
+      body.append("timestamp", timestamp);
+      body.append("signature", signature);
+      const response = await fetch(
+        `${CLOUDINARY_API_HOST}/${account.cloudName}/${parsed.resourceType}/${CLOUDINARY_DESTROY_PATH}`,
+        { method: "POST", body },
+      );
+      if (!response.ok) {
+        logger.warn("cloudinary destroy failed", response.status);
+      }
     },
   };
 }

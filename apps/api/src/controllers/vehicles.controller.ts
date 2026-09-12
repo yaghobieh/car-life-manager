@@ -12,6 +12,7 @@ import {
   getDocumentFile,
   listVehicles,
   lookupVehicle,
+  removeDocument,
   removeVehicle,
 } from "../modules/vehicles/service";
 import { vehicleCalendarIcs } from "../modules/vehicles/calendar";
@@ -111,6 +112,11 @@ export async function downloadDocumentController(req: Request, res: Response): P
   res.setHeader("Content-Type", file.mimeType);
   res.setHeader("Content-Disposition", `attachment; filename="${encodeURIComponent(file.originalName)}"`);
   res.send(Buffer.from(file.body));
+}
+
+export async function removeDocumentController(req: Request, res: Response): Promise<void> {
+  await removeDocument(getUserId(req), String(req.params.id), String(req.params.docId));
+  res.json({ deleted: true });
 }
 
 export async function confirmServiceController(req: Request, res: Response): Promise<void> {

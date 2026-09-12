@@ -493,6 +493,7 @@ export const en = {
   documentsFormTitle: 'Upload document',
   chooseFile: 'Choose file',
   downloadFile: 'Download file',
+  removeDocument: 'Remove',
   documentHasFile: 'File saved',
   documentNoFile: 'Details only — no file',
   fileTooLarge: 'The file is larger than 4MB.',

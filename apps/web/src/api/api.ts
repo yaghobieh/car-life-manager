@@ -17,7 +17,7 @@ import type {
   VehicleDocument,
   VehicleLookupResult,
 } from '@clm/shared';
-import { ADDRESS_QUERY_PARAM, HTTP_METHOD_PATCH, HTTP_METHOD_POST, ICS_PATH_SUFFIX } from '@const';
+import { ADDRESS_QUERY_PARAM, HTTP_METHOD_DELETE, HTTP_METHOD_PATCH, HTTP_METHOD_POST, ICS_PATH_SUFFIX } from '@const';
 import {
   AUTH_AUTH0_PATH,
   AUTH_GOOGLE_PATH,
@@ -89,6 +89,10 @@ export const api = {
     `${VEHICLES_PATH}/${vehicleId}/documents/${documentId}/file`,
   downloadDocument: (vehicleId: string, documentId: string) =>
     apiClient.requestBlob(`${VEHICLES_PATH}/${vehicleId}/documents/${documentId}/file`),
+  removeDocument: (vehicleId: string, documentId: string) =>
+    apiClient.request<{ deleted: boolean }>(`${VEHICLES_PATH}/${vehicleId}/documents/${documentId}`, {
+      method: HTTP_METHOD_DELETE,
+    }),
   sendTestSms: () =>
     apiClient.request<SmsTestResult>(AUTH_SMS_TEST_PATH, { method: HTTP_METHOD_POST }),
   addReminder: (vehicleId: string, input: Pick<Reminder, 'title' | 'dueDate'>) =>

@@ -493,6 +493,7 @@ export const he = {
   documentsFormTitle: 'העלאת מסמך',
   chooseFile: 'בחירת קובץ',
   downloadFile: 'הורדת הקובץ',
+  removeDocument: 'מחיקה',
   documentHasFile: 'קובץ שמור',
   documentNoFile: 'פרטים בלבד — בלי קובץ',
   fileTooLarge: 'הקובץ גדול מ־4MB.',

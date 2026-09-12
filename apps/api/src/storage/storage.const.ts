@@ -3,6 +3,7 @@ export const CLOUDINARY_STORAGE_PREFIX = "cloudinary:";
 export const CLOUDINARY_API_HOST = "https://api.cloudinary.com/v1_1";
 export const CLOUDINARY_RES_HOST = "https://res.cloudinary.com";
 export const CLOUDINARY_UPLOAD_PATH = "auto/upload";
+export const CLOUDINARY_DESTROY_PATH = "destroy";
 export const CLOUDINARY_FOLDER = "clm";
 export const CLOUDINARY_SHA1 = "sha1";
 export const CLOUDINARY_HEX = "hex";

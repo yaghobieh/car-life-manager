@@ -19,6 +19,8 @@ import { documentObjectKey, parseDocumentFile } from "./documents.utils";
 import {
   DOCUMENT_FILE_MISSING_CODE,
   DOCUMENT_FILE_MISSING_MESSAGE,
+  DOCUMENT_NOT_FOUND_CODE,
+  DOCUMENT_NOT_FOUND_MESSAGE,
   PLATE_TAKEN_CODE,
   PLATE_TAKEN_MESSAGE,
 } from "./vehicles.const";
@@ -382,6 +384,19 @@ export async function getDocumentFile(userId: string, vehicleId: string, documen
     mimeType: row.mimeType,
     originalName: row.originalName,
   };
+}
+
+export async function removeDocument(userId: string, vehicleId: string, documentId: string) {
+  await getOwnedVehicle(userId, vehicleId);
+  const row = await prisma.vehicleDocument.findFirst({ where: { id: documentId, vehicleId } });
+  if (!row) {
+    throw new HttpError(DOCUMENT_NOT_FOUND_MESSAGE, HTTP_NOT_FOUND, DOCUMENT_NOT_FOUND_CODE);
+  }
+  if (row.storageKey !== DOCUMENT_STORAGE_MANUAL) {
+    await storageForKey(row.storageKey).remove(row.storageKey);
+  }
+  await prisma.vehicleDocument.delete({ where: { id: row.id } });
+  await audit({ userId, vehicleId, action: "document_deleted", metadata: { type: row.type } });
 }
 
 export async function addReminder(userId: string, vehicleId: string, input: { title: string; dueDate: string }) {
