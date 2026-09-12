@@ -4,7 +4,6 @@ import { useTranslate } from '@forgedevstack/lingo/react';
 import {
   BOOLEAN_FALSE,
   CARD_RADIUS_XL,
-  COLOR_BG,
   COLOR_MUTED,
   COLOR_NAVY_DEEP,
   FLEX_GAP_LG,
@@ -15,6 +14,7 @@ import {
   TYPO_SECTION_TITLE,
 } from '@const';
 import { LocaleSelect } from '@components/LocaleSelect';
+import { ThemeToggle } from '@components/ThemeToggle';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
 import { authHref } from '../../Route.utils';
@@ -36,13 +36,14 @@ export function Landing() {
   if (user) return <Navigate to={ROUTE_HOME} replace />;
 
   return (
-    <Box bg={COLOR_BG} className="Bear-Landing bear-min-h-screen">
+    <Box className="Bear-Landing bear-min-h-screen">
       <Box bg={COLOR_NAVY_DEEP} className="bear-px-4 bear-py-4">
         <Box className="bear-max-w-5xl bear-mx-auto">
           <Flex justify="between" align="center">
             <Logo onDark />
             <Flex align="center" gap={FLEX_GAP_MD}>
               <LocaleSelect />
+              <ThemeToggle lightLabel={t('themeLight')} darkLabel={t('themeDark')} />
             </Flex>
           </Flex>
         </Box>

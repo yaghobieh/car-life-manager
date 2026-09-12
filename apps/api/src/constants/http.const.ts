@@ -27,4 +27,23 @@ export const PRISMA_UNREACHABLE = "P1001";
 export const PRISMA_TIMEOUT = "P1002";
 export const PRISMA_SERVER_CLOSED = "P1017";
 export const DB_UNREACHABLE_CODE = "db_unreachable";
+export const DB_UNCONFIGURED_CODE = "db_unconfigured";
 export const DB_UNREACHABLE_MESSAGE = "Can't reach the database. Check DATABASE_URL and that Neon is awake.";
+export const DB_UNSET_MESSAGE = "DATABASE_URL is not set";
+export const DB_SQLITE_UNSUPPORTED_MESSAGE = "DATABASE_URL must be a PostgreSQL URL (postgresql://...). SQLite file: URLs are not supported.";
+export const POSTGRES_URL_PREFIX = "postgresql://";
+export const POSTGRES_URL_PREFIX_SHORT = "postgres://";
+export const JSON_BODY_LIMIT = "8mb";
+export const DOCUMENT_STORAGE_MANUAL = "manual";
+export const DOCUMENT_UPLOADS_DIR = "uploads";
+export const DOCUMENT_MAX_BYTES = 4_000_000;
+export const DOCUMENT_MIME_PDF = "application/pdf";
+export const DOCUMENT_MIME_JPEG = "image/jpeg";
+export const DOCUMENT_MIME_PNG = "image/png";
+export const DOCUMENT_MIME_WEBP = "image/webp";
+export const DOCUMENT_ALLOWED_MIMES = [
+  DOCUMENT_MIME_PDF,
+  DOCUMENT_MIME_JPEG,
+  DOCUMENT_MIME_PNG,
+  DOCUMENT_MIME_WEBP,
+] as const;

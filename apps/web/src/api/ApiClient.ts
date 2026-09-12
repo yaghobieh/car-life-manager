@@ -53,6 +53,24 @@ export class ApiClient {
     }
     return body as T;
   }
+
+  async requestBlob(path: string): Promise<Blob> {
+    const headers = new Headers();
+    if (this.token) {
+      headers.set('Authorization', `Bearer ${this.token}`);
+    }
+    const response = await fetch(path, {
+      credentials: HTTP_CREDENTIALS_INCLUDE,
+      headers,
+    });
+    if (response.status < HTTP_STATUS_OK || !response.ok) {
+      const body = (await response.json().catch(() => ({}))) as ApiErrorBody;
+      const error = new ApiError(body.error ?? `Request failed (${response.status})`, response.status, body.code);
+      this.onError?.(error);
+      throw error;
+    }
+    return response.blob();
+  }
 }
 
 export const apiClient = new ApiClient();

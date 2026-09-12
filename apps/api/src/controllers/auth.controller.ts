@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { isAuth0Ready, isEmailNotifyReady, isGoogleAuthReady, isSmsAccountReady, isSmsNotifyReady } from "../config";
 import { HTTP_CREATED, HTTP_OK } from "../constants/http.const";
 import { getUserId, type AuthedRequest } from "../middlewares";
+import { sendTestSms } from "../notifications/service";
 import {
   auth0AuthorizeUrl,
   clearSession,
@@ -54,13 +55,15 @@ export async function registerController(req: Request, res: Response): Promise<v
     String(req.body?.password ?? ""),
     req.body?.name,
     req.body?.role,
+    req.body?.username,
   );
   attachSession(res, await createSession(user.id));
   res.status(HTTP_CREATED).json({ user });
 }
 
 export async function loginController(req: Request, res: Response): Promise<void> {
-  const user = await loginUser(String(req.body?.email ?? ""), String(req.body?.password ?? ""));
+  const identifier = String(req.body?.identifier ?? req.body?.username ?? req.body?.email ?? "");
+  const user = await loginUser(identifier, String(req.body?.password ?? ""));
   attachSession(res, await createSession(user.id));
   res.status(HTTP_OK).json({ user });
 }
@@ -90,11 +93,17 @@ export async function meController(req: Request, res: Response): Promise<void> {
 export async function updateProfileController(req: Request, res: Response): Promise<void> {
   const user = await updateProfile(getUserId(req), {
     name: req.body?.name,
+    username: req.body?.username,
     phone: req.body?.phone,
     notifyEmail: typeof req.body?.notifyEmail === "boolean" ? req.body.notifyEmail : undefined,
     notifySms: typeof req.body?.notifySms === "boolean" ? req.body.notifySms : undefined,
   });
   res.status(HTTP_OK).json({ user });
+}
+
+export async function testSmsController(req: Request, res: Response): Promise<void> {
+  const result = await sendTestSms(getUserId(req));
+  res.status(HTTP_OK).json(result);
 }
 
 export async function googleStartController(req: Request, res: Response): Promise<void> {

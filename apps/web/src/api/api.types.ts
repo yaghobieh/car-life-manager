@@ -37,6 +37,7 @@ export interface VehicleListPayload {
 export interface AuthUser {
   id: string;
   email: string | null;
+  username: string | null;
   name: string | null;
   phone: string | null;
   imageUrl: string | null;
@@ -58,8 +59,25 @@ export interface AuthMePayload {
   notificationChannels: NotificationChannels;
 }
 
+export interface SmsTestResult {
+  channel: string;
+  status: string;
+  error?: string;
+}
+
+export interface DocumentCreateInput {
+  type: VehicleDocument['type'];
+  title: string;
+  notes?: string | null;
+  expiresAt?: string | null;
+  fileName?: string;
+  mimeType?: string;
+  contentBase64?: string;
+}
+
 export interface ProfileUpdateInput {
   name: string;
+  username?: string;
   phone: string;
   notifyEmail: boolean;
   notifySms: boolean;

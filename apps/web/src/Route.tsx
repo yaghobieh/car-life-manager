@@ -3,6 +3,7 @@ import {
   CAR_SEGMENT_DOCUMENTS,
   CAR_SEGMENT_EXPENSES,
   CAR_SEGMENT_MAINTENANCE,
+  CAR_SEGMENT_REMINDER_ID,
   CAR_SEGMENT_REMINDERS,
   CAR_SEGMENT_REPORTS,
   CAR_SEGMENT_SERVICES,
@@ -27,6 +28,7 @@ import {
 } from '@const';
 import {
   Auth,
+  CalendarEvent,
   Documents,
   Expenses,
   Gate,
@@ -71,6 +73,7 @@ export function AppRoutes() {
         <Route path={CAR_SEGMENT_DOCUMENTS} element={<Documents />} />
         <Route path={CAR_SEGMENT_MAINTENANCE} element={<Maintenance />} />
         <Route path={CAR_SEGMENT_REMINDERS} element={<Reminders />} />
+        <Route path={`${CAR_SEGMENT_REMINDERS}/${CAR_SEGMENT_REMINDER_ID}`} element={<CalendarEvent />} />
         <Route path={CAR_SEGMENT_REPORTS} element={<Reports />} />
         <Route path={CAR_SEGMENT_SETTINGS} element={<Settings />} />
       </Route>

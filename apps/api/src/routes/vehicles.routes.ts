@@ -8,6 +8,7 @@ import {
   addReminderController,
   addVehicleController,
   confirmServiceController,
+  downloadDocumentController,
   getDashboardController,
   listVehicleDocumentsController,
   listVehicleExpensesController,
@@ -17,6 +18,7 @@ import {
   listVehicleTasksController,
   listVehiclesController,
   lookupVehicleController,
+  removeDocumentController,
   removeVehicleController,
   vehicleCalendarController,
 } from "../controllers/vehicles.controller";
@@ -39,6 +41,8 @@ export function registerVehicleRoutes(router: Router): void {
   router.post("/vehicles/:id/reminders", asyncRoute(addReminderController));
   router.get("/vehicles/:id/documents", asyncRoute(listVehicleDocumentsController));
   router.post("/vehicles/:id/documents", asyncRoute(addDocumentController));
+  router.get("/vehicles/:id/documents/:docId/file", asyncRoute(downloadDocumentController));
+  router.delete("/vehicles/:id/documents/:docId", asyncRoute(removeDocumentController));
   router.post("/vehicles/:id/services/:providerId/confirm", asyncRoute(confirmServiceController));
   router.get("/vehicles/:id/maintenance", asyncRoute(listVehicleMaintenanceController));
   router.post("/vehicles/:id/maintenance", asyncRoute(addMaintenanceController));

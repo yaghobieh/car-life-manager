@@ -1,6 +1,6 @@
 {
   "name": "home-life",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "description": "HomeLife — Car & Home (רכב ודירה). One account, one API, one database for CarLife and NadLife.",
   "workspaces": [

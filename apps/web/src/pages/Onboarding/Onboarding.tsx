@@ -3,14 +3,16 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Box, Button, Card, Flex, Input, Typography } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import type { VehicleLookupResult } from '@clm/shared';
-import { api } from '@api';
+import { api, ApiError } from '@api';
 import {
   CARD_RADIUS_XL,
   COLOR_BG,
+  COLOR_DANGER,
   COLOR_MUTED,
   COLOR_NAVY_DEEP,
   DATA_SOURCE_DEVELOPMENT,
   DEFAULT_PLATE_EXAMPLE,
+  EMPTY_STRING,
   FLEX_GAP_LG,
   ONBOARDING_STEP_CONFIRM,
   ONBOARDING_STEP_PLATE,
@@ -24,13 +26,14 @@ import {
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
 import { authHref } from '../../Route.utils';
-import { lookupTitle, resolveOnboardingStep, sliceDate } from './Onboarding.utils';
+import { addVehicleErrorKey, lookupTitle, resolveOnboardingStep, sliceDate } from './Onboarding.utils';
 
 export function Onboarding() {
   const [step, setStep] = useState(ONBOARDING_STEP_WELCOME);
   const [plate, setPlate] = useState(DEFAULT_PLATE_EXAMPLE);
   const [lookup, setLookup] = useState<VehicleLookupResult | null>(null);
   const [busy, setBusy] = useState(false);
+  const [errorKey, setErrorKey] = useState(EMPTY_STRING);
   const navigate = useNavigate();
   const { user, vehicles, loading, authReady, refresh } = useAppState();
   const t = useTranslate();
@@ -61,10 +64,13 @@ export function Onboarding() {
 
   async function save() {
     setBusy(true);
+    setErrorKey(EMPTY_STRING);
     try {
       await api.addVehicle(plate);
       await refresh();
       navigate(ROUTE_HOME);
+    } catch (error) {
+      setErrorKey(addVehicleErrorKey(error instanceof ApiError ? error.code : undefined));
     } finally {
       setBusy(false);
     }
@@ -130,6 +136,9 @@ export function Onboarding() {
               <Typography>{t('lastTest')}: {sliceDate(lookup.vehicle.lastTestDate, t('unknown'))}</Typography>
               <Typography color={COLOR_MUTED}>{t('identityUnavailable')}</Typography>
               <Typography>{t('preparing')}</Typography>
+              {errorKey !== EMPTY_STRING && (
+                <Typography color={COLOR_DANGER} role="alert">{t(errorKey)}</Typography>
+              )}
               <Button variant="primary" fullWidth loading={busy} loadingText={t('saving')} onClick={() => void save()}>
                 {t('goDashboard')}
               </Button>
