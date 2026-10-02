@@ -17,7 +17,7 @@ import { LocaleSelect } from '@components/LocaleSelect';
 import { ThemeToggle } from '@components/ThemeToggle';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
-import { authHref } from '../../Route.utils';
+import { authHref } from '@routes';
 import { LandingFeatures } from './helpers/LandingFeatures';
 import { LandingHow } from './helpers/LandingHow';
 import { LandingLoading } from './helpers/LandingLoading';

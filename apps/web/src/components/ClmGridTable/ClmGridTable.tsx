@@ -1,6 +1,6 @@
 import { Box, useBearMode } from '@forgedevstack/bear';
 import { GridTable } from '@forgedevstack/grid-table';
-import { CLM_GRID_BEAR_OVERRIDE, CLM_GRID_THEME } from '@theme';
+import { CLM_GRID_BEAR_OVERRIDE, clmGridTheme } from '@theme';
 import type { ClmGridTableProps } from './ClmGridTable.types';
 
 export function ClmGridTable(props: ClmGridTableProps) {
@@ -10,7 +10,7 @@ export function ClmGridTable(props: ClmGridTableProps) {
       <GridTable
         density="comfortable"
         themeMode={mode}
-        theme={CLM_GRID_THEME}
+        theme={clmGridTheme(mode)}
         themeOverride={CLM_GRID_BEAR_OVERRIDE}
         mobileLayout="stacked"
         {...props}

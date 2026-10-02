@@ -4,7 +4,7 @@ import { useTranslate } from '@forgedevstack/lingo/react';
 import { CARD_RADIUS_XL, COLOR_BG, FLEX_GAP_MD, ROUTE_CAR, ROUTE_ONBOARDING, ZERO } from '@const';
 import { AppShell } from '@components/AppShell';
 import { useAppState } from '@hooks';
-import { authHref } from '../../Route.utils';
+import { authHref } from '@routes';
 
 export function Gate() {
   const { user, vehicles, loading, authReady, error, refresh } = useAppState();

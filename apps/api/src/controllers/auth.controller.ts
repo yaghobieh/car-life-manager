@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { isAuth0Ready, isEmailNotifyReady, isGoogleAuthReady, isSmsAccountReady, isSmsNotifyReady } from "../config";
 import { HTTP_CREATED, HTTP_OK } from "../constants/http.const";
 import { getUserId, type AuthedRequest } from "../middlewares";
-import { sendTestSms } from "../notifications/service";
+import { sendTestEmail, sendTestSms } from "../notifications/service";
 import {
   auth0AuthorizeUrl,
   clearSession,
@@ -103,6 +103,11 @@ export async function updateProfileController(req: Request, res: Response): Prom
 
 export async function testSmsController(req: Request, res: Response): Promise<void> {
   const result = await sendTestSms(getUserId(req));
+  res.status(HTTP_OK).json(result);
+}
+
+export async function testEmailController(req: Request, res: Response): Promise<void> {
+  const result = await sendTestEmail(getUserId(req));
   res.status(HTTP_OK).json(result);
 }
 

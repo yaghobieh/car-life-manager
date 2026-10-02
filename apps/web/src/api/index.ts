@@ -5,6 +5,7 @@ export type {
   AuthUser,
   AuthUserPayload,
   DashboardPayload,
+  NotifyTestResult,
   VehicleListPayload,
   ApiClientError,
 } from './api.types';

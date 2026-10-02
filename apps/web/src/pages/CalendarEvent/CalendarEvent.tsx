@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Typography } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
@@ -14,7 +15,10 @@ export function CalendarEvent() {
   const { dashboard } = useAppState();
   const navigate = useNavigate();
   const t = useTranslate();
-  const reminder = dashboard?.reminders.find((item) => item.id === reminderId);
+  const reminder = useMemo(
+    () => dashboard?.reminders.find((item) => item.id === reminderId),
+    [dashboard, reminderId],
+  );
   const event = reminder ? reminderToCalendarEvent(reminder) : null;
 
   if (!reminder || !event) {

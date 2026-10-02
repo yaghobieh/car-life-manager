@@ -24,7 +24,8 @@
       "@store": ["src/store"],
       "@locales": ["src/locales"],
       "@api": ["src/api"],
-      "@logger": ["src/logger"]
+      "@logger": ["src/logger"],
+      "@routes": ["src/Route.utils.ts"]
     },
     "types": ["vite/client"]
   },

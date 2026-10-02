@@ -15,4 +15,5 @@ export const aliases = {
   '@locales': path.resolve(root, 'src/locales'),
   '@api': path.resolve(root, 'src/api'),
   '@logger': path.resolve(root, 'src/logger'),
+  '@routes': path.resolve(root, 'src/Route.utils.ts'),
 };

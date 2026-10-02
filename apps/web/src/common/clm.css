@@ -4,6 +4,19 @@
   box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+  background: var(--clm-paper);
+  color: var(--clm-ink);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
 :root {
   --clm-ink: #0F1B33;
   --clm-ink-soft: #3A4A6B;
@@ -373,8 +386,8 @@ html[data-theme="dark"] .Clm-nav-item:hover img {
   border-radius: var(--clm-radius-m);
   padding: 16px 20px;
   margin-bottom: 22px;
-  border-top: 3px dashed rgba(22, 27, 34, 0.28);
-  border-bottom: 3px dashed rgba(22, 27, 34, 0.28);
+  border-top: 3px dashed color-mix(in srgb, var(--clm-ink) 28%, transparent);
+  border-bottom: 3px dashed color-mix(in srgb, var(--clm-ink) 28%, transparent);
 }
 
 .Clm-banner-icon {
@@ -382,7 +395,7 @@ html[data-theme="dark"] .Clm-nav-item:hover img {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: rgba(22, 27, 34, 0.12);
+  background: color-mix(in srgb, var(--clm-ink) 12%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -392,9 +405,10 @@ html[data-theme="dark"] .Clm-nav-item:hover img {
   flex: 1;
 }
 
-.Clm-banner-text b {
+.Clm-banner-title {
   display: block;
   font-size: 15px;
+  font-weight: 700;
   margin-bottom: 2px;
 }
 
@@ -1420,6 +1434,9 @@ html[data-theme="dark"] .Bear-ClmGridTable,
 html[data-theme="dark"] .gt-root,
 html[data-theme="dark"] [class*="GridTable"] {
   color: var(--clm-ink);
+  border-color: var(--clm-line);
+  --gt-border: var(--clm-line);
+  --gt-border-color: var(--clm-line);
 }
 
 html[data-theme="dark"] .Bear-Card,
@@ -1438,4 +1455,15 @@ html[data-theme="dark"] [data-bear-select-menu] {
 
 html[data-theme="dark"] .Clm-btn-outline:hover {
   color: #ffffff;
+}
+
+html .Bear-Button,
+html [class*="Bear-Button"] {
+  --bear-btn-primary-bg: var(--clm-blue);
+  --bear-btn-primary-bg-hover: var(--clm-blue-text);
+  --bear-btn-primary-bg-active: var(--clm-blue-text);
+  --bear-btn-primary-border: var(--clm-blue);
+  --bear-primary-500: var(--clm-blue);
+  --bear-primary-600: var(--clm-blue);
+  --bear-primary-700: var(--clm-blue-text);
 }

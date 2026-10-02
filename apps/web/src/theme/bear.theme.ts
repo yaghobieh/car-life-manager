@@ -8,6 +8,7 @@ import {
   COLOR_NAV_TEXT,
   COLOR_NAVY,
   COLOR_NAVY_DEEP,
+  COLOR_TRANSPARENT,
   COLOR_WARNING,
   COLOR_WHITE,
   FONT_FAMILY,
@@ -30,13 +31,31 @@ import {
   VARIANT_NAV_ACTIVE,
 } from '@const';
 
+const BEAR_COLOR_STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
+
+function bearSolidScale(color: string): Record<string, string> {
+  return Object.fromEntries(BEAR_COLOR_STEPS.map((step) => [String(step), color]));
+}
+
+const CLM_PRIMARY_SCALE = {
+  ...bearSolidScale('var(--clm-blue)'),
+  50: 'var(--clm-blue-soft)',
+  100: 'var(--clm-blue-soft)',
+  200: 'var(--clm-blue-soft)',
+  600: 'var(--clm-blue)',
+  700: 'var(--clm-blue-text)',
+  800: 'var(--clm-blue-text)',
+  900: 'var(--clm-bar)',
+  950: 'var(--clm-bar)',
+};
+
 export const CLM_BEAR_THEME = {
   colors: {
-    primary: 'var(--clm-blue)',
-    secondary: COLOR_NAVY,
-    success: COLOR_GREEN,
-    warning: COLOR_WARNING,
-    danger: COLOR_DANGER,
+    primary: CLM_PRIMARY_SCALE,
+    secondary: bearSolidScale(COLOR_NAVY),
+    success: bearSolidScale(COLOR_GREEN),
+    warning: bearSolidScale(COLOR_WARNING),
+    danger: bearSolidScale(COLOR_DANGER),
     background: {
       primary: 'var(--clm-paper)',
       secondary: 'var(--clm-paper)',
@@ -143,5 +162,23 @@ export const CLM_BEAR_DEFAULT_PROPS = {
   },
   Input: {
     size: 'md',
+  },
+};
+
+export const CLM_BEAR_COMPONENTS = {
+  Button: {
+    primary: {
+      bg: 'var(--clm-blue)',
+      bgHover: 'var(--clm-blue-text)',
+      bgActive: 'var(--clm-blue-text)',
+      text: COLOR_WHITE,
+      border: 'var(--clm-blue)',
+    },
+    ghost: {
+      bg: COLOR_TRANSPARENT,
+      bgHover: 'var(--clm-blue-soft)',
+      text: 'var(--clm-blue)',
+      border: COLOR_TRANSPARENT,
+    },
   },
 };

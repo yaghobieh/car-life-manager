@@ -59,11 +59,13 @@ export interface AuthMePayload {
   notificationChannels: NotificationChannels;
 }
 
-export interface SmsTestResult {
+export interface NotifyTestResult {
   channel: string;
   status: string;
   error?: string;
 }
+
+export type SmsTestResult = NotifyTestResult;
 
 export interface DocumentCreateInput {
   type: VehicleDocument['type'];

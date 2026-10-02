@@ -18,16 +18,17 @@ import { ThemeToggle } from '@components/ThemeToggle';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
 import { logger } from '@logger';
+import { oauthStartHref } from '@routes';
 import { AUTH_DEFAULT_ROLE, AUTH_ERROR_QUERY, AUTH_MODE_LOGIN, AUTH_MODE_REGISTER } from './Auth.const';
 import type { AuthMode } from './Auth.types';
-import { oauthStartHref } from '../../Route.utils';
 import { afterAuthPath, authErrorKey, nextAuthMode } from './Auth.utils';
 import { AuthGoogleButton } from './helpers/AuthGoogleButton';
+import { AuthIdentifierField } from './helpers/AuthIdentifierField';
 import { AuthProviderButton } from './helpers/AuthProviderButton';
 import { AuthRegisterPanel } from './helpers/AuthRegisterPanel';
 
 export function Auth() {
-  const { user, vehicles, loading, authReady, googleEnabled, auth0Enabled, refresh } = useAppState();
+  const { user, vehicles, loading, authReady, googleEnabled, auth0Enabled, login, register } = useAppState();
   const t = useTranslate();
   const [mode, setMode] = useState<AuthMode>(AUTH_MODE_LOGIN);
   const [identifier, setIdentifier] = useState(EMPTY_STRING);
@@ -54,10 +55,12 @@ export function Auth() {
     setBusy(true);
     setErrorKey(EMPTY_STRING);
     try {
-      if (isRegister) await api.register(email, password, name, role, username);
-      else await api.login(identifier, password);
+      if (isRegister) {
+        await register(email, password, name, role, username);
+      } else {
+        await login(identifier, password);
+      }
       logger.info('auth success', mode);
-      await refresh();
     } catch (error) {
       logger.warn('auth failed', error);
       setErrorKey(authErrorKey(error instanceof ApiError ? error.code : undefined));
@@ -113,11 +116,15 @@ export function Auth() {
                   onCityChange={setCity}
                 />
               )}
-              {isRegister ? (
-                <Input label={t('email')} type="email" value={email} onChange={(event) => setEmail(event.target.value)} fullWidth />
-              ) : (
-                <Input label={t('emailOrUsername')} value={identifier} onChange={(event) => setIdentifier(event.target.value)} fullWidth />
-              )}
+              <AuthIdentifierField
+                isRegister={isRegister}
+                email={email}
+                identifier={identifier}
+                emailLabel={t('email')}
+                identifierLabel={t('emailOrUsername')}
+                onEmailChange={setEmail}
+                onIdentifierChange={setIdentifier}
+              />
               <Input label={t('password')} type="password" value={password} onChange={(event) => setPassword(event.target.value)} fullWidth />
               <Button variant="primary" fullWidth loading={busy} loadingText={t('saving')} onClick={() => void submit()}>
                 {isRegister ? t('register') : t('login')}

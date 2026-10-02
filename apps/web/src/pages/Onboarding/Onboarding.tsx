@@ -25,7 +25,7 @@ import {
 } from '@const';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
-import { authHref } from '../../Route.utils';
+import { authHref } from '@routes';
 import { addVehicleErrorKey, lookupTitle, resolveOnboardingStep, sliceDate } from './Onboarding.utils';
 
 export function Onboarding() {

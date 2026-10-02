@@ -2,11 +2,21 @@ import {
   COLOR_DANGER,
   COLOR_GREEN,
   COLOR_WARNING,
+  THEME_MODE_DARK,
 } from '@const';
 import { CLM_BEAR_THEME } from './bear.theme';
 
+const GRID_THEME_LIGHT = 'light' as const;
+const GRID_THEME_DARK = 'dark' as const;
+
+export function clmGridTheme(mode: string) {
+  return {
+    mode: mode === THEME_MODE_DARK ? GRID_THEME_DARK : GRID_THEME_LIGHT,
+    colors: CLM_GRID_THEME.colors,
+  };
+}
+
 export const CLM_GRID_THEME = {
-  mode: 'light' as const,
   colors: {
     background: {
       primary: 'var(--clm-raised)',

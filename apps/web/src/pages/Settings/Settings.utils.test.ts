@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { TWILIO_NUMBERS_URL, TWILIO_SIGNUP_URL } from '@const';
-import { profileErrorKey, smsActionHref, smsActionLabelKey, smsHelpKey, smsTestResultKey } from './Settings.utils';
+import { emailHelpKey, emailTestResultKey, profileErrorKey, smsHelpKey, smsTestResultKey } from './Settings.utils';
 
 describe('profileErrorKey', () => {
   it('maps username and phone codes', () => {
@@ -15,28 +14,30 @@ describe('smsHelpKey', () => {
     expect(smsHelpKey(true, true)).toBe('notifySmsReady');
     expect(smsHelpKey(true, true, false)).toBe('smsNeedPhone');
     expect(smsHelpKey(false, true)).toBe('smsFromNumberMissing');
-    expect(smsHelpKey(false, false)).toBe('smsSignupHelp');
+    expect(smsHelpKey(false, false)).toBe('notifySmsMissing');
   });
 });
 
-describe('smsActionHref', () => {
-  it('hides the link when SMS can send', () => {
-    expect(smsActionHref(true, true)).toBeNull();
-    expect(smsActionHref(false, true)).toBe(TWILIO_NUMBERS_URL);
-    expect(smsActionHref(false, false)).toBe(TWILIO_SIGNUP_URL);
+describe('emailHelpKey', () => {
+  it('prefers ready, then a missing account email', () => {
+    expect(emailHelpKey(true)).toBe('notifyEmailReady');
+    expect(emailHelpKey(true, false)).toBe('emailNeedAddress');
+    expect(emailHelpKey(false)).toBe('notifyEmailMissing');
   });
 });
 
 describe('smsTestResultKey', () => {
-  it('maps Twilio outcomes without inventing a send', () => {
+  it('maps SMS outcomes without inventing a send', () => {
     expect(smsTestResultKey('sent')).toBe('smsTestSent');
     expect(smsTestResultKey('failed')).toBe('smsTestFailed');
     expect(smsTestResultKey('skipped')).toBe('smsTestSkipped');
   });
 });
 
-describe('smsActionLabelKey', () => {
-  it('uses the buy-number label when only the from number is missing', () => {
-    expect(smsActionLabelKey(false, true)).toBe('smsBuyNumberCta');
+describe('emailTestResultKey', () => {
+  it('maps email outcomes without inventing a send', () => {
+    expect(emailTestResultKey('sent')).toBe('emailTestSent');
+    expect(emailTestResultKey('failed')).toBe('emailTestFailed');
+    expect(emailTestResultKey('skipped')).toBe('emailTestSkipped');
   });
 });

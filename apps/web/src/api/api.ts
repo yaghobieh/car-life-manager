@@ -25,6 +25,7 @@ import {
   AUTH_LOGOUT_PATH,
   AUTH_ME_PATH,
   AUTH_REGISTER_PATH,
+  AUTH_EMAIL_TEST_PATH,
   AUTH_SMS_TEST_PATH,
   LOOKUP_PATH,
   PROPERTY_ADDRESSES_PATH,
@@ -37,7 +38,7 @@ import {
   VEHICLES_PATH,
 } from './api.const';
 import { apiClient } from './ApiClient';
-import type { AuthMePayload, AuthUserPayload, DashboardPayload, DocumentCreateInput, ProfileUpdateInput, SmsTestResult, VehicleListPayload } from './api.types';
+import type { AuthMePayload, AuthUserPayload, DashboardPayload, DocumentCreateInput, NotifyTestResult, ProfileUpdateInput, VehicleListPayload } from './api.types';
 
 export const api = {
   me: () => apiClient.request<AuthMePayload>(AUTH_ME_PATH),
@@ -94,7 +95,9 @@ export const api = {
       method: HTTP_METHOD_DELETE,
     }),
   sendTestSms: () =>
-    apiClient.request<SmsTestResult>(AUTH_SMS_TEST_PATH, { method: HTTP_METHOD_POST }),
+    apiClient.request<NotifyTestResult>(AUTH_SMS_TEST_PATH, { method: HTTP_METHOD_POST }),
+  sendTestEmail: () =>
+    apiClient.request<NotifyTestResult>(AUTH_EMAIL_TEST_PATH, { method: HTTP_METHOD_POST }),
   addReminder: (vehicleId: string, input: Pick<Reminder, 'title' | 'dueDate'>) =>
     apiClient.request<{ reminder: Reminder }>(`${VEHICLES_PATH}/${vehicleId}/reminders`, {
       method: HTTP_METHOD_POST,

@@ -5,6 +5,8 @@ import {
   CHANNEL_EMAIL,
   CHANNEL_IN_APP,
   CHANNEL_SMS,
+  EMAIL_TEST_BODY,
+  EMAIL_TEST_TITLE,
   ISO_DATE_LENGTH,
   REMINDER_STATUS_COMPLETED,
   SKIP_MISSING_TARGET,
@@ -14,7 +16,14 @@ import {
   STATUS_SKIPPED,
 } from "./notifications.const";
 import type { ChannelResult, NotifyUser, ReminderDispatchInput } from "./notifications.types";
-import { reminderBody, reminderScheduledBody, reminderScheduledSourceKey, reminderSourceKey, smsTestSourceKey } from "./notifications.utils";
+import {
+  emailTestSourceKey,
+  reminderBody,
+  reminderScheduledBody,
+  reminderScheduledSourceKey,
+  reminderSourceKey,
+  smsTestSourceKey,
+} from "./notifications.utils";
 import { sendSms } from "./sms.adapter";
 
 async function persist(userId: string, vehicleId: string | null, title: string, body: string, sourceKey: string, result: ChannelResult): Promise<void> {
@@ -134,6 +143,22 @@ export async function sendTestSms(userId: string): Promise<ChannelResult> {
       ? { channel: CHANNEL_SMS, status: STATUS_SKIPPED, error: SKIP_MISSING_TARGET }
       : await sendSms(user.phone, SMS_TEST_BODY);
   await persist(user.id, null, SMS_TEST_BODY, SMS_TEST_BODY, sourceKey, result);
+  return result;
+}
+
+export async function sendTestEmail(userId: string): Promise<ChannelResult> {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    return { channel: CHANNEL_EMAIL, status: STATUS_SKIPPED, error: SKIP_MISSING_TARGET };
+  }
+  const sentAt = new Date().toISOString();
+  const sourceKey = emailTestSourceKey(sentAt);
+  const result: ChannelResult = !user.notifyEmail
+    ? { channel: CHANNEL_EMAIL, status: STATUS_SKIPPED, error: SKIP_PREFERENCE_OFF }
+    : !user.email
+      ? { channel: CHANNEL_EMAIL, status: STATUS_SKIPPED, error: SKIP_MISSING_TARGET }
+      : await sendEmail(user.email, EMAIL_TEST_TITLE, EMAIL_TEST_BODY);
+  await persist(user.id, null, EMAIL_TEST_TITLE, EMAIL_TEST_BODY, sourceKey, result);
   return result;
 }
 

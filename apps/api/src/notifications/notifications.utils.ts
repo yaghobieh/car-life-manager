@@ -1,4 +1,10 @@
-import { REMINDER_SCHEDULED_PREFIX, SOURCE_KIND_SCHEDULED, SOURCE_PREFIX_REMINDER, SOURCE_PREFIX_SMS_TEST } from "./notifications.const";
+import {
+  REMINDER_SCHEDULED_PREFIX,
+  SOURCE_KIND_SCHEDULED,
+  SOURCE_PREFIX_EMAIL_TEST,
+  SOURCE_PREFIX_REMINDER,
+  SOURCE_PREFIX_SMS_TEST,
+} from "./notifications.const";
 import type { NotificationChannel } from "./notifications.types";
 
 export function reminderSourceKey(reminderId: string, channel: NotificationChannel): string {
@@ -11,6 +17,10 @@ export function reminderScheduledSourceKey(reminderId: string, channel: Notifica
 
 export function smsTestSourceKey(sentAt: string): string {
   return `${SOURCE_PREFIX_SMS_TEST}${sentAt}`;
+}
+
+export function emailTestSourceKey(sentAt: string): string {
+  return `${SOURCE_PREFIX_EMAIL_TEST}${sentAt}`;
 }
 
 export function reminderBody(title: string, dueDate: string): string {

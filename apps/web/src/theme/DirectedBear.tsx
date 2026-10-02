@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { ApiErrorHost } from '@components/ApiErrorHost';
 import { DIRECTION_LTR, DIRECTION_RTL, LOCALE_HE, THEME_MODE_LIGHT, THEME_STORAGE_KEY } from '@const';
 import {
+  CLM_BEAR_COMPONENTS,
   CLM_BEAR_DEFAULT_PROPS,
   CLM_BEAR_CUSTOM_VARIANTS,
   bearThemeForLocale,
@@ -30,6 +31,7 @@ export function DirectedBear() {
       storageKey={THEME_STORAGE_KEY}
       direction={direction}
       theme={bearThemeForLocale(locale)}
+      components={CLM_BEAR_COMPONENTS}
       defaultProps={CLM_BEAR_DEFAULT_PROPS}
       customVariants={CLM_BEAR_CUSTOM_VARIANTS}
       customTypography={bearTypographyForLocale(locale)}

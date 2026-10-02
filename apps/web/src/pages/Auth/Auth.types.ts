@@ -32,3 +32,13 @@ export interface AuthRegisterPanelProps {
   city: string;
   onCityChange: (value: string) => void;
 }
+
+export interface AuthIdentifierFieldProps {
+  isRegister: boolean;
+  email: string;
+  identifier: string;
+  emailLabel: string;
+  identifierLabel: string;
+  onEmailChange: (value: string) => void;
+  onIdentifierChange: (value: string) => void;
+}
