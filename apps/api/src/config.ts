@@ -29,7 +29,7 @@ export const config = {
   auth0RedirectUri:
     process.env.AUTH0_CALLBACK_URL ?? "http://127.0.0.1:5188/api/auth/auth0/callback",
   enableLogs: process.env.ENABLE_LOGS === "1",
-  appVersion: process.env.APP_VERSION ?? "1.0.2",
+  appVersion: process.env.APP_VERSION ?? "1.0.3",
   buildSha: process.env.VERCEL_GIT_COMMIT_SHA ?? process.env.BUILD_SHA ?? "local",
   providerHubUrl: process.env.PROVIDER_HUB_URL ?? "",
   providerHubKey: process.env.PROVIDER_HUB_KEY ?? "",
@@ -41,6 +41,7 @@ export const config = {
   twilioAccountSid: process.env.TWILIO_ACCOUNT_SID ?? "",
   twilioAuthToken: process.env.TWILIO_AUTH_TOKEN ?? "",
   twilioFromNumber: process.env.TWILIO_FROM_NUMBER ?? "",
+  cloudinaryUrl: process.env.CLOUDINARY_URL ?? "",
 };
 
 export function isDevelopment(): boolean {
@@ -65,4 +66,8 @@ export function isSmsAccountReady(): boolean {
 
 export function isSmsNotifyReady(): boolean {
   return isSmsAccountReady() && Boolean(config.twilioFromNumber);
+}
+
+export function isCloudinaryReady(): boolean {
+  return Boolean(config.cloudinaryUrl);
 }

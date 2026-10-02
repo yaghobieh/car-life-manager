@@ -8,13 +8,20 @@ import {
   SAFE_PATH_CAR,
   SAFE_PATH_CARLIFE,
   SAFE_PATH_PROPERTY,
+  EMAIL_AT,
   EMAIL_PATTERN,
   HASH_SEPARATOR,
+  IL_COUNTRY_DIGITS,
+  IL_MOBILE_LOCAL_LENGTH,
+  IL_MOBILE_NATIONAL_LENGTH,
+  IL_TRUNK_PREFIX,
   PHONE_MAX_DIGITS,
   PHONE_MIN_DIGITS,
+  PHONE_PLUS,
   SCRYPT_KEYLEN,
   SESSION_MAX_AGE_MS,
   TOKEN_BYTES,
+  USERNAME_PATTERN,
 } from "./auth.const";
 import type { AuthUserPayload, SessionCookieOptions } from "./auth.types";
 
@@ -24,6 +31,18 @@ export function normalizeEmail(email: string): string {
 
 export function isValidEmail(email: string): boolean {
   return EMAIL_PATTERN.test(email);
+}
+
+export function normalizeUsername(username: string): string {
+  return username.trim().toLowerCase();
+}
+
+export function isValidUsername(username: string): boolean {
+  return USERNAME_PATTERN.test(username);
+}
+
+export function isEmailIdentifier(identifier: string): boolean {
+  return identifier.includes(EMAIL_AT);
 }
 
 export function hashPassword(password: string): string {
@@ -63,6 +82,7 @@ export function sessionCookieOptions(): SessionCookieOptions {
 export function serializeAuthUser(user: {
   id: string;
   email: string | null;
+  username: string | null;
   name: string | null;
   phone: string | null;
   imageUrl: string | null;
@@ -73,6 +93,7 @@ export function serializeAuthUser(user: {
   return {
     id: user.id,
     email: user.email,
+    username: user.username,
     name: user.name,
     phone: user.phone,
     imageUrl: user.imageUrl,
@@ -82,9 +103,25 @@ export function serializeAuthUser(user: {
   };
 }
 
-export function normalizePhone(phone: string): string | null {
+export function toE164Phone(phone: string | null): string | null {
+  if (!phone) return null;
   const trimmed = phone.trim();
-  return trimmed || null;
+  if (!trimmed) return null;
+  const digits = trimmed.replace(/\D/g, "");
+  if (!digits) return null;
+  if (trimmed.startsWith(PHONE_PLUS)) return `${PHONE_PLUS}${digits}`;
+  if (digits.startsWith(IL_COUNTRY_DIGITS)) return `${PHONE_PLUS}${digits}`;
+  if (digits.startsWith(IL_TRUNK_PREFIX) && digits.length === IL_MOBILE_LOCAL_LENGTH) {
+    return `${PHONE_PLUS}${IL_COUNTRY_DIGITS}${digits.slice(1)}`;
+  }
+  if (digits.length === IL_MOBILE_NATIONAL_LENGTH) {
+    return `${PHONE_PLUS}${IL_COUNTRY_DIGITS}${digits}`;
+  }
+  return `${PHONE_PLUS}${digits}`;
+}
+
+export function normalizePhone(phone: string): string | null {
+  return toE164Phone(phone);
 }
 
 export function isValidPhone(phone: string): boolean {

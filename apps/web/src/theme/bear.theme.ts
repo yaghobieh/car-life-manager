@@ -1,18 +1,14 @@
 import type { ElementType } from 'react';
 import type { BearThemeOverride } from '@forgedevstack/bear';
 import {
-  COLOR_BG,
   COLOR_BLUE,
-  COLOR_CARD,
   COLOR_DANGER,
   COLOR_GREEN,
-  COLOR_INK,
-  COLOR_LINE,
-  COLOR_MUTED,
   COLOR_NAV_HOVER,
   COLOR_NAV_TEXT,
   COLOR_NAVY,
   COLOR_NAVY_DEEP,
+  COLOR_TRANSPARENT,
   COLOR_WARNING,
   COLOR_WHITE,
   FONT_FAMILY,
@@ -35,28 +31,46 @@ import {
   VARIANT_NAV_ACTIVE,
 } from '@const';
 
+const BEAR_COLOR_STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
+
+function bearSolidScale(color: string): Record<string, string> {
+  return Object.fromEntries(BEAR_COLOR_STEPS.map((step) => [String(step), color]));
+}
+
+const CLM_PRIMARY_SCALE = {
+  ...bearSolidScale('var(--clm-blue)'),
+  50: 'var(--clm-blue-soft)',
+  100: 'var(--clm-blue-soft)',
+  200: 'var(--clm-blue-soft)',
+  600: 'var(--clm-blue)',
+  700: 'var(--clm-blue-text)',
+  800: 'var(--clm-blue-text)',
+  900: 'var(--clm-bar)',
+  950: 'var(--clm-bar)',
+};
+
 export const CLM_BEAR_THEME = {
   colors: {
-    primary: COLOR_BLUE,
-    secondary: COLOR_NAVY,
-    success: COLOR_GREEN,
-    warning: COLOR_WARNING,
-    danger: COLOR_DANGER,
+    primary: CLM_PRIMARY_SCALE,
+    secondary: bearSolidScale(COLOR_NAVY),
+    success: bearSolidScale(COLOR_GREEN),
+    warning: bearSolidScale(COLOR_WARNING),
+    danger: bearSolidScale(COLOR_DANGER),
     background: {
-      primary: COLOR_BG,
-      secondary: COLOR_BG,
-      tertiary: COLOR_CARD,
+      primary: 'var(--clm-paper)',
+      secondary: 'var(--clm-paper)',
+      tertiary: 'var(--clm-raised)',
     },
     text: {
-      primary: COLOR_INK,
-      secondary: COLOR_MUTED,
-      muted: COLOR_MUTED,
+      primary: 'var(--clm-ink)',
+      secondary: 'var(--clm-muted)',
+      muted: 'var(--clm-muted)',
       inverted: COLOR_WHITE,
     },
     border: {
-      default: COLOR_LINE,
-      subtle: COLOR_LINE,
-      strong: COLOR_LINE,
+      default: 'var(--clm-line)',
+      subtle: 'var(--clm-line)',
+      strong: 'var(--clm-line-strong)',
     },
   },
   typography: {
@@ -148,5 +162,23 @@ export const CLM_BEAR_DEFAULT_PROPS = {
   },
   Input: {
     size: 'md',
+  },
+};
+
+export const CLM_BEAR_COMPONENTS = {
+  Button: {
+    primary: {
+      bg: 'var(--clm-blue)',
+      bgHover: 'var(--clm-blue-text)',
+      bgActive: 'var(--clm-blue-text)',
+      text: COLOR_WHITE,
+      border: 'var(--clm-blue)',
+    },
+    ghost: {
+      bg: COLOR_TRANSPARENT,
+      bgHover: 'var(--clm-blue-soft)',
+      text: 'var(--clm-blue)',
+      border: COLOR_TRANSPARENT,
+    },
   },
 };

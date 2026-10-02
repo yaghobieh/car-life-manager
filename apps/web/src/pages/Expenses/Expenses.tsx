@@ -45,9 +45,7 @@ export function Expenses() {
           data={expenseRows(expenses, t, formatCurrency, locale)}
         />
       )}
-      <div className="Clm-form">
-        <ExpensesForm />
-      </div>
+      <ExpensesForm />
     </div>
   );
 }

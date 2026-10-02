@@ -1,5 +1,5 @@
 import type { Vehicle } from '@clm/shared';
-import type { AuthUser, DashboardPayload } from '@api';
+import type { AuthUser, DashboardPayload, NotifyTestResult } from '@api';
 
 export interface AppNucleusState {
   user: AuthUser | null;
@@ -16,4 +16,8 @@ export interface AppNucleusState {
   error: string | null;
   refresh: () => Promise<void>;
   select: (id: string) => void;
+  login: (identifier: string, password: string) => Promise<void>;
+  register: (email: string, password: string, name: string, role: string, username: string) => Promise<void>;
+  sendTestSms: () => Promise<NotifyTestResult>;
+  sendTestEmail: () => Promise<NotifyTestResult>;
 }

@@ -3,6 +3,7 @@ export { PropertyShell } from './PropertyShell';
 export { AppLoader, isAppBootLoading } from './AppLoader';
 export { ClmGridTable } from './ClmGridTable';
 export { LocaleSelect } from './LocaleSelect';
+export { ThemeToggle } from './ThemeToggle';
 export { CarArt } from './CarArt';
 export { EmptyState } from './EmptyState';
 export { Logo } from './Logo';

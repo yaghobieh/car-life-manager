@@ -184,6 +184,10 @@ export interface VehicleDocument {
   notes: string | null;
   expiresAt: string | null;
   storageKey: string;
+  originalName: string | null;
+  mimeType: string | null;
+  fileSize: number | null;
+  hasFile: boolean;
   createdAt: string;
 }
 

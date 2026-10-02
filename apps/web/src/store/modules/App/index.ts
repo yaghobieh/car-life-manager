@@ -2,7 +2,14 @@ import { createNucleus } from '@forgedevstack/synapse';
 import { api } from '@api';
 import { BOOLEAN_FALSE, BOOLEAN_TRUE } from '@const';
 import { logger } from '@logger';
-import { fetchDashboard, fetchVehicleList } from './App.apis';
+import {
+  fetchDashboard,
+  fetchVehicleList,
+  loginUser,
+  registerUser,
+  sendTestEmailRequest,
+  sendTestSmsRequest,
+} from './App.apis';
 import { APP_NUCLEUS_NAME } from './App.consts';
 import { beginRefresh, refreshFailed, refreshSucceeded, refreshUnauthenticated } from './App.reducers';
 import type { AppNucleusState } from './App.types';
@@ -65,6 +72,16 @@ export const appNucleus = createNucleus<AppNucleusState>(
         (err: Error) => set({ error: err.message }),
       );
     },
+    login: async (identifier, password) => {
+      await loginUser(identifier, password);
+      await get().refresh();
+    },
+    register: async (email, password, name, role, username) => {
+      await registerUser(email, password, name, role, username);
+      await get().refresh();
+    },
+    sendTestSms: () => sendTestSmsRequest(),
+    sendTestEmail: () => sendTestEmailRequest(),
   }),
   { devtoolsName: APP_NUCLEUS_NAME },
 );

@@ -8,5 +8,8 @@ export function manualStorage(): StorageProvider {
     async get(): Promise<Uint8Array | null> {
       return null;
     },
+    async remove(): Promise<void> {
+      return;
+    },
   };
 }

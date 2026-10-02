@@ -9,7 +9,7 @@ export function ClmBanner(props: ClmBannerProps) {
         <img src={SVG_BANNER_WARN} alt="" width={20} height={20} />
       </div>
       <div className="Clm-banner-text">
-        <b>{title}</b>
+        <div className="Clm-banner-title">{title}</div>
         <span>{body}</span>
       </div>
       <button type="button" className="Clm-banner-cta" onClick={onAction}>{actionLabel}</button>

@@ -21,7 +21,8 @@ export interface ClmHeroProps {
   eyebrow: string;
   title: string;
   plate: string;
-  carSrc: string;
+  carSrc?: string;
+  car?: ReactNode;
   carAlt: string;
   pills: Array<{ label: string; tone: ClmTone }>;
   meta: Array<{ label: string; value: string }>;
