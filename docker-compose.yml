@@ -1,3 +1,5 @@
+# Postgres only. The API and web app stay on the host so Resend/Twilio
+# from apps/api/.env actually send. A mail catcher in Docker would not.
 services:
   postgres:
     image: postgres:16-alpine

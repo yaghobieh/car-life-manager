@@ -9,8 +9,10 @@ import {
   addVehicle,
   confirmService,
   getDashboard,
+  getDocumentFile,
   listVehicles,
   lookupVehicle,
+  removeDocument,
   removeVehicle,
 } from "../modules/vehicles/service";
 import { vehicleCalendarIcs } from "../modules/vehicles/calendar";
@@ -88,13 +90,33 @@ export async function listVehicleDocumentsController(req: Request, res: Response
 }
 
 export async function addDocumentController(req: Request, res: Response): Promise<void> {
+  const hasFile = Boolean(req.body?.contentBase64);
   const document = await addDocument(getUserId(req), String(req.params.id), {
     type: String(req.body?.type ?? "other"),
     title: String(req.body?.title ?? ""),
     notes: req.body?.notes ?? null,
     expiresAt: req.body?.expiresAt ?? null,
+    file: hasFile
+      ? {
+          fileName: String(req.body?.fileName ?? req.body?.originalName ?? ""),
+          mimeType: String(req.body?.mimeType ?? ""),
+          contentBase64: String(req.body?.contentBase64 ?? ""),
+        }
+      : null,
   });
   res.status(HTTP_CREATED).json({ document });
+}
+
+export async function downloadDocumentController(req: Request, res: Response): Promise<void> {
+  const file = await getDocumentFile(getUserId(req), String(req.params.id), String(req.params.docId));
+  res.setHeader("Content-Type", file.mimeType);
+  res.setHeader("Content-Disposition", `attachment; filename="${encodeURIComponent(file.originalName)}"`);
+  res.send(Buffer.from(file.body));
+}
+
+export async function removeDocumentController(req: Request, res: Response): Promise<void> {
+  await removeDocument(getUserId(req), String(req.params.id), String(req.params.docId));
+  res.json({ deleted: true });
 }
 
 export async function confirmServiceController(req: Request, res: Response): Promise<void> {
@@ -115,6 +137,7 @@ export async function addMaintenanceController(req: Request, res: Response): Pro
     garage: req.body?.garage ?? null,
     cost: req.body?.cost === undefined || req.body?.cost === "" ? null : Number(req.body.cost),
     notes: req.body?.notes ?? null,
+    parts: req.body?.parts ?? null,
   });
   res.status(HTTP_CREATED).json({ maintenance: record });
 }

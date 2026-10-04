@@ -8,7 +8,17 @@
     "outDir": "dist",
     "rootDir": "src",
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@const": ["src/constants"],
+      "@const/*": ["src/constants/*"],
+      "@integrations/*": ["src/integrations/*"],
+      "@modules/*": ["src/modules/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@middlewares": ["src/middlewares"],
+      "@middlewares/*": ["src/middlewares/*"]
+    }
   },
   "include": ["src"]
 }

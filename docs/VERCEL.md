@@ -18,7 +18,8 @@ The site is a Vite frontend plus `/api` serverless functions (`vercel.json`).
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `GOOGLE_REDIRECT_URI` | Google sign-in button |
 | `RESEND_API_KEY` / `NOTIFY_FROM_EMAIL` | Email reminders |
 | `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_FROM_NUMBER` | SMS reminders |
-| `APP_VERSION` | Shown as `1.0.2` |
+| `APP_VERSION` | Shown as `1.0.3` |
+| `CLOUDINARY_URL` | Document vault. `cloudinary://API_KEY:API_SECRET@CLOUD_NAME` |
 
 ## Build
 

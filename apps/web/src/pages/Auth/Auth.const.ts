@@ -37,9 +37,13 @@ export const ROLE_LABEL_KEYS: Record<string, string> = {
   [ROLE_LAWYER]: 'roleLawyer',
   [ROLE_CAR_SELLER]: 'roleCarSeller',
 };
+export const AUTH_FAILED_KEY = 'authFailed';
+export const ROLE_LABEL_FALLBACK_KEY = 'roleOwner';
 export const AUTH_ERROR_QUERY = 'error';
 export const AUTH_ERROR_KEYS: Record<string, string> = {
   email_taken: 'authEmailTaken',
+  username_taken: 'authUsernameTaken',
+  invalid_username: 'authInvalidUsername',
   password_short: 'authPasswordShort',
   invalid_email: 'authInvalidEmail',
   google_unavailable: 'authGoogleUnavailable',

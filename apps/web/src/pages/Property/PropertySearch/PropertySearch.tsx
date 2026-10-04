@@ -13,7 +13,7 @@ import {
 } from '@const';
 import { AddressSearchBoard } from '@components/AddressSearchBoard';
 import { AreaPriceList } from '@components/AreaPriceList';
-import { HomesBoard } from '@components/HomesBoard';
+import { HomesBoard } from '../HomesBoard';
 import { ClmEmpty, ClmList, ClmPageHead, ClmRow } from '@common';
 import { usePropertyState } from '@hooks';
 import { addressSubtitle, addressTitle } from '../Property.utils';

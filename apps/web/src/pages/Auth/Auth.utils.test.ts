@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ROLE_CAR_SELLER, ROLE_OWNER, ROLE_SELLER, ROUTE_CAR, ROUTE_ONBOARDING, ROUTE_PROPERTY } from '@const';
+import { ROLE_CAR_SELLER, ROLE_OWNER, ROLE_SELLER, ROUTE_CAR, ROUTE_ONBOARDING, ROUTE_PLATFORM, ROUTE_PROPERTY } from '@const';
 import { afterAuthPath, authErrorKey, roleLabelKey } from './Auth.utils';
 
 const REJECTED_NEXT = '/evil';
@@ -11,12 +11,18 @@ describe('authErrorKey', () => {
     expect(authErrorKey('auth0_unavailable')).toBe('authAuth0Unavailable');
     expect(authErrorKey('auth0_failed')).toBe('authAuth0Failed');
   });
+
+  it('maps taken username and email codes', () => {
+    expect(authErrorKey('email_taken')).toBe('authEmailTaken');
+    expect(authErrorKey('username_taken')).toBe('authUsernameTaken');
+    expect(authErrorKey('invalid_username')).toBe('authInvalidUsername');
+  });
 });
 
 describe('afterAuthPath', () => {
-  it('opens car when next is missing and property is off', () => {
-    expect(afterAuthPath(1)).toBe(ROUTE_CAR);
-    expect(afterAuthPath(0, REJECTED_NEXT)).toBe(ROUTE_ONBOARDING);
+  it('opens the platform when next is missing', () => {
+    expect(afterAuthPath(1)).toBe(ROUTE_PLATFORM);
+    expect(afterAuthPath(0, REJECTED_NEXT)).toBe(ROUTE_PLATFORM);
   });
 
   it('sends empty car accounts to onboarding', () => {
@@ -24,14 +30,14 @@ describe('afterAuthPath', () => {
     expect(afterAuthPath(1, ROUTE_CAR)).toBe(ROUTE_CAR);
   });
 
-  it('rejects a property next path while property is off', () => {
-    expect(afterAuthPath(0, ROUTE_PROPERTY)).toBe(ROUTE_ONBOARDING);
-    expect(afterAuthPath(1, ROUTE_PROPERTY)).toBe(ROUTE_CAR);
+  it('keeps a property next path', () => {
+    expect(afterAuthPath(0, ROUTE_PROPERTY)).toBe(ROUTE_PROPERTY);
+    expect(afterAuthPath(1, ROUTE_PROPERTY)).toBe(ROUTE_PROPERTY);
   });
 
-  it('sends every role to car while property is off', () => {
-    expect(afterAuthPath(0, null, ROLE_OWNER)).toBe(ROUTE_ONBOARDING);
-    expect(afterAuthPath(0, null, ROLE_SELLER)).toBe(ROUTE_ONBOARDING);
+  it('sends apartment roles to property and car sellers to the car', () => {
+    expect(afterAuthPath(0, null, ROLE_OWNER)).toBe(ROUTE_PROPERTY);
+    expect(afterAuthPath(0, null, ROLE_SELLER)).toBe(ROUTE_PROPERTY);
     expect(afterAuthPath(0, null, ROLE_CAR_SELLER)).toBe(ROUTE_ONBOARDING);
     expect(afterAuthPath(1, null, ROLE_CAR_SELLER)).toBe(ROUTE_CAR);
   });
@@ -39,7 +45,7 @@ describe('afterAuthPath', () => {
 
 describe('roleLabelKey', () => {
   it('maps register roles', () => {
-    expect(roleLabelKey(ROLE_OWNER)).toBe('roleCarOwner');
+    expect(roleLabelKey(ROLE_OWNER)).toBe('roleOwner');
     expect(roleLabelKey(ROLE_CAR_SELLER)).toBe('roleCarSeller');
   });
 });

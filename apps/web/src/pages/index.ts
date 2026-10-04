@@ -23,6 +23,7 @@ export { Services } from './Services';
 export { Expenses } from './Expenses';
 export { Documents } from './Documents';
 export { Reminders } from './Reminders';
+export { CalendarEvent } from './CalendarEvent';
 export { Landing } from './Landing';
 export { Maintenance } from './Maintenance';
 export { Reports } from './Reports';

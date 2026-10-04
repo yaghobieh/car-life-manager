@@ -1,10 +1,15 @@
-import type { Home, OfficialAddress, SavedAddress } from '@clm/shared';
+import type { Home, HomeDealType, OfficialAddress, SavedAddress } from '@clm/shared';
 import {
   ADDRESS_KIND_STREET,
   CSV_SEPARATOR,
   DATE_SLICE_LENGTH,
+  DEAL_OWNED,
+  DEAL_RENT,
+  DEAL_SALE,
   EMPTY_STRING,
   FILTER_ALL,
+  HOME_INTENT_EXISTING,
+  HOME_INTENT_INTEREST,
   MONTH_KEY_LENGTH,
   PRICE_WITH,
   PRICE_WITHOUT,
@@ -16,6 +21,17 @@ import {
 } from '@const';
 import { listedByFromFeatures } from '@components/HomeCard/HomeCard.utils';
 import type { HomeBoardFilter } from './Property.types';
+
+export function homeDealType(value: string): HomeDealType {
+  if (value === DEAL_SALE || value === DEAL_RENT || value === DEAL_OWNED) return value;
+  return DEAL_OWNED;
+}
+
+export function dealForHomeIntent(intent: string | null): string | undefined {
+  if (intent === HOME_INTENT_INTEREST) return DEAL_SALE;
+  if (intent === HOME_INTENT_EXISTING) return DEAL_OWNED;
+  return undefined;
+}
 
 export function addressTitle(address: OfficialAddress | SavedAddress): string {
   if ('kind' in address && address.kind === ADDRESS_KIND_STREET && address.street) {

@@ -3,6 +3,7 @@ import {
   CAR_SEGMENT_DOCUMENTS,
   CAR_SEGMENT_EXPENSES,
   CAR_SEGMENT_MAINTENANCE,
+  CAR_SEGMENT_REMINDER_ID,
   CAR_SEGMENT_REMINDERS,
   CAR_SEGMENT_REPORTS,
   CAR_SEGMENT_SERVICES,
@@ -27,6 +28,7 @@ import {
 } from '@const';
 import {
   Auth,
+  CalendarEvent,
   Documents,
   Expenses,
   Gate,
@@ -59,6 +61,13 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path={ROUTE_PLATFORM} element={<PlatformHostRedirect />} />
+      <Route path="/cars" element={<PlatformHostRedirect />} />
+      <Route path="/apartments" element={<PlatformHostRedirect />} />
+      <Route path="/favorites" element={<PlatformHostRedirect />} />
+      <Route path="/generals" element={<PlatformHostRedirect />} />
+      <Route path="/post" element={<PlatformHostRedirect />} />
+      <Route path="/design" element={<PlatformHostRedirect />} />
+      <Route path="/item/:id" element={<PlatformHostRedirect />} />
       <Route path={`${ROUTE_AUTH}/*`} element={<Auth />} />
       <Route path={ROUTE_ONBOARDING} element={<Onboarding />} />
       <Route path={ROUTE_CAR} element={<Gate />}>
@@ -71,6 +80,7 @@ export function AppRoutes() {
         <Route path={CAR_SEGMENT_DOCUMENTS} element={<Documents />} />
         <Route path={CAR_SEGMENT_MAINTENANCE} element={<Maintenance />} />
         <Route path={CAR_SEGMENT_REMINDERS} element={<Reminders />} />
+        <Route path={`${CAR_SEGMENT_REMINDERS}/${CAR_SEGMENT_REMINDER_ID}`} element={<CalendarEvent />} />
         <Route path={CAR_SEGMENT_REPORTS} element={<Reports />} />
         <Route path={CAR_SEGMENT_SETTINGS} element={<Settings />} />
       </Route>

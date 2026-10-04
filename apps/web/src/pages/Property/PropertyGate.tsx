@@ -2,10 +2,10 @@ import { Navigate } from 'react-router-dom';
 import { Box, Button, Card, Flex, Typography } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import { CARD_RADIUS_XL, COLOR_BG, FLEX_GAP_MD, PROPERTY_PRODUCT_ENABLED, ROUTE_CAR, ROUTE_PROPERTY } from '@const';
-import { PropertyShell } from '@components/PropertyShell';
+import { PropertyShell } from '@connected/PropertyShell';
 import { useAppState } from '@hooks';
+import { authHref } from '@routes';
 import { bootstrapPropertyStore } from '@store';
-import { authHref } from '../../Route.utils';
 
 if (PROPERTY_PRODUCT_ENABLED) {
   bootstrapPropertyStore();

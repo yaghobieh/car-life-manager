@@ -40,12 +40,11 @@ afterEach(() => {
 });
 
 describe('AppRoutes', () => {
-  it('shows the platform at /', () => {
+  it('shows the landing at /', () => {
     renderPath(ROUTE_PLATFORM);
-    expect(screen.getByText('הכל לרכב שלך. במקום אחד.')).toBeTruthy();
-    expect(screen.getByText('ניהול הדירה')).toBeTruthy();
-    expect(screen.getByText('ניהול הדירה עדיין לא זמין.')).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'בקרוב' })).toHaveProperty('disabled', true);
+    expect(screen.getByText('הבית הבא והרכב הבא, במקום אחד')).toBeTruthy();
+    expect(screen.getByPlaceholderText('לדוגמה: 4 חדרים בתל אביב עד 4 מיליון, או מאזדה עד 90 אלף')).toBeTruthy();
+    expect(screen.getByRole('button', { name: /התחברות/ })).toBeTruthy();
   });
 
   it('sends unsigned /car and /property to auth', () => {
@@ -55,9 +54,9 @@ describe('AppRoutes', () => {
     expect(screen.getAllByText('התחברות לחשבון').length).toBeGreaterThan(0);
   });
 
-  it('redirects /welcome to the platform', () => {
+  it('redirects /welcome to the landing', () => {
     renderPath(ROUTE_WELCOME);
-    expect(screen.getByText('הכל לרכב שלך. במקום אחד.')).toBeTruthy();
+    expect(screen.getByText('הבית הבא והרכב הבא, במקום אחד')).toBeTruthy();
   });
 
   it('maps named product routes onto the apps', () => {
