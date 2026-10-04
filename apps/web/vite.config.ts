@@ -16,7 +16,7 @@ export default defineConfig({
   },
   server: {
     host: true,
-    port: 5188,
+    port: 5173,
     strictPort: true,
     allowedHosts: ['.localhost', 'localhost'],
     proxy: {

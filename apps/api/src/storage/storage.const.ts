@@ -1,0 +1,14 @@
+export const CLOUDINARY_URL_PREFIX = "cloudinary://";
+export const CLOUDINARY_STORAGE_PREFIX = "cloudinary:";
+export const CLOUDINARY_API_HOST = "https://api.cloudinary.com/v1_1";
+export const CLOUDINARY_RES_HOST = "https://res.cloudinary.com";
+export const CLOUDINARY_UPLOAD_PATH = "auto/upload";
+export const CLOUDINARY_DESTROY_PATH = "destroy";
+export const CLOUDINARY_FOLDER = "clm";
+export const CLOUDINARY_SHA1 = "sha1";
+export const CLOUDINARY_HEX = "hex";
+export const CLOUDINARY_KEY_SEP = ":";
+export const DOCUMENT_UPLOAD_FAILED_CODE = "document_upload_failed";
+export const DOCUMENT_UPLOAD_FAILED_MESSAGE = "Could not store the document file";
+export const DOCUMENT_STORAGE_UNAVAILABLE_CODE = "storage_unavailable";
+export const DOCUMENT_STORAGE_UNAVAILABLE_MESSAGE = "Document storage is not configured";

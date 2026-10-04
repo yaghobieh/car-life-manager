@@ -1,5 +1,5 @@
 import { Badge, Card, Flex, Typography } from '@forgedevstack/bear';
-import { CARD_RADIUS_XL, FLEX_GAP_MD, FLEX_GAP_SM, TYPO_SECTION_TITLE } from '@const';
+import { CARD_RADIUS_LG, CARD_RADIUS_XL, FLEX_GAP_MD, FLEX_GAP_SM, TYPO_SECTION_TITLE } from '@const';
 import { LANDING_STEPS } from '../Landing.const';
 import type { LandingHowProps } from '../Landing.types';
 
@@ -11,7 +11,7 @@ export function LandingHow(props: LandingHowProps) {
         <Typography variant={TYPO_SECTION_TITLE}>{title}</Typography>
         <Flex gap={FLEX_GAP_MD} wrap="wrap">
           {LANDING_STEPS.map((item) => (
-            <Card key={item.step} variant="outlined" padding="md" radius="lg" className="bear-flex-1">
+            <Card key={item.step} variant="outlined" padding="md" radius={CARD_RADIUS_LG} className="bear-flex-1">
               <Flex direction="column" gap={FLEX_GAP_SM}>
                 <Badge variant="primary" pill>{item.step}</Badge>
                 <Typography>{translate(item.labelKey)}</Typography>

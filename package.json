@@ -1,8 +1,8 @@
 {
-  "name": "home-life",
-  "version": "1.0.2",
+  "name": "tavo",
+  "version": "1.0.3",
   "private": true,
-  "description": "HomeLife — Car & Home (רכב ודירה). One account, one API, one database for CarLife and NadLife.",
+  "description": "Tavo (טאבו) — Car & Home (רכב ודירה). Verified Israel marketplace, API, and platform.",
   "workspaces": [
     "apps/*",
     "packages/*"

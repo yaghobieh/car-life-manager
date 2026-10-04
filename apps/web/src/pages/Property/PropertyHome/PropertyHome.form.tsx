@@ -1,23 +1,24 @@
 import { useState } from 'react';
 import { Button, Flex, Input, Select } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
-import type { HomeDealType } from '@clm/shared';
 import {
   BOOLEAN_FALSE,
   DEAL_OWNED,
   EMPTY_STRING,
   FLEX_GAP_MD,
+  HOME_IMAGE_MAX_BYTES,
   LISTED_BROKER,
   LISTED_PRIVATE,
 } from '@const';
 import { usePropertyState } from '@hooks';
 import { HOME_DEAL_OPTIONS } from '../Property.const';
-import { mergeHomeFeatures, parseCsvList } from '../Property.utils';
+import type { PropertyHomeFormProps } from '../Property.types';
+import { homeDealType, mergeHomeFeatures, parseCsvList } from '../Property.utils';
 
-export function PropertyHomeForm() {
+export function PropertyHomeForm(props: PropertyHomeFormProps) {
   const t = useTranslate();
   const { addHome } = usePropertyState();
-  const [dealType, setDealType] = useState<string>(DEAL_OWNED);
+  const [dealType, setDealType] = useState<string>(props.initialDealType ?? DEAL_OWNED);
   const [city, setCity] = useState(EMPTY_STRING);
   const [street, setStreet] = useState(EMPTY_STRING);
   const [houseNumber, setHouseNumber] = useState(EMPTY_STRING);
@@ -31,6 +32,7 @@ export function PropertyHomeForm() {
   const [aircon, setAircon] = useState(BOOLEAN_FALSE);
   const [features, setFeatures] = useState(EMPTY_STRING);
   const [imageUrls, setImageUrls] = useState(EMPTY_STRING);
+  const [photos, setPhotos] = useState<string[]>([]);
   const [model3dUrl, setModel3dUrl] = useState(EMPTY_STRING);
   const [nextDueDate, setNextDueDate] = useState(EMPTY_STRING);
   const [nextDueTitle, setNextDueTitle] = useState(EMPTY_STRING);
@@ -47,7 +49,7 @@ export function PropertyHomeForm() {
     setError(EMPTY_STRING);
     try {
       await addHome({
-        dealType: dealType as HomeDealType,
+        dealType: homeDealType(dealType),
         city,
         street: street || null,
         houseNumber: houseNumber || null,
@@ -57,7 +59,7 @@ export function PropertyHomeForm() {
         floor: floor ? Number(floor) : null,
         price: price ? Number(price) : null,
         features: mergeHomeFeatures(parseCsvList(features), listedBy, elevator, aircon),
-        imageUrls: parseCsvList(imageUrls),
+        imageUrls: [...photos, ...parseCsvList(imageUrls)],
         model3dUrl: model3dUrl || null,
         nextDueDate: nextDueDate || null,
         nextDueTitle: nextDueTitle || null,
@@ -75,6 +77,7 @@ export function PropertyHomeForm() {
       setAircon(BOOLEAN_FALSE);
       setFeatures(EMPTY_STRING);
       setImageUrls(EMPTY_STRING);
+      setPhotos([]);
       setModel3dUrl(EMPTY_STRING);
       setNextDueDate(EMPTY_STRING);
       setNextDueTitle(EMPTY_STRING);
@@ -84,6 +87,23 @@ export function PropertyHomeForm() {
     } finally {
       setBusy(false);
     }
+  }
+
+  function addPhotoFiles(files: FileList | null) {
+    if (!files) return;
+    Array.from(files).forEach((file) => {
+      if (file.size > HOME_IMAGE_MAX_BYTES) {
+        setError(t('fileTooLarge'));
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result;
+        if (typeof result !== 'string') return;
+        setPhotos((current) => [...current, result]);
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
   return (
@@ -132,6 +152,17 @@ export function PropertyHomeForm() {
         </div>
         <Input label={t('homeFeatures')} value={features} onChange={(event) => setFeatures(event.target.value)} fullWidth />
         <Input label={t('homeImageUrls')} value={imageUrls} onChange={(event) => setImageUrls(event.target.value)} fullWidth />
+        <label className="Bear-PropertyHomeForm__photos">
+          {t('homeAddPhotos')}
+          <input type="file" accept="image/*" multiple onChange={(event) => addPhotoFiles(event.target.files)} />
+        </label>
+        {photos.length ? (
+          <Flex gap={FLEX_GAP_MD} wrap="wrap">
+            {photos.map((photo) => (
+              <img key={photo.slice(0, 48)} className="Bear-PropertyHomeForm__preview" src={photo} alt="" width={72} height={72} />
+            ))}
+          </Flex>
+        ) : null}
         <Input label={t('homeModel3d')} value={model3dUrl} onChange={(event) => setModel3dUrl(event.target.value)} fullWidth />
         <Input label={t('homeNextDue')} type="date" value={nextDueDate} onChange={(event) => setNextDueDate(event.target.value)} fullWidth />
         <Input label={t('homeNextDueTitle')} value={nextDueTitle} onChange={(event) => setNextDueTitle(event.target.value)} fullWidth />

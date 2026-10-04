@@ -7,8 +7,16 @@ import {
   ROUTE_PROPERTY,
   ZERO,
 } from '@const';
-import { isCarAppPath, isSafeAppPath } from '../../Route.utils';
-import { AUTH_ERROR_KEYS, AUTH_MODE_LOGIN, AUTH_MODE_REGISTER, PROPERTY_AUTH_ROLES, ROLE_LABEL_KEYS } from './Auth.const';
+import { isCarAppPath, isSafeAppPath } from '@routes';
+import {
+  AUTH_ERROR_KEYS,
+  AUTH_FAILED_KEY,
+  AUTH_MODE_LOGIN,
+  AUTH_MODE_REGISTER,
+  PROPERTY_AUTH_ROLES,
+  ROLE_LABEL_FALLBACK_KEY,
+  ROLE_LABEL_KEYS,
+} from './Auth.const';
 import type { AuthMode } from './Auth.types';
 
 export function nextAuthMode(mode: AuthMode): AuthMode {
@@ -33,10 +41,10 @@ export function afterAuthPath(vehicleCount: number, next?: string | null, role?:
 }
 
 export function authErrorKey(code?: string): string {
-  if (!code) return 'authFailed';
-  return AUTH_ERROR_KEYS[code] ?? 'authFailed';
+  if (!code) return AUTH_FAILED_KEY;
+  return AUTH_ERROR_KEYS[code] ?? AUTH_FAILED_KEY;
 }
 
 export function roleLabelKey(role: string): string {
-  return ROLE_LABEL_KEYS[role] ?? 'roleOwner';
+  return ROLE_LABEL_KEYS[role] ?? ROLE_LABEL_FALLBACK_KEY;
 }

@@ -40,7 +40,7 @@ export function AuthRegisterExtras(props: AuthRegisterExtrasProps) {
   }
 
   return (
-    <>
+    <div className="Bear-AuthRegisterExtras">
       <AuthRegisterRoleSelect role={role} onRoleChange={onRoleChange} />
       <AddressSearchBoard
         query={city}
@@ -58,6 +58,6 @@ export function AuthRegisterExtras(props: AuthRegisterExtrasProps) {
         hint={t('registerAreaHint')}
       />
       {city.trim() ? <AreaPriceList prices={prices} error={error} busy={busy} /> : null}
-    </>
+    </div>
   );
 }

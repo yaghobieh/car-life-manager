@@ -11,7 +11,7 @@ import {
 } from '@const';
 import { AddressSearchBoard } from '@components/AddressSearchBoard';
 import { AreaPriceList } from '@components/AreaPriceList';
-import { HomesBoard } from '@components/HomesBoard';
+import { HomesBoard } from '../HomesBoard';
 import { ClmEmpty, ClmList, ClmPageHead, ClmRow, ClmSectionTitle, ClmStatCard } from '@common';
 import { usePropertyState } from '@hooks';
 import { HOME_DEAL_OPTIONS, PROPERTY_CITY_CHIPS } from '../Property.const';

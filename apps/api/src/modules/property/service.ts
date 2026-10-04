@@ -10,18 +10,20 @@ import type {
   SavedAddress,
   SavedAddressInput,
 } from "@clm/shared";
-import { HTTP_BAD_GATEWAY, HTTP_BAD_REQUEST, HTTP_TOO_MANY_REQUESTS } from "../../constants/http.const";
+import { HTTP_BAD_GATEWAY, HTTP_BAD_REQUEST, HTTP_TOO_MANY_REQUESTS } from "@const/http.const";
 import { prisma } from "../../db";
 import { HttpError } from "../../errors/http-error";
 import {
   IsraelAddressError,
   searchOfficialAddresses,
   searchOfficialAreaPrices,
-} from "../../integrations/israel-addresses/client";
-import { QUERY_MIN_LENGTH } from "../../integrations/israel-addresses/addresses.const";
+} from "@integrations/israel-addresses/client";
+import { searchFallbackAddresses } from "@integrations/israel-addresses/fallback";
+import { QUERY_MIN_LENGTH } from "@integrations/israel-addresses/addresses.const";
 import { isValidPhone, normalizePhone } from "../auth/auth.utils";
 import {
   ADDRESS_CITY_REQUIRED_CODE,
+  EMPTY_LENGTH,
   HOME_DEAL_TYPES,
   INVALID_PHONE_CODE,
   LAWYER_NAME_MIN,
@@ -45,16 +47,14 @@ export async function searchAddresses(query: string): Promise<OfficialAddress[]>
     throw new HttpError("Search query is too short", HTTP_BAD_REQUEST, QUERY_TOO_SHORT_CODE);
   }
   try {
-    return await searchOfficialAddresses(trimmed);
-  } catch (error) {
-    if (error instanceof IsraelAddressError && error.code === "rate_limit") {
-      throw Object.assign(new Error(error.message), { status: HTTP_TOO_MANY_REQUESTS, code: error.code });
-    }
-    throw Object.assign(
-      new Error(error instanceof Error ? error.message : "Address lookup unavailable"),
-      { status: HTTP_BAD_GATEWAY, code: error instanceof IsraelAddressError ? error.code : "unavailable" },
-    );
+    const results = await searchOfficialAddresses(trimmed);
+    if (results.length > EMPTY_LENGTH) return results;
+  } catch {
+    // continue to fallback
   }
+  const fallback = searchFallbackAddresses(trimmed);
+  if (fallback.length > EMPTY_LENGTH) return fallback;
+  return [];
 }
 
 export async function searchAreaPrices(query: string): Promise<AreaPrice[]> {

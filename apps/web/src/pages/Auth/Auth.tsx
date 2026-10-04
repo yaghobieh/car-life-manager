@@ -6,7 +6,6 @@ import { api, ApiError } from '@api';
 import {
   AUTH_NEXT_QUERY,
   CARD_RADIUS_XL,
-  COLOR_BG,
   COLOR_DANGER,
   COLOR_MUTED,
   COLOR_NAVY_DEEP,
@@ -15,22 +14,25 @@ import {
   TYPO_PAGE_TITLE,
 } from '@const';
 import { LocaleSelect } from '@components/LocaleSelect';
+import { ThemeToggle } from '@components/ThemeToggle';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
 import { logger } from '@logger';
+import { oauthStartHref } from '@routes';
 import { AUTH_DEFAULT_ROLE, AUTH_ERROR_QUERY, AUTH_MODE_LOGIN, AUTH_MODE_REGISTER } from './Auth.const';
 import type { AuthMode } from './Auth.types';
-import { oauthStartHref } from '../../Route.utils';
 import { afterAuthPath, authErrorKey, nextAuthMode } from './Auth.utils';
 import { AuthGoogleButton } from './helpers/AuthGoogleButton';
-import { AuthProviderButton } from './helpers/AuthProviderButton';
+import { AuthIdentifierField } from './helpers/AuthIdentifierField';
 import { AuthRegisterPanel } from './helpers/AuthRegisterPanel';
 
 export function Auth() {
-  const { user, vehicles, loading, authReady, googleEnabled, auth0Enabled, refresh } = useAppState();
+  const { user, vehicles, loading, authReady, googleEnabled, auth0Enabled, login, register } = useAppState();
   const t = useTranslate();
   const [mode, setMode] = useState<AuthMode>(AUTH_MODE_LOGIN);
+  const [identifier, setIdentifier] = useState(EMPTY_STRING);
   const [email, setEmail] = useState(EMPTY_STRING);
+  const [username, setUsername] = useState(EMPTY_STRING);
   const [password, setPassword] = useState(EMPTY_STRING);
   const [name, setName] = useState(EMPTY_STRING);
   const [role, setRole] = useState(AUTH_DEFAULT_ROLE);
@@ -52,10 +54,12 @@ export function Auth() {
     setBusy(true);
     setErrorKey(EMPTY_STRING);
     try {
-      if (isRegister) await api.register(email, password, name, role);
-      else await api.login(email, password);
+      if (isRegister) {
+        await register(email, password, name, role, username);
+      } else {
+        await login(identifier, password);
+      }
       logger.info('auth success', mode);
-      await refresh();
     } catch (error) {
       logger.warn('auth failed', error);
       setErrorKey(authErrorKey(error instanceof ApiError ? error.code : undefined));
@@ -65,11 +69,14 @@ export function Auth() {
   }
 
   return (
-    <Box bg={COLOR_BG} className="Bear-Auth bear-min-h-screen">
+    <Box className="Bear-Auth bear-min-h-screen">
       <Box bg={COLOR_NAVY_DEEP} className="bear-px-4 bear-py-4">
         <Flex justify="between" align="center">
           <Logo onDark />
-          <LocaleSelect />
+          <Flex align="center" gap={FLEX_GAP_LG}>
+            <LocaleSelect />
+            <ThemeToggle lightLabel={t('themeLight')} darkLabel={t('themeDark')} />
+          </Flex>
         </Flex>
       </Box>
       <Flex className="bear-min-h-screen bear-p-4" align="center" justify="center">
@@ -86,16 +93,12 @@ export function Auth() {
               href={oauthStartHref(api.googleStart, params.get(AUTH_NEXT_QUERY))}
               onUnavailable={() => setErrorKey('authGoogleUnavailable')}
             />
-            <AuthProviderButton
-              enabled={Boolean(auth0Enabled)}
-              label={t('connectWithAuth0')}
-              unavailableText={t('authAuth0Unavailable')}
-              href={oauthStartHref(api.auth0Start, params.get(AUTH_NEXT_QUERY))}
-              onUnavailable={() => setErrorKey('authAuth0Unavailable')}
-            />
             <Flex direction="column" gap={FLEX_GAP_LG}>
               {isRegister && (
                 <Input label={t('name')} value={name} onChange={(event) => setName(event.target.value)} fullWidth />
+              )}
+              {isRegister && (
+                <Input label={t('username')} value={username} onChange={(event) => setUsername(event.target.value)} fullWidth />
               )}
               {isRegister && (
                 <AuthRegisterPanel
@@ -105,7 +108,15 @@ export function Auth() {
                   onCityChange={setCity}
                 />
               )}
-              <Input label={t('email')} type="email" value={email} onChange={(event) => setEmail(event.target.value)} fullWidth />
+              <AuthIdentifierField
+                isRegister={isRegister}
+                email={email}
+                identifier={identifier}
+                emailLabel={t('email')}
+                identifierLabel={t('emailOrUsername')}
+                onEmailChange={setEmail}
+                onIdentifierChange={setIdentifier}
+              />
               <Input label={t('password')} type="password" value={password} onChange={(event) => setPassword(event.target.value)} fullWidth />
               <Button variant="primary" fullWidth loading={busy} loadingText={t('saving')} onClick={() => void submit()}>
                 {isRegister ? t('register') : t('login')}
