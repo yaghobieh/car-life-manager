@@ -24,7 +24,6 @@ import type { AuthMode } from './Auth.types';
 import { afterAuthPath, authErrorKey, nextAuthMode } from './Auth.utils';
 import { AuthGoogleButton } from './helpers/AuthGoogleButton';
 import { AuthIdentifierField } from './helpers/AuthIdentifierField';
-import { AuthProviderButton } from './helpers/AuthProviderButton';
 import { AuthRegisterPanel } from './helpers/AuthRegisterPanel';
 
 export function Auth() {
@@ -93,13 +92,6 @@ export function Auth() {
               unavailableText={t('authGoogleUnavailable')}
               href={oauthStartHref(api.googleStart, params.get(AUTH_NEXT_QUERY))}
               onUnavailable={() => setErrorKey('authGoogleUnavailable')}
-            />
-            <AuthProviderButton
-              enabled={Boolean(auth0Enabled)}
-              label={t('connectWithAuth0')}
-              unavailableText={t('authAuth0Unavailable')}
-              href={oauthStartHref(api.auth0Start, params.get(AUTH_NEXT_QUERY))}
-              onUnavailable={() => setErrorKey('authAuth0Unavailable')}
             />
             <Flex direction="column" gap={FLEX_GAP_LG}>
               {isRegister && (

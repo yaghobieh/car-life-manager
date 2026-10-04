@@ -1,4 +1,7 @@
 export const config = {
+  projectName: process.env.PROJECT_NAME ?? "Tavo",
+  enableMockMode: process.env.ENABLE_MOCK_MODE !== "0" && process.env.ENABLE_MOCK_MODE !== "false",
+  developerMode: process.env.DEVELOPER_MODE === "1" || process.env.NODE_ENV !== "production",
   port: Number(process.env.PORT ?? 4173),
   host: process.env.HOST ?? "0.0.0.0",
   nodeEnv: process.env.NODE_ENV ?? "development",
@@ -17,11 +20,11 @@ export const config = {
     process.env.HOUSING_LOTTERY_RESOURCE_ID ?? "7c8255d0-49ef-49db-8904-4cf917586031",
   lookupCacheTtlMs: Number(process.env.VEHICLE_LOOKUP_CACHE_TTL_MS ?? 86_400_000),
   vehicleDataSource: (process.env.VEHICLE_DATA_SOURCE ?? "official") as "official" | "development",
-  webOrigin: process.env.WEB_ORIGIN ?? "http://127.0.0.1:5188",
+  webOrigin: process.env.WEB_ORIGIN ?? "http://127.0.0.1:5173",
   googleClientId: process.env.GOOGLE_CLIENT_ID ?? "",
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
   googleRedirectUri:
-    process.env.GOOGLE_REDIRECT_URI ?? "http://127.0.0.1:5188/api/auth/google/callback",
+    process.env.GOOGLE_REDIRECT_URI ?? "http://127.0.0.1:5173/api/auth/google/callback",
   auth0Domain: process.env.AUTH0_DOMAIN ?? "",
   auth0ClientId: process.env.AUTH0_CLIENT_ID ?? "",
   auth0ClientSecret: process.env.AUTH0_CLIENT_SECRET ?? "",

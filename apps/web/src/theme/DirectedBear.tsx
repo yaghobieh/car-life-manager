@@ -1,17 +1,9 @@
 import { useEffect } from 'react';
-import { BearProvider, ToastContainer, ToastProvider } from '@forgedevstack/bear';
+import { ToastContainer, ToastProvider } from '@forgedevstack/bear';
 import { useDirection, useLocale } from '@forgedevstack/lingo/react';
 import { BrowserRouter } from 'react-router-dom';
-import { ApiErrorHost } from '@components/ApiErrorHost';
-import { DIRECTION_LTR, DIRECTION_RTL, LOCALE_HE, THEME_MODE_LIGHT, THEME_STORAGE_KEY } from '@const';
-import {
-  CLM_BEAR_COMPONENTS,
-  CLM_BEAR_DEFAULT_PROPS,
-  CLM_BEAR_CUSTOM_VARIANTS,
-  bearThemeForLocale,
-  bearTypographyForLocale,
-} from './bear.theme';
-import { ThemeDocumentSync } from './ThemeDocumentSync';
+import { ApiErrorHost } from '@tavo/sdk';
+import { DIRECTION_LTR, DIRECTION_RTL, LOCALE_HE, TavoBearProvider } from '@tavo/common';
 import { App } from '../App';
 
 export function DirectedBear() {
@@ -25,18 +17,7 @@ export function DirectedBear() {
   }, [direction, locale]);
 
   return (
-    <BearProvider
-      defaultMode={THEME_MODE_LIGHT}
-      persistPreference
-      storageKey={THEME_STORAGE_KEY}
-      direction={direction}
-      theme={bearThemeForLocale(locale)}
-      components={CLM_BEAR_COMPONENTS}
-      defaultProps={CLM_BEAR_DEFAULT_PROPS}
-      customVariants={CLM_BEAR_CUSTOM_VARIANTS}
-      customTypography={bearTypographyForLocale(locale)}
-    >
-      <ThemeDocumentSync />
+    <TavoBearProvider locale={locale} direction={direction}>
       <ToastProvider>
         <BrowserRouter>
           <ApiErrorHost />
@@ -44,6 +25,6 @@ export function DirectedBear() {
         </BrowserRouter>
         <ToastContainer />
       </ToastProvider>
-    </BearProvider>
+    </TavoBearProvider>
   );
 }

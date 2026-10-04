@@ -23,6 +23,8 @@ import {
   AUTH0_QUERY_MODE,
   AUTH0_SCREEN_HINT_SIGNUP,
   AUTH0_UNAVAILABLE_CODE,
+  COOKIE_ROOT_PATH,
+  EMPTY_STRING,
   GOOGLE_FAILED_CODE,
   GOOGLE_UNAVAILABLE_CODE,
   OAUTH_STATE_COOKIE,
@@ -35,43 +37,45 @@ function attachSession(res: Response, token: string): void {
 }
 
 function rememberAuthNext(req: Request, res: Response): void {
-  const next = String(req.query[AUTH_NEXT_QUERY] ?? "");
+  const next = String(req.query[AUTH_NEXT_QUERY] ?? EMPTY_STRING);
   if (isSafeAppPath(next)) {
     res.cookie(AUTH_NEXT_COOKIE, next, sessionCookieOptions());
     return;
   }
-  res.clearCookie(AUTH_NEXT_COOKIE, { path: "/" });
+  res.clearCookie(AUTH_NEXT_COOKIE, { path: COOKIE_ROOT_PATH });
 }
 
 function redirectAfterAuth(req: Request, res: Response): void {
-  const next = readAuthNext(req.headers.cookie ?? "");
-  res.clearCookie(AUTH_NEXT_COOKIE, { path: "/" });
+  const next = readAuthNext(req.headers.cookie ?? EMPTY_STRING);
+  res.clearCookie(AUTH_NEXT_COOKIE, { path: COOKIE_ROOT_PATH });
   res.redirect(appHomeUrl(next));
 }
 
 export async function registerController(req: Request, res: Response): Promise<void> {
   const user = await registerUser(
-    String(req.body?.email ?? ""),
-    String(req.body?.password ?? ""),
+    String(req.body?.email ?? EMPTY_STRING),
+    String(req.body?.password ?? EMPTY_STRING),
     req.body?.name,
     req.body?.role,
     req.body?.username,
   );
-  attachSession(res, await createSession(user.id));
-  res.status(HTTP_CREATED).json({ user });
+  const token = await createSession(user.id);
+  attachSession(res, token);
+  res.status(HTTP_CREATED).json({ user, token });
 }
 
 export async function loginController(req: Request, res: Response): Promise<void> {
-  const identifier = String(req.body?.identifier ?? req.body?.username ?? req.body?.email ?? "");
-  const user = await loginUser(identifier, String(req.body?.password ?? ""));
-  attachSession(res, await createSession(user.id));
-  res.status(HTTP_OK).json({ user });
+  const identifier = String(req.body?.identifier ?? req.body?.username ?? req.body?.email ?? EMPTY_STRING);
+  const user = await loginUser(identifier, String(req.body?.password ?? EMPTY_STRING));
+  const token = await createSession(user.id);
+  attachSession(res, token);
+  res.status(HTTP_OK).json({ user, token });
 }
 
 export async function logoutController(req: Request, res: Response): Promise<void> {
-  const token = readCookie(req.headers.cookie ?? "", SESSION_COOKIE);
+  const token = readCookie(req.headers.cookie ?? EMPTY_STRING, SESSION_COOKIE);
   if (token) await clearSession(token);
-  res.clearCookie(SESSION_COOKIE, { path: "/" });
+  res.clearCookie(SESSION_COOKIE, { path: COOKIE_ROOT_PATH });
   res.status(HTTP_OK).json({ user: null });
 }
 
@@ -123,9 +127,9 @@ export async function googleStartController(req: Request, res: Response): Promis
 }
 
 export async function googleCallbackController(req: Request, res: Response): Promise<void> {
-  const expected = readCookie(req.headers.cookie ?? "", OAUTH_STATE_COOKIE);
-  const state = String(req.query.state ?? "");
-  const code = String(req.query.code ?? "");
+  const expected = readCookie(req.headers.cookie ?? EMPTY_STRING, OAUTH_STATE_COOKIE);
+  const state = String(req.query.state ?? EMPTY_STRING);
+  const code = String(req.query.code ?? EMPTY_STRING);
   if (!expected || !state || expected !== state || !code) {
     res.redirect(authErrorUrl(GOOGLE_FAILED_CODE));
     return;
@@ -133,7 +137,7 @@ export async function googleCallbackController(req: Request, res: Response): Pro
   try {
     const user = await loginWithGoogleCode(code);
     attachSession(res, await createSession(user.id));
-    res.clearCookie(OAUTH_STATE_COOKIE, { path: "/" });
+    res.clearCookie(OAUTH_STATE_COOKIE, { path: COOKIE_ROOT_PATH });
     redirectAfterAuth(req, res);
   } catch {
     res.redirect(authErrorUrl(GOOGLE_FAILED_CODE));
@@ -148,15 +152,15 @@ export async function auth0StartController(req: Request, res: Response): Promise
   rememberAuthNext(req, res);
   const state = randomToken();
   const screenHint =
-    String(req.query[AUTH0_QUERY_MODE] ?? "") === AUTH0_MODE_REGISTER ? AUTH0_SCREEN_HINT_SIGNUP : undefined;
+    String(req.query[AUTH0_QUERY_MODE] ?? EMPTY_STRING) === AUTH0_MODE_REGISTER ? AUTH0_SCREEN_HINT_SIGNUP : undefined;
   res.cookie(OAUTH_STATE_COOKIE, state, sessionCookieOptions());
   res.redirect(auth0AuthorizeUrl(state, screenHint));
 }
 
 export async function auth0CallbackController(req: Request, res: Response): Promise<void> {
-  const expected = readCookie(req.headers.cookie ?? "", OAUTH_STATE_COOKIE);
-  const state = String(req.query.state ?? "");
-  const code = String(req.query.code ?? "");
+  const expected = readCookie(req.headers.cookie ?? EMPTY_STRING, OAUTH_STATE_COOKIE);
+  const state = String(req.query.state ?? EMPTY_STRING);
+  const code = String(req.query.code ?? EMPTY_STRING);
   if (!expected || !state || expected !== state || !code) {
     res.redirect(authErrorUrl(AUTH0_FAILED_CODE));
     return;
@@ -164,7 +168,7 @@ export async function auth0CallbackController(req: Request, res: Response): Prom
   try {
     const user = await loginWithAuth0Code(code);
     attachSession(res, await createSession(user.id));
-    res.clearCookie(OAUTH_STATE_COOKIE, { path: "/" });
+    res.clearCookie(OAUTH_STATE_COOKIE, { path: COOKIE_ROOT_PATH });
     redirectAfterAuth(req, res);
   } catch {
     res.redirect(authErrorUrl(AUTH0_FAILED_CODE));

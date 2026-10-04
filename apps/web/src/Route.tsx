@@ -61,6 +61,13 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path={ROUTE_PLATFORM} element={<PlatformHostRedirect />} />
+      <Route path="/cars" element={<PlatformHostRedirect />} />
+      <Route path="/apartments" element={<PlatformHostRedirect />} />
+      <Route path="/favorites" element={<PlatformHostRedirect />} />
+      <Route path="/generals" element={<PlatformHostRedirect />} />
+      <Route path="/post" element={<PlatformHostRedirect />} />
+      <Route path="/design" element={<PlatformHostRedirect />} />
+      <Route path="/item/:id" element={<PlatformHostRedirect />} />
       <Route path={`${ROUTE_AUTH}/*`} element={<Auth />} />
       <Route path={ROUTE_ONBOARDING} element={<Onboarding />} />
       <Route path={ROUTE_CAR} element={<Gate />}>

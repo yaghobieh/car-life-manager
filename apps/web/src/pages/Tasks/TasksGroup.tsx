@@ -1,6 +1,6 @@
 import { ZERO } from '@const';
 import { ClmList, ClmSectionTitle } from '@common';
-import { TaskRow } from '@components/TaskRow';
+import { TaskRow } from '@connected/TaskRow';
 import type { TasksGroupProps } from './Tasks.types';
 
 export function TasksGroup(props: TasksGroupProps) {

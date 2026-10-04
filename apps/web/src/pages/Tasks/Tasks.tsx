@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import type { Task } from '@clm/shared';
 import { ClmPageHead } from '@common';
-import { TaskDrawer } from '@components/TaskDrawer';
+import { TaskDrawer } from '@connected/TaskDrawer';
 import { useAppState } from '@hooks';
 import { TasksBody } from './TasksBody';
 

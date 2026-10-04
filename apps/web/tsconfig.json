@@ -2,7 +2,11 @@
   "compilerOptions": {
     "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "Bundler",
@@ -13,21 +17,58 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@const": ["src/constants"],
-      "@hooks": ["src/store/hooks"],
-      "@theme": ["src/theme"],
-      "@pages": ["src/pages"],
-      "@pages/*": ["src/pages/*"],
-      "@components/*": ["src/components/*"],
-      "@components": ["src/components"],
-      "@common": ["src/common"],
-      "@store": ["src/store"],
-      "@locales": ["src/locales"],
-      "@api": ["src/api"],
-      "@logger": ["src/logger"],
-      "@routes": ["src/Route.utils.ts"]
+      "@const": [
+        "../../packages/common/src/constants"
+      ],
+      "@logger": [
+        "../../packages/common/src/logger"
+      ],
+      "@locales": [
+        "../../packages/common/src/locales"
+      ],
+      "@theme": [
+        "../../packages/common/src/theme"
+      ],
+      "@common": [
+        "../../packages/common/src/common"
+      ],
+      "@components": [
+        "../../packages/common/src/components"
+      ],
+      "@components/*": [
+        "../../packages/common/src/components/*"
+      ],
+      "@api": [
+        "../../packages/sdk/src/api"
+      ],
+      "@store": [
+        "../../packages/sdk/src/store"
+      ],
+      "@hooks": [
+        "../../packages/sdk/src/store/hooks"
+      ],
+      "@connected": [
+        "../../packages/sdk/src/components"
+      ],
+      "@connected/*": [
+        "../../packages/sdk/src/components/*"
+      ],
+      "@pages": [
+        "src/pages"
+      ],
+      "@pages/*": [
+        "src/pages/*"
+      ],
+      "@routes": [
+        "src/Route.utils.ts"
+      ]
     },
-    "types": ["vite/client"]
+    "types": [
+      "vite/client"
+    ]
   },
-  "include": ["src", "vite.aliases.ts"]
+  "include": [
+    "src",
+    "vite.aliases.ts"
+  ]
 }

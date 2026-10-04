@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@clm/shared": "1.0.3",
+    "@tavo/common": "1.0.0",
+    "@tavo/sdk": "1.0.0",
     "@forgedevstack/bear": "^1.3.2",
     "@forgedevstack/bear-icons": "^1.0.1",
     "@forgedevstack/grid-table": "^1.1.5",

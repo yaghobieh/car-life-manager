@@ -28,8 +28,8 @@ import {
 } from '@common';
 import { CarArt } from '@components/CarArt';
 import { OfficialLink } from '@components/OfficialLink';
-import { TaskDrawer } from '@components/TaskDrawer';
-import { TaskRow } from '@components/TaskRow';
+import { TaskDrawer } from '@connected/TaskDrawer';
+import { TaskRow } from '@connected/TaskRow';
 import { useAppState } from '@hooks';
 import { OVERVIEW_VIEW_EMPTY, OVERVIEW_VIEW_LOADING } from './Overview.const';
 import { OverviewRecalls } from './Overview.recalls';

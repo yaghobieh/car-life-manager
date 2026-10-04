@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@const": ["../common/src/constants"],
+      "@logger": ["../common/src/logger"],
+      "@locales": ["../common/src/locales"],
+      "@theme": ["../common/src/theme"],
+      "@common": ["../common/src/common"],
+      "@components": ["../common/src/components"],
+      "@components/*": ["../common/src/components/*"],
+      "@api": ["../sdk/src/api"],
+      "@store": ["../sdk/src/store"],
+      "@hooks": ["../sdk/src/store/hooks"],
+      "@connected": ["../sdk/src/components"],
+      "@connected/*": ["../sdk/src/components/*"]
+    },
+    "types": ["vite/client"]
+  },
+  "include": ["src", "*.ts"]
+}

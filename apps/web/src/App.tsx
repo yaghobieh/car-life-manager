@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { AppLoader, isAppBootLoading } from '@components/AppLoader';
 import { bootstrapAppStore } from '@store';
 import { useAppState } from '@hooks';
-import { fontFamilyForLocale } from './theme/bear.theme';
+import { fontFamilyForLocale } from '@tavo/common';
 import { AppRoutes } from './Route';
 import { isCarAppPath } from './Route.utils';
 

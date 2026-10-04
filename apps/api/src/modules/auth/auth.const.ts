@@ -1,3 +1,7 @@
+import { COOKIE_ROOT_PATH, EMPTY_STRING } from "../../constants/general.const";
+
+export { COOKIE_ROOT_PATH, EMPTY_STRING };
+export const BEARER_PREFIX = "Bearer ";
 export const SESSION_COOKIE = "clm_session";
 export const OAUTH_STATE_COOKIE = "clm_oauth_state";
 export const AUTH_NEXT_COOKIE = "clm_auth_next";

@@ -1,3 +1,4 @@
+export { connectedServiceCount } from '@tavo/sdk';
 import {
   EXPENSE_CATEGORY_INSURANCE,
   EXPENSE_CATEGORY_PARKING,
@@ -14,10 +15,6 @@ export function receiptCategory(category: string): string {
   if (category === 'toll') return EXPENSE_CATEGORY_TOLLS;
   if (category === 'insurance') return EXPENSE_CATEGORY_INSURANCE;
   return EXPENSE_CATEGORY_PARKING;
-}
-
-export function connectedServiceCount(services: Array<{ status: string }>): number {
-  return services.filter((service) => service.status === PROVIDER_STATUS_CONNECTED).length;
 }
 
 export function serviceTone(status: string, category: string): 'good' | 'bad' | 'warn' {
