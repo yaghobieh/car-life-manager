@@ -1,5 +1,5 @@
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { Button, Typography } from '@forgedevstack/bear';
+import { Button, Link, Typography } from '@forgedevstack/bear';
 import { formatPrice } from '@tavo/common';
 import { SvgIcon } from '@pages/Landing/Landing.art';
 import { FEATS } from '@pages/Landing/Landing.const';
@@ -10,6 +10,8 @@ import {
   VIEW_MODE_GALLERY,
   VIEW_MODE_360,
   VIEW_MODE_MAP,
+  INQUIRY_MSG_PREFIX,
+  INQUIRY_MSG_ROOMS,
 } from './LandingItemDetail.const';
 import type { LandingItemDetailProps } from './LandingItemDetail.types';
 import { LandingItemDetail360Viewer } from './components/LandingItemDetail360Viewer';
@@ -17,23 +19,24 @@ import { LandingItemDetailGallery } from './components/LandingItemDetailGallery'
 import { LandingItemDetailSpecs } from './components/LandingItemDetailSpecs';
 import { LandingItemDetailMap } from './components/LandingItemDetailMap';
 
-export function LandingItemDetail({
-  item,
-  aptViewMode,
-  setAptViewMode,
-  selectedGalleryThumb,
-  setSelectedGalleryThumb,
-  view360Angle,
-  setView360Angle,
-  autoRotate360,
-  toggleAutoRotate360,
-  rotate360Left,
-  rotate360Right,
-  phoneRevealed,
-  setPhoneRevealed,
-  setContactModalOpen,
-  onNavigate,
-}: LandingItemDetailProps) {
+export function LandingItemDetail(props: LandingItemDetailProps) {
+  const {
+    item,
+    aptViewMode,
+    setAptViewMode,
+    selectedGalleryThumb,
+    setSelectedGalleryThumb,
+    view360Angle,
+    setView360Angle,
+    autoRotate360,
+    toggleAutoRotate360,
+    rotate360Left,
+    rotate360Right,
+    phoneRevealed,
+    setPhoneRevealed,
+    setContactModalOpen,
+    onNavigate,
+  } = props;
   const t = useTranslate();
 
   const isCar = item.cat === 'car';
@@ -51,13 +54,11 @@ export function LandingItemDetail({
   const phone = item.seller?.phone || DEFAULT_SELLER_PHONE;
   const cleanPhone = phone.replace(/\D/g, '');
   const cleanNoZero = cleanPhone.startsWith('0') ? cleanPhone.slice(1) : cleanPhone;
-  const msgText = encodeURIComponent(
-    `שלום, אני פונה לגבי המודעה שלך: ${
-      item.cat === 'apt'
-        ? `${item.rooms} חדרים ב${item.city}`
-        : `${item.maker} ${item.model}`
-    }`
-  );
+  const msgDetails =
+    item.cat === 'apt'
+      ? `${item.rooms} ${INQUIRY_MSG_ROOMS} ${item.city}`
+      : `${item.maker} ${item.model}`;
+  const msgText = encodeURIComponent(`${INQUIRY_MSG_PREFIX} ${msgDetails}`);
   const waUrl = `https://wa.me/972${cleanNoZero}?text=${msgText}`;
   const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(
     typeof window !== 'undefined' ? window.location.href : ''
@@ -96,7 +97,7 @@ export function LandingItemDetail({
     <div className="container page-container-padded">
       <div className="page-head">
         <nav className="crumbs" aria-label={t('landing_crumbHome')}>
-          <a
+          <Link
             href="#/"
             onClick={(e) => {
               e.preventDefault();
@@ -104,9 +105,9 @@ export function LandingItemDetail({
             }}
           >
             {t('landing_crumbHome')}
-          </a>
+          </Link>
           <SvgIcon name="chev" />
-          <a
+          <Link
             href={isCar ? '#/cars' : '#/apartments'}
             onClick={(e) => {
               e.preventDefault();
@@ -114,7 +115,7 @@ export function LandingItemDetail({
             }}
           >
             {isCar ? t('landing_cars') : t('landing_apartments')}
-          </a>
+          </Link>
           <SvgIcon name="chev" />
           <span>{itemTitle}</span>
         </nav>
@@ -196,40 +197,38 @@ export function LandingItemDetail({
                 {item.seller?.name ? item.seller.name.charAt(0) : DEFAULT_SELLER_AVATAR}
               </div>
               <div>
-                <b>{item.seller?.name || DEFAULT_SELLER_NAME}</b>
-                <div className="muted">
+                <Typography variant="body1" weight="bold">{item.seller?.name || DEFAULT_SELLER_NAME}</Typography>
+                <Typography variant="body2" color="muted" className="muted">
                   {sellerTag} · {t('landing_memberSince')}
-                </div>
+                </Typography>
               </div>
             </div>
 
             <div className="detail-seller-actions">
-              <a
+              <Link
                 href={`tel:${phone}`}
                 className="btn btn--lg btn--block"
                 onClick={() => setPhoneRevealed(true)}
               >
                 <SvgIcon name="phone" />
                 {phoneRevealed ? <span dir="ltr">{phone}</span> : t('landing_showPhone')}
-              </a>
+              </Link>
 
-              <a
+              <Link
                 href={waUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                external
                 className="btn btn--secondary btn--lg btn--block"
               >
                 <SvgIcon name="whatsapp" /> {t('landing_whatsapp')}
-              </a>
+              </Link>
 
-              <a
+              <Link
                 href={tgUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                external
                 className="btn btn--secondary btn--lg btn--block"
               >
                 <SvgIcon name="telegram" /> {t('landing_telegram')}
-              </a>
+              </Link>
 
               <Button
                 variant="ghost"
@@ -245,8 +244,8 @@ export function LandingItemDetail({
           <div className="alert alert--info">
             <SvgIcon name="shield" />
             <div>
-              <b>{t('landing_safetyTip')}</b>
-              {t('landing_safetyTipDesc')}
+              <Typography variant="body1" weight="bold">{t('landing_safetyTip')}</Typography>
+              <Typography variant="body2">{t('landing_safetyTipDesc')}</Typography>
             </div>
           </div>
         </aside>

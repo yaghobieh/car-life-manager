@@ -1,6 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslate } from '@forgedevstack/lingo/react';
+import { Button, Link, Typography } from '@forgedevstack/bear';
+import { BearIcons } from '@forgedevstack/bear-icons';
+
+const HeartIcon = BearIcons.HeartIcon;
 import { ROUTE_CAR, ROUTE_PROPERTY, ROUTE_AUTH, BOOLEAN_TRUE, BOOLEAN_FALSE } from '@const';
 import { SvgIcon, renderSkylineSvg } from './Landing.art';
 import {
@@ -22,12 +26,6 @@ import {
   POST_KIND_CAR,
   PREVIEW_ID_APT,
   PREVIEW_ID_CAR,
-  DEFAULT_PREVIEW_CITY,
-  DEFAULT_PREVIEW_STREET,
-  DEFAULT_PREVIEW_MAKER,
-  DEFAULT_PREVIEW_MODEL,
-  DEFAULT_PREVIEW_FUEL,
-  DEFAULT_PREVIEW_GEAR,
   DEFAULT_PREVIEW_COLOR,
   DEFAULT_PREVIEW_ROOMS,
   DEFAULT_PREVIEW_SIZE,
@@ -200,8 +198,8 @@ export function Landing() {
           cat: POST_KIND_APT,
           deal: DEAL_TYPE_SALE,
           price: Number(postForm.price) || DEFAULT_PREVIEW_PRICE,
-          city: postForm.city || DEFAULT_PREVIEW_CITY,
-          street: postForm.street || DEFAULT_PREVIEW_STREET,
+          city: postForm.city || t('landing_defaultPreviewCity'),
+          street: postForm.street || t('landing_defaultPreviewStreet'),
           rooms: Number(postForm.rooms) || DEFAULT_PREVIEW_ROOMS,
           size: Number(postForm.size) || DEFAULT_PREVIEW_SIZE,
           floor: DEFAULT_PREVIEW_FLOOR,
@@ -213,15 +211,15 @@ export function Landing() {
       : {
           id: PREVIEW_ID_CAR,
           cat: POST_KIND_CAR,
-          maker: postForm.maker || DEFAULT_PREVIEW_MAKER,
-          model: postForm.model || DEFAULT_PREVIEW_MODEL,
+          maker: postForm.maker || t('landing_defaultPreviewMaker'),
+          model: postForm.model || t('landing_defaultPreviewModel'),
           year: Number(postForm.year) || DEFAULT_PREVIEW_YEAR,
           km: Number(postForm.km) || DEFAULT_PREVIEW_KM,
           hand: DEFAULT_PREVIEW_HAND,
-          fuel: DEFAULT_PREVIEW_FUEL,
-          gear: DEFAULT_PREVIEW_GEAR,
+          fuel: t('landing_defaultPreviewFuel'),
+          gear: t('landing_defaultPreviewGear'),
           color: DEFAULT_PREVIEW_COLOR,
-          city: postForm.city || DEFAULT_PREVIEW_CITY,
+          city: postForm.city || t('landing_defaultPreviewCity'),
           price: Number(postForm.price) || DEFAULT_PREVIEW_PRICE,
           desc: postForm.desc || EMPTY_STRING,
           isNew: BOOLEAN_TRUE,
@@ -239,14 +237,15 @@ export function Landing() {
             <span className="badge">Tavo 2026</span>
             <span>{t('landing_announcement')}</span>
           </div>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className="btn btn--icon btn--sm"
             onClick={() => setStripVisible(false)}
             aria-label={t('close')}
           >
             <SvgIcon name="x" />
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -257,11 +256,11 @@ export function Landing() {
       return (
         <div className="empty">
           <SvgIcon name="search" />
-          <h3>{t('landing_noAdsFound')}</h3>
-          <p className="muted">{t('landing_noAdsFoundDesc')}</p>
-          <button type="button" className="btn btn--secondary" onClick={resetAptFilters}>
+          <Typography variant="h3">{t('landing_noAdsFound')}</Typography>
+          <Typography variant="body2" color="muted" className="muted">{t('landing_noAdsFoundDesc')}</Typography>
+          <Button variant="secondary" className="btn btn--secondary" onClick={resetAptFilters}>
             {t('landing_resetFilter')}
-          </button>
+          </Button>
         </div>
       );
     }
@@ -286,11 +285,11 @@ export function Landing() {
       return (
         <div className="empty">
           <SvgIcon name="search" />
-          <h3>{t('landing_noAdsFound')}</h3>
-          <p className="muted">{t('landing_noAdsFoundDesc')}</p>
-          <button type="button" className="btn btn--secondary" onClick={resetCarFilters}>
+          <Typography variant="h3">{t('landing_noAdsFound')}</Typography>
+          <Typography variant="body2" color="muted" className="muted">{t('landing_noAdsFoundDesc')}</Typography>
+          <Button variant="secondary" className="btn btn--secondary" onClick={resetCarFilters}>
             {t('landing_resetFilter')}
-          </button>
+          </Button>
         </div>
       );
     }
@@ -314,16 +313,16 @@ export function Landing() {
     if (favoritesList.length === EMPTY_COUNT) {
       return (
         <div className="empty empty-spaced">
-          <SvgIcon name="heart" />
-          <h3>{t('landing_favoritesEmptyTitle')}</h3>
-          <p className="muted">{t('landing_favoritesEmptyDesc')}</p>
-          <button
-            type="button"
+          <HeartIcon size={32} />
+          <Typography variant="h3">{t('landing_favoritesEmptyTitle')}</Typography>
+          <Typography variant="body2" color="muted" className="muted">{t('landing_favoritesEmptyDesc')}</Typography>
+          <Button
+            variant="primary"
             className="btn btn--homes"
             onClick={handleNavigateToApartments}
           >
             {t('landing_searchAptsBtn')}
-          </button>
+          </Button>
         </div>
       );
     }
@@ -386,7 +385,7 @@ export function Landing() {
 
       <div className="container">
         <div className="tiles">
-          <a
+          <Link
             className="tile tile--homes"
             href="#/apartments"
             onClick={(e) => {
@@ -395,17 +394,17 @@ export function Landing() {
             }}
           >
             <div>
-              <h3>{t('landing_apartments')}</h3>
-              <p>
+              <Typography variant="h3">{t('landing_apartments')}</Typography>
+              <Typography variant="body2">
                 {apartments.length} {t('landing_adsCount')} · {t('landing_apartmentsSubtitle')}
-              </p>
+              </Typography>
             </div>
             <span className="go">
               <SvgIcon name="chev" />
             </span>
-          </a>
+          </Link>
 
-          <a
+          <Link
             className="tile tile--cars"
             href="#/cars"
             onClick={(e) => {
@@ -414,21 +413,21 @@ export function Landing() {
             }}
           >
             <div>
-              <h3>{t('landing_cars')}</h3>
-              <p>
+              <Typography variant="h3">{t('landing_cars')}</Typography>
+              <Typography variant="body2">
                 {cars.length} {t('landing_adsCount')} · {t('landing_carsSubtitle')}
-              </p>
+              </Typography>
             </div>
             <span className="go">
               <SvgIcon name="chev" />
             </span>
-          </a>
+          </Link>
         </div>
 
         <section className="section">
           <div className="section__head">
-            <h2>{t('landing_newAptsSection')}</h2>
-            <a
+            <Typography variant="h2">{t('landing_newAptsSection')}</Typography>
+            <Link
               className="link"
               href="#/apartments"
               onClick={(e) => {
@@ -437,7 +436,7 @@ export function Landing() {
               }}
             >
               {t('landing_allAptsLink')} ({apartments.length})
-            </a>
+            </Link>
           </div>
           <div className="grid">
             {apartments.slice(NUMBER_ZERO, HOME_SECTION_ITEMS_LIMIT).map((item) => (
@@ -455,23 +454,24 @@ export function Landing() {
         <section className="section">
           <div className="banner banner--teal">
             <div>
-              <h3>{t('landing_sellersBannerTitle')}</h3>
-              <p>{t('landing_sellersBannerDesc')}</p>
+              <Typography variant="h3">{t('landing_sellersBannerTitle')}</Typography>
+              <Typography variant="body1">{t('landing_sellersBannerDesc')}</Typography>
             </div>
-            <button
-              type="button"
+            <Button
+              variant="accent"
+              size="lg"
               className="btn btn--accent btn--lg"
               onClick={handleNavigateToPost}
             >
               <SvgIcon name="plus" /> {t('landing_postAd')}
-            </button>
+            </Button>
           </div>
         </section>
 
         <section className="section">
           <div className="section__head">
-            <h2>{t('landing_newCarsSection')}</h2>
-            <a
+            <Typography variant="h2">{t('landing_newCarsSection')}</Typography>
+            <Link
               className="link"
               href="#/cars"
               onClick={(e) => {
@@ -480,7 +480,7 @@ export function Landing() {
               }}
             >
               {t('landing_allCarsLink')} ({cars.length})
-            </a>
+            </Link>
           </div>
           <div className="grid">
             {cars.slice(NUMBER_ZERO, HOME_SECTION_ITEMS_LIMIT).map((item) => (
@@ -498,29 +498,29 @@ export function Landing() {
         <section className="section grid-2">
           <div className="banner banner--soft">
             <div>
-              <h3>{t('landing_mortgageCalcTitle')}</h3>
-              <p>{t('landing_mortgageCalcDesc')}</p>
+              <Typography variant="h3">{t('landing_mortgageCalcTitle')}</Typography>
+              <Typography variant="body1">{t('landing_mortgageCalcDesc')}</Typography>
             </div>
-            <button
-              type="button"
+            <Button
+              variant="secondary"
               className="btn btn--secondary"
               onClick={() => showToast(t('landing_comingSoon'))}
             >
               {t('landing_toCalc')}
-            </button>
+            </Button>
           </div>
           <div className="banner banner--soft banner--cobalt">
             <div>
-              <h3>{t('landing_carValuationTitle')}</h3>
-              <p>{t('landing_carValuationDesc')}</p>
+              <Typography variant="h3">{t('landing_carValuationTitle')}</Typography>
+              <Typography variant="body1">{t('landing_carValuationDesc')}</Typography>
             </div>
-            <button
-              type="button"
+            <Button
+              variant="secondary"
               className="btn btn--secondary"
               onClick={() => showToast(t('landing_comingSoon'))}
             >
               {t('landing_toValuation')}
-            </button>
+            </Button>
           </div>
         </section>
       </div>
@@ -531,7 +531,7 @@ export function Landing() {
     <div className="container">
       <div className="page-head">
         <nav className="crumbs" aria-label={t('landing_crumbHome')}>
-          <a
+          <Link
             href="#/"
             onClick={(e) => {
               e.preventDefault();
@@ -539,17 +539,17 @@ export function Landing() {
             }}
           >
             {t('landing_crumbHome')}
-          </a>
+          </Link>
           <SvgIcon name="chev" />
           <span>{t('landing_apartments')}</span>
         </nav>
-        <h1>{t('landing_apartmentsTitle')}</h1>
-        <p className="muted page-subtitle-muted">{t('landing_apartmentsSubtitle')}</p>
+        <Typography variant="h1">{t('landing_apartmentsTitle')}</Typography>
+        <Typography variant="body1" className="muted page-subtitle-muted">{t('landing_apartmentsSubtitle')}</Typography>
       </div>
 
       <div className="layout">
         <aside className="filters" aria-label={t('landing_filterAptsTitle')}>
-          <h3>{t('landing_filterAptsTitle')}</h3>
+          <Typography variant="h3">{t('landing_filterAptsTitle')}</Typography>
 
           <div className="field">
             <span className="label">{t('landing_dealType')}</span>
@@ -634,9 +634,9 @@ export function Landing() {
             })}
           </div>
 
-          <button type="button" className="btn btn--ghost btn--sm" onClick={resetAptFilters}>
+          <Button variant="ghost" size="sm" className="btn btn--ghost btn--sm" onClick={resetAptFilters}>
             {t('landing_resetFilter')}
-          </button>
+          </Button>
         </aside>
 
         <div>
@@ -670,7 +670,7 @@ export function Landing() {
     <div className="container">
       <div className="page-head">
         <nav className="crumbs" aria-label={t('landing_crumbHome')}>
-          <a
+          <Link
             href="#/"
             onClick={(e) => {
               e.preventDefault();
@@ -678,17 +678,17 @@ export function Landing() {
             }}
           >
             {t('landing_crumbHome')}
-          </a>
+          </Link>
           <SvgIcon name="chev" />
           <span>{t('landing_cars')}</span>
         </nav>
-        <h1>{t('landing_carsTitle')}</h1>
-        <p className="muted page-subtitle-muted">{t('landing_carsSubtitle')}</p>
+        <Typography variant="h1">{t('landing_carsTitle')}</Typography>
+        <Typography variant="body1" className="muted page-subtitle-muted">{t('landing_carsSubtitle')}</Typography>
       </div>
 
       <div className="layout">
         <aside className="filters" aria-label={t('landing_filterCarsTitle')}>
-          <h3>{t('landing_filterCarsTitle')}</h3>
+          <Typography variant="h3">{t('landing_filterCarsTitle')}</Typography>
 
           <div className="field">
             <label htmlFor="f-car-maker">{t('landing_maker')}</label>
@@ -767,9 +767,9 @@ export function Landing() {
             />
           </div>
 
-          <button type="button" className="btn btn--ghost btn--sm" onClick={resetCarFilters}>
+          <Button variant="ghost" size="sm" className="btn btn--ghost btn--sm" onClick={resetCarFilters}>
             {t('landing_resetFilter')}
-          </button>
+          </Button>
         </aside>
 
         <div>
@@ -803,7 +803,7 @@ export function Landing() {
     <div className="container page-container-padded">
       <div className="page-head">
         <nav className="crumbs" aria-label={t('landing_crumbHome')}>
-          <a
+          <Link
             href="#/"
             onClick={(e) => {
               e.preventDefault();
@@ -811,13 +811,13 @@ export function Landing() {
             }}
           >
             {t('landing_crumbHome')}
-          </a>
+          </Link>
           <SvgIcon name="chev" />
           <span>{t('landing_favorites')}</span>
         </nav>
-        <h1>
+        <Typography variant="h1">
           {t('landing_favoritesTitle')} ({favoritesList.length})
-        </h1>
+        </Typography>
       </div>
 
       {renderFavoritesListings()}
@@ -827,10 +827,10 @@ export function Landing() {
   const renderGeneralsView = () => (
     <div className="container page-container-padded">
       <div className="page-head">
-        <h1>{t('landing_dashboardHub')}</h1>
-        <p className="muted page-subtitle-muted">
+        <Typography variant="h1">{t('landing_dashboardHub')}</Typography>
+        <Typography variant="body1" className="muted page-subtitle-muted">
           {t('landing_active')} — Tavo Ecosystem Hub
-        </p>
+        </Typography>
       </div>
 
       <div className="grid-generals">
@@ -841,19 +841,19 @@ export function Landing() {
                 <SvgIcon name="car" />
               </div>
               <div>
-                <h2>{t('productCarTitle')}</h2>
+                <Typography variant="h2">{t('productCarTitle')}</Typography>
                 <span className="badge badge--brand">{t('landing_active')}</span>
               </div>
             </div>
-            <p className="muted generals-card__body">{t('productCarBody')}</p>
+            <Typography variant="body1" className="muted generals-card__body">{t('productCarBody')}</Typography>
           </div>
-          <button
-            type="button"
+          <Button
+            size="lg"
             className="btn btn--cars btn--lg btn--block"
             onClick={() => navigate(ROUTE_CAR)}
           >
             <SvgIcon name="car" /> {t('productCarCta')}
-          </button>
+          </Button>
         </div>
 
         <div className="panel generals-card generals-card--teal">
@@ -863,60 +863,60 @@ export function Landing() {
                 <SvgIcon name="home" />
               </div>
               <div>
-                <h2>{t('productPropertyTitle')}</h2>
+                <Typography variant="h2">{t('productPropertyTitle')}</Typography>
                 <span className="badge badge--soft">{t('landing_apartments')}</span>
               </div>
             </div>
-            <p className="muted generals-card__body">{t('productPropertyBody')}</p>
+            <Typography variant="body1" className="muted generals-card__body">{t('productPropertyBody')}</Typography>
           </div>
-          <button
-            type="button"
+          <Button
+            size="lg"
             className="btn btn--homes btn--lg btn--block"
             onClick={() => navigate(ROUTE_PROPERTY)}
           >
             <SvgIcon name="home" /> {t('productPropertyCta')}
-          </button>
+          </Button>
         </div>
       </div>
 
       <div className="panel quick-actions-panel">
-        <h3>{t('manage')}</h3>
+        <Typography variant="h3">{t('manage')}</Typography>
         <div className="quick-actions-wrap">
-          <button
-            type="button"
+          <Button
+            variant="secondary"
             className="btn btn--secondary"
             onClick={handleNavigateToPost}
           >
             <SvgIcon name="plus" /> {t('landing_postAd')}
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             className="btn btn--ghost"
             onClick={() => goTo('/favorites')}
           >
-            <SvgIcon name="heart" /> {t('landing_favorites')} ({favoritesList.length})
-          </button>
-          <button
-            type="button"
+            <HeartIcon size={16} /> {t('landing_favorites')} ({favoritesList.length})
+          </Button>
+          <Button
+            variant="ghost"
             className="btn btn--ghost"
             onClick={() => navigate(ROUTE_PROPERTY)}
           >
             <SvgIcon name="home" /> {t('productPropertyTitle')}
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             className="btn btn--ghost"
             onClick={() => navigate(ROUTE_CAR)}
           >
             <SvgIcon name="car" /> {t('productCarTitle')}
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             className="btn btn--ghost"
             onClick={handleNavigateToDesign}
           >
             {t('landing_footerDesign')}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -926,7 +926,7 @@ export function Landing() {
     <div className="container page-container-padded">
       <div className="page-head">
         <nav className="crumbs" aria-label={t('landing_crumbHome')}>
-          <a
+          <Link
             href="#/"
             onClick={(e) => {
               e.preventDefault();
@@ -934,11 +934,11 @@ export function Landing() {
             }}
           >
             {t('landing_crumbHome')}
-          </a>
+          </Link>
           <SvgIcon name="chev" />
           <span>{t('landing_postTitle')}</span>
         </nav>
-        <h1>{t('landing_postTitle')}</h1>
+        <Typography variant="h1">{t('landing_postTitle')}</Typography>
       </div>
 
       <div className="post">
@@ -946,20 +946,22 @@ export function Landing() {
           <div className="field field-spacing-bottom">
             <span className="label">{t('landing_whatToPublish')}</span>
             <div className="seg">
-              <button
+              <Button
                 type="button"
+                variant="ghost"
                 className={postForm.kind === POST_KIND_APT ? 'is-active' : ''}
                 onClick={handleSetPostKindApt}
               >
                 <SvgIcon name="home" /> {t('landing_postApartment')}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="ghost"
                 className={postForm.kind === POST_KIND_CAR ? 'is-active' : ''}
                 onClick={handleSetPostKindCar}
               >
                 <SvgIcon name="car" /> {t('landing_postCar')}
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -1087,7 +1089,7 @@ export function Landing() {
               <span className="label">{t('landing_imagesLabel')}</span>
               <div className="drop">
                 <SvgIcon name="image" />
-                <b>{t('landing_dropImages')}</b>
+                <Typography variant="body1" weight="bold">{t('landing_dropImages')}</Typography>
                 <span className="hint">{t('landing_dropImagesHint')}</span>
               </div>
             </div>
@@ -1116,20 +1118,23 @@ export function Landing() {
           </div>
 
           <div className="row">
-            <button
+            <Button
               type="submit"
+              size="lg"
               className="btn btn--lg"
               disabled={!postForm.terms || postForm.loading}
             >
               {postForm.loading ? '...' : t('landing_publishAdBtn')}
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="ghost"
+              size="lg"
               className="btn btn--ghost btn--lg"
               onClick={() => showToast(t('landing_comingSoon'))}
             >
               {t('landing_saveDraftBtn')}
-            </button>
+            </Button>
           </div>
         </form>
 
@@ -1146,14 +1151,14 @@ export function Landing() {
   const renderDesignView = () => (
     <div className="container ds page-container-padded">
       <div className="page-head">
-        <h1>Tavo Design Tokens</h1>
-        <p className="muted page-subtitle-muted">
+        <Typography variant="h1">Tavo Design Tokens</Typography>
+        <Typography variant="body1" className="muted page-subtitle-muted">
           Design System & Ecosystem Components Showcase
-        </p>
+        </Typography>
       </div>
 
       <section className="ds-section">
-        <h2>Palette Tokens</h2>
+        <Typography variant="h2">Palette Tokens</Typography>
         <div className="ds-row">
           <div className="ds-swatch ds-swatch--teal">
             teal-600
@@ -1171,16 +1176,16 @@ export function Landing() {
       </section>
 
       <section className="ds-section">
-        <h2>Buttons</h2>
+        <Typography variant="h2">Buttons</Typography>
         <div className="panel">
           <div className="row">
-            <button className="btn">Primary</button>
-            <button className="btn btn--secondary">Secondary</button>
-            <button className="btn btn--ghost">Ghost</button>
-            <button className="btn btn--accent">Accent</button>
-            <button className="btn btn--homes">Homes</button>
-            <button className="btn btn--cars">Cars</button>
-            <button className="btn btn--danger">Danger</button>
+            <Button className="btn">Primary</Button>
+            <Button variant="secondary" className="btn btn--secondary">Secondary</Button>
+            <Button variant="ghost" className="btn btn--ghost">Ghost</Button>
+            <Button variant="accent" className="btn btn--accent">Accent</Button>
+            <Button className="btn btn--homes">Homes</Button>
+            <Button className="btn btn--cars">Cars</Button>
+            <Button variant="danger" className="btn btn--danger">Danger</Button>
           </div>
         </div>
       </section>
@@ -1244,20 +1249,24 @@ export function Landing() {
           onClick={(e: React.MouseEvent) => e.stopPropagation()}
         >
           <div className="dlg__head">
-            <h3>{t('landing_login')}</h3>
-            <button
+            <Typography variant="h3">{t('landing_login')}</Typography>
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
               className="btn btn--ghost btn--icon btn--sm"
               onClick={() => setLoginModalOpen(false)}
               aria-label={t('close')}
             >
               <SvgIcon name="x" />
-            </button>
+            </Button>
           </div>
 
           <div className="modal-form-grid">
-            <button
+            <Button
               type="button"
+              variant="secondary"
+              size="lg"
               className="btn btn--secondary btn--lg btn--block"
               onClick={() => {
                 setLoginModalOpen(false);
@@ -1265,7 +1274,7 @@ export function Landing() {
               }}
             >
               <SvgIcon name="user" /> {t('landing_loginToSystem')} (Google / Gmail)
-            </button>
+            </Button>
             <div className="divider-text">{t('landing_orSearchByDetails')}</div>
             <div className="field">
               <label htmlFor="login-email">Email</label>
@@ -1277,8 +1286,9 @@ export function Landing() {
                 dir="ltr"
               />
             </div>
-            <button
+            <Button
               type="button"
+              size="lg"
               className="btn btn--lg btn--block"
               onClick={() => {
                 setLoginModalOpen(false);
@@ -1286,7 +1296,7 @@ export function Landing() {
               }}
             >
               {t('landing_loginToSystem')}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -1305,15 +1315,17 @@ export function Landing() {
           onClick={(e: React.MouseEvent) => e.stopPropagation()}
         >
           <div className="dlg__head">
-            <h3>{t('landing_msgToSeller')}</h3>
-            <button
+            <Typography variant="h3">{t('landing_msgToSeller')}</Typography>
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
               className="btn btn--ghost btn--icon btn--sm"
               onClick={() => setContactModalOpen(false)}
               aria-label={t('close')}
             >
               <SvgIcon name="x" />
-            </button>
+            </Button>
           </div>
           <div className="modal-form-grid">
             <div className="field">
@@ -1333,8 +1345,9 @@ export function Landing() {
                 defaultValue={t('landing_msgDefault')}
               />
             </div>
-            <button
+            <Button
               type="button"
+              size="lg"
               className="btn btn--lg"
               onClick={() => {
                 setContactModalOpen(false);
@@ -1342,7 +1355,7 @@ export function Landing() {
               }}
             >
               {t('landing_send')}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

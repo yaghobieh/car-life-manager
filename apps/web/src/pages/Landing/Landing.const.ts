@@ -80,13 +80,6 @@ export const POST_KIND_CAR = 'car';
 
 export const PREVIEW_ID_APT = 'preview';
 export const PREVIEW_ID_CAR = 'previewc';
-
-export const DEFAULT_PREVIEW_CITY = 'תל אביב';
-export const DEFAULT_PREVIEW_STREET = 'רוטשילד';
-export const DEFAULT_PREVIEW_MAKER = 'טויוטה';
-export const DEFAULT_PREVIEW_MODEL = 'קורולה';
-export const DEFAULT_PREVIEW_FUEL = 'בנזין';
-export const DEFAULT_PREVIEW_GEAR = 'אוטומט';
 export const DEFAULT_PREVIEW_COLOR = '#4766DB';
 
 export const DEFAULT_PREVIEW_ROOMS = 3;
@@ -116,8 +109,6 @@ export const ADDRESS_SUGGESTION_LIMIT = 10;
 export const DEBOUNCE_SEARCH_MS = 120;
 export const MIN_SEARCH_LENGTH = 1;
 export const CAR_QUERY_KEYWORDS = ['רכב', 'ק״מ', 'אוטו', 'מנוע', 'יד', 'היברידי', 'בנזין'] as const;
-export const TOAST_FAVORITE_REMOVED = 'הוסר מהמועדפים';
-export const TOAST_FAVORITE_ADDED = 'נשמר במועדפים ❤️';
 export const DEFAULT_HERO_ROOMS_VALUE = '0';
 
 export const LANDING_ROUTE_HOME = '/';
@@ -187,48 +178,3 @@ export const POST_ROOMS_OPTIONS = [1, 2, 3, 3.5, 4, 5, 6] as const;
 export const DEAL_TYPE_OPTIONS = [DEAL_TYPE_ALL, DEAL_TYPE_SALE, DEAL_TYPE_RENT] as const;
 export const SORT_OPTIONS = [SORT_OPTION_NEW, SORT_OPTION_ASC, SORT_OPTION_DESC] as const;
 
-
-
-export const LANDING_STRINGS = {
-  heroTitle: 'הבית הבא והרכב הבא, במקום אחד',
-  heroSubtitle: 'כל המודעות בשני נושאים בלבד, כדי שיהיה קל למצוא.',
-  searchPlaceholder: 'לדוגמה: 4 חדרים בתל אביב עד 4 מיליון, או מאזדה עד 90 אלף',
-  announcement: 'חדש ב-Tavo: חיפוש חכם מאוחד לדירות ורכבים, מבט 360° וחיבור ישיר למאגרי הרשויות',
-  apartmentsTitle: 'דירות למכירה ולהשכרה',
-  apartmentsSubtitle: 'דירות מאומתות בטאבו עם מפות, תצוגת 360° ופרטי קשר ישירים.',
-  carsTitle: 'רכבים מיד שנייה',
-  carsSubtitle: 'רכבים עם היסטוריית טיפולים מאומתת, בדיקת קילומטראז׳ ומבט 360° מלא.',
-  favoritesEmptyTitle: 'עדיין אין מועדפים',
-  favoritesEmptyDesc: 'לחצו על הלב בכל מודעה כדי לשמור אותה כאן.',
-  footerTagline: 'דירות ורכבים. פלטפורמה אחת חכמה לכל מה שחשוב.',
-  footerLegal: '© 2026 Tavo (טאבו) — פלטפורמת רכבים ודירות.',
-  footerStandards: 'נבנה עם Design Tokens לפי סטנדרט ישראלי מקצועי.',
-  postBreadcrumb: 'פרסום מודעה',
-  postTitle: 'פרסום מודעה חדשה ב-Tavo',
-  postSubtitle: 'המודעה תעבור אימות טאבו או בדיקת רישוי ממשלתי ותפורסם למאות אלפי מחפשים.',
-  // Navbar
-  logoutSuccess: 'התנתקת בהצלחה',
-  myAccount: 'החשבון שלי',
-  login: 'התחברות',
-  guest: 'אורח',
-  notConnected: 'לא מחובר',
-  connected: 'מחובר',
-  active: 'פעיל',
-  navCars: 'רכבים',
-  navApts: 'דירות',
-  navSaved: 'שמורים',
-  navGenerals: 'ניהול כללי',
-  carsHub: 'רכבים (Tavo Motors)',
-  aptsHub: 'דירות (Tavo Property)',
-  dashboardHub: 'לוח ניהול כללי ודשבורד',
-  themeLabel: 'ערכת נושא: ',
-  themeLight: 'מצב בהיר',
-  themeDark: 'מצב כהה',
-  themeSystem: 'לפי מערכת',
-  themeLightBadge: '☀️ בהיר',
-  themeDarkBadge: '🌙 כהה',
-  themeSystemBadge: '💻 מערכת',
-  logout: 'התנתקות',
-  loginToSystem: 'התחברות למערכת',
-  postAd: 'פרסום מודעה',
-} as const;

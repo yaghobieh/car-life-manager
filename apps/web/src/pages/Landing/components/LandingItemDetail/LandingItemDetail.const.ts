@@ -25,3 +25,6 @@ export const DEFAULT_SELLER_VALID_UNTIL = '03/2027';
 
 export const MAP_EMBED_URL =
   'https://www.openstreetmap.org/export/embed.html?bbox=34.75%2C32.05%2C34.85%2C32.12&layer=mapnik&marker=32.0853%2C34.7818';
+
+export const INQUIRY_MSG_PREFIX = 'שלום, אני פונה לגבי המודעה שלך:';
+export const INQUIRY_MSG_ROOMS = 'חדרים ב';
