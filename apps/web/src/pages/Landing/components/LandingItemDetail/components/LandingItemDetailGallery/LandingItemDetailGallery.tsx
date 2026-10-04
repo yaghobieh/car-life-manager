@@ -1,6 +1,6 @@
-import React from 'react';
-import { renderArtSvg } from '../../../../Landing.art';
-import { GALLERY_THUMB_INDICES } from '../../LandingItemDetail.const';
+import { Button } from '@forgedevstack/bear';
+import { renderArtSvg } from '@pages/Landing/Landing.art';
+import { GALLERY_MAIN_INDEX, GALLERY_THUMB_INDICES } from '../../LandingItemDetail.const';
 import type { LandingItemDetailGalleryProps } from '../../LandingItemDetail.types';
 
 export function LandingItemDetailGallery({
@@ -9,27 +9,35 @@ export function LandingItemDetailGallery({
   setSelectedGalleryThumb,
   itemTitle,
 }: LandingItemDetailGalleryProps) {
+  const renderMainMedia = () => {
+    if (selectedGalleryThumb === GALLERY_MAIN_INDEX && item.imageUrl) {
+      return (
+        <img
+          src={item.imageUrl}
+          alt={itemTitle}
+          className="art card__img"
+        />
+      );
+    }
+
+    return (
+      <div
+        className="art"
+        dangerouslySetInnerHTML={{ __html: renderArtSvg(item, selectedGalleryThumb) }}
+      />
+    );
+  };
+
   return (
     <div className="gallery">
       <div className="gallery__main">
-        {selectedGalleryThumb === 0 && item.imageUrl ? (
-          <img
-            src={item.imageUrl}
-            alt={itemTitle}
-            className="art card__img"
-          />
-        ) : (
-          <div
-            className="art"
-            dangerouslySetInnerHTML={{ __html: renderArtSvg(item, selectedGalleryThumb) }}
-          />
-        )}
+        {renderMainMedia()}
       </div>
       <div className="thumbs">
         {GALLERY_THUMB_INDICES.map((i: number) => (
-          <button
+          <Button
             key={i}
-            type="button"
+            variant="ghost"
             className={selectedGalleryThumb === i ? 'is-active' : ''}
             onClick={() => setSelectedGalleryThumb(i)}
             aria-label={`Image ${i + 1}`}
@@ -38,7 +46,7 @@ export function LandingItemDetailGallery({
               className="art"
               dangerouslySetInnerHTML={{ __html: renderArtSvg(item, i) }}
             />
-          </button>
+          </Button>
         ))}
       </div>
     </div>

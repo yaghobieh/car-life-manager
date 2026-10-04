@@ -1,12 +1,15 @@
-import React from 'react';
 import { useTranslate } from '@forgedevstack/lingo/react';
+import { Button, Typography } from '@forgedevstack/bear';
 import { formatPrice } from '@tavo/common';
-import { SvgIcon } from '../../Landing.art';
-import { FEATS } from '../../Landing.const';
+import { SvgIcon } from '@pages/Landing/Landing.art';
+import { FEATS } from '@pages/Landing/Landing.const';
 import {
   DEFAULT_SELLER_PHONE,
   DEFAULT_SELLER_NAME,
   DEFAULT_SELLER_AVATAR,
+  VIEW_MODE_GALLERY,
+  VIEW_MODE_360,
+  VIEW_MODE_MAP,
 } from './LandingItemDetail.const';
 import type { LandingItemDetailProps } from './LandingItemDetail.types';
 import { LandingItemDetail360Viewer } from './components/LandingItemDetail360Viewer';
@@ -62,7 +65,7 @@ export function LandingItemDetail({
 
   const renderActiveMediaMode = () => {
     switch (aptViewMode) {
-      case '360':
+      case VIEW_MODE_360:
         return (
           <LandingItemDetail360Viewer
             item={item}
@@ -74,9 +77,9 @@ export function LandingItemDetail({
             rotate360Right={rotate360Right}
           />
         );
-      case 'map':
+      case VIEW_MODE_MAP:
         return <LandingItemDetailMap item={item} />;
-      case 'gallery':
+      case VIEW_MODE_GALLERY:
       default:
         return (
           <LandingItemDetailGallery
@@ -120,28 +123,28 @@ export function LandingItemDetail({
       <div className="detail">
         <div>
           <div className="seg field-spacing-bottom" role="tablist">
-            <button
-              type="button"
-              className={aptViewMode === 'gallery' ? 'is-active' : ''}
-              onClick={() => setAptViewMode('gallery')}
+            <Button
+              variant="ghost"
+              className={aptViewMode === VIEW_MODE_GALLERY ? 'is-active' : ''}
+              onClick={() => setAptViewMode(VIEW_MODE_GALLERY)}
             >
               <SvgIcon name="sun" /> {t('landing_imagesLabel')}
-            </button>
-            <button
-              type="button"
-              className={aptViewMode === '360' ? 'is-active' : ''}
-              onClick={() => setAptViewMode('360')}
+            </Button>
+            <Button
+              variant="ghost"
+              className={aptViewMode === VIEW_MODE_360 ? 'is-active' : ''}
+              onClick={() => setAptViewMode(VIEW_MODE_360)}
             >
               <SvgIcon name="view360" /> {t('landing_view360')}
-            </button>
+            </Button>
             {!isCar && (
-              <button
-                type="button"
-                className={aptViewMode === 'map' ? 'is-active' : ''}
-                onClick={() => setAptViewMode('map')}
+              <Button
+                variant="ghost"
+                className={aptViewMode === VIEW_MODE_MAP ? 'is-active' : ''}
+                onClick={() => setAptViewMode(VIEW_MODE_MAP)}
               >
                 <SvgIcon name="pin" /> {t('landing_wazeNav')}
-              </button>
+              </Button>
             )}
           </div>
 
@@ -150,8 +153,12 @@ export function LandingItemDetail({
           <div className="panel detail-panel-spaced">
             <div className="row">
               <div>
-                <h2>{itemTitle}</h2>
-                <p className="muted">{itemSub}</p>
+                <Typography variant="h2">
+                  {itemTitle}
+                </Typography>
+                <Typography variant="body" color="muted">
+                  {itemSub}
+                </Typography>
               </div>
               <div className="price">
                 {formatPrice(item.price)}
@@ -163,8 +170,12 @@ export function LandingItemDetail({
           </div>
 
           <div className="panel detail-panel-spaced">
-            <h2>{t('landing_description')}</h2>
-            <p className="generals-card__body">{item.desc}</p>
+            <Typography variant="h2">
+              {t('landing_description')}
+            </Typography>
+            <Typography variant="body" className="generals-card__body">
+              {item.desc}
+            </Typography>
             {!isCar && item.feats && item.feats.length > 0 && (
               <div className="feat">
                 {item.feats.map((f: string) => (
@@ -220,13 +231,14 @@ export function LandingItemDetail({
                 <SvgIcon name="telegram" /> {t('landing_telegram')}
               </a>
 
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="lg"
                 className="btn btn--ghost btn--lg btn--block"
                 onClick={() => setContactModalOpen(true)}
               >
                 <SvgIcon name="chat" /> {t('landing_sendMessage')}
-              </button>
+              </Button>
             </div>
           </div>
 

@@ -1,5 +1,5 @@
-import React from 'react';
 import { useTranslate } from '@forgedevstack/lingo/react';
+import { Link } from '@forgedevstack/bear';
 import { MAP_EMBED_URL } from '../../LandingItemDetail.const';
 import type { LandingItemDetailMapProps } from '../../LandingItemDetail.types';
 
@@ -20,22 +20,20 @@ export function LandingItemDetailMap({ item }: LandingItemDetailMapProps) {
           <div className="muted">{t('landing_tagVerified')}</div>
         </div>
         <div className="row">
-          <a
+          <Link
             href={`https://waze.com/ul?q=${encodeURIComponent(addressQuery)}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            external
             className="btn btn--secondary btn--sm"
           >
             {t('landing_wazeNav')}
-          </a>
-          <a
+          </Link>
+          <Link
             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressQuery)}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            external
             className="btn btn--secondary btn--sm"
           >
             {t('landing_googleMaps')}
-          </a>
+          </Link>
         </div>
       </div>
     </div>

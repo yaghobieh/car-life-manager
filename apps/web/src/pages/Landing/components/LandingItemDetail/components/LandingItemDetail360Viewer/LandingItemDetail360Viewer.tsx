@@ -1,6 +1,7 @@
 import React, { useRef, useCallback } from 'react';
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { SvgIcon, renderArtSvg } from '../../../../Landing.art';
+import { Button } from '@forgedevstack/bear';
+import { SvgIcon, renderArtSvg } from '@pages/Landing/Landing.art';
 import {
   ANGLE_FRONT,
   ANGLE_RIGHT,
@@ -66,13 +67,14 @@ export function LandingItemDetail360Viewer({
         <span className="badge badge--brand">
           <SvgIcon name="view360" /> {t('landing_view360')} — {normalizedAngle}°
         </span>
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="sm"
           className="btn btn--ghost btn--sm"
           onClick={toggleAutoRotate360}
         >
           ↻ {autoRotate360 ? t('landing_stopAutoRotate') : t('landing_autoRotate')}
-        </button>
+        </Button>
       </div>
 
       <div
@@ -97,24 +99,24 @@ export function LandingItemDetail360Viewer({
       </div>
 
       <div className="view-360-actions">
-        <button type="button" className="btn btn--ghost btn--sm" onClick={rotate360Left}>
+        <Button variant="ghost" size="sm" className="btn btn--ghost btn--sm" onClick={rotate360Left}>
           {t('landing_rotateLeft')}
-        </button>
-        <button type="button" className="btn btn--ghost btn--sm" onClick={() => setView360Angle(ANGLE_FRONT)}>
+        </Button>
+        <Button variant="ghost" size="sm" className="btn btn--ghost btn--sm" onClick={() => setView360Angle(ANGLE_FRONT)}>
           {t('landing_angleFront')}
-        </button>
-        <button type="button" className="btn btn--ghost btn--sm" onClick={() => setView360Angle(ANGLE_RIGHT)}>
+        </Button>
+        <Button variant="ghost" size="sm" className="btn btn--ghost btn--sm" onClick={() => setView360Angle(ANGLE_RIGHT)}>
           {t('landing_angleSide')}
-        </button>
-        <button type="button" className="btn btn--ghost btn--sm" onClick={() => setView360Angle(ANGLE_BACK)}>
+        </Button>
+        <Button variant="ghost" size="sm" className="btn btn--ghost btn--sm" onClick={() => setView360Angle(ANGLE_BACK)}>
           {t('landing_angleBack')}
-        </button>
-        <button type="button" className="btn btn--ghost btn--sm" onClick={() => setView360Angle(ANGLE_LEFT)}>
+        </Button>
+        <Button variant="ghost" size="sm" className="btn btn--ghost btn--sm" onClick={() => setView360Angle(ANGLE_LEFT)}>
           {t('landing_angleSide2')}
-        </button>
-        <button type="button" className="btn btn--ghost btn--sm" onClick={rotate360Right}>
+        </Button>
+        <Button variant="ghost" size="sm" className="btn btn--ghost btn--sm" onClick={rotate360Right}>
           {t('landing_rotateRight')}
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
-import React from 'react';
 import { useTranslate } from '@forgedevstack/lingo/react';
+import { Typography } from '@forgedevstack/bear';
 import { DEFAULT_SELLER_VALID_UNTIL } from '../../LandingItemDetail.const';
 import type { LandingItemDetailSpecsProps } from '../../LandingItemDetail.types';
 
@@ -10,28 +10,52 @@ export function LandingItemDetailSpecs({ item, isCar }: LandingItemDetailSpecsPr
     return (
       <div className="specs">
         <div className="spec">
-          <small>{t('landing_yearLabel')}</small>
-          <b>{item.year}</b>
+          <Typography variant="caption" color="muted">
+            {t('landing_yearLabel')}
+          </Typography>
+          <Typography variant="body" weight="bold">
+            {item.year}
+          </Typography>
         </div>
         <div className="spec">
-          <small>{t('landing_kmLabel')}</small>
-          <b>{Number(item.km).toLocaleString('he-IL')} {t('landing_km')}</b>
+          <Typography variant="caption" color="muted">
+            {t('landing_kmLabel')}
+          </Typography>
+          <Typography variant="body" weight="bold">
+            {Number(item.km).toLocaleString('he-IL')} {t('landing_km')}
+          </Typography>
         </div>
         <div className="spec">
-          <small>{t('landing_hand')}</small>
-          <b>{item.hand}</b>
+          <Typography variant="caption" color="muted">
+            {t('landing_hand')}
+          </Typography>
+          <Typography variant="body" weight="bold">
+            {item.hand}
+          </Typography>
         </div>
         <div className="spec">
-          <small>{t('landing_fuel')}</small>
-          <b>{item.fuel}</b>
+          <Typography variant="caption" color="muted">
+            {t('landing_fuel')}
+          </Typography>
+          <Typography variant="body" weight="bold">
+            {item.fuel}
+          </Typography>
         </div>
         <div className="spec">
-          <small>{t('landing_gear')}</small>
-          <b>{item.gear}</b>
+          <Typography variant="caption" color="muted">
+            {t('landing_gear')}
+          </Typography>
+          <Typography variant="body" weight="bold">
+            {item.gear}
+          </Typography>
         </div>
         <div className="spec">
-          <small>{t('validUntil')}</small>
-          <b>{DEFAULT_SELLER_VALID_UNTIL}</b>
+          <Typography variant="caption" color="muted">
+            {t('validUntil')}
+          </Typography>
+          <Typography variant="body" weight="bold">
+            {DEFAULT_SELLER_VALID_UNTIL}
+          </Typography>
         </div>
       </div>
     );
@@ -41,28 +65,52 @@ export function LandingItemDetailSpecs({ item, isCar }: LandingItemDetailSpecsPr
     return (
       <div className="specs">
         <div className="spec">
-          <small>{t('landing_rooms')}</small>
-          <b>{item.rooms}</b>
+          <Typography variant="caption" color="muted">
+            {t('landing_rooms')}
+          </Typography>
+          <Typography variant="body" weight="bold">
+            {item.rooms}
+          </Typography>
         </div>
         <div className="spec">
-          <small>{t('landing_areaLabel')}</small>
-          <b>{item.size} {t('landing_sqm')}</b>
+          <Typography variant="caption" color="muted">
+            {t('landing_areaLabel')}
+          </Typography>
+          <Typography variant="body" weight="bold">
+            {item.size} {t('landing_sqm')}
+          </Typography>
         </div>
         <div className="spec">
-          <small>{t('landing_floor')}</small>
-          <b>{item.floor} / {item.floors}</b>
+          <Typography variant="caption" color="muted">
+            {t('landing_floor')}
+          </Typography>
+          <Typography variant="body" weight="bold">
+            {item.floor} / {item.floors}
+          </Typography>
         </div>
         <div className="spec">
-          <small>{t('landing_dealType')}</small>
-          <b>{item.deal === 'sale' ? t('landing_dealSale') : t('landing_dealRent')}</b>
+          <Typography variant="caption" color="muted">
+            {t('landing_dealType')}
+          </Typography>
+          <Typography variant="body" weight="bold">
+            {item.deal === 'sale' ? t('landing_dealSale') : t('landing_dealRent')}
+          </Typography>
         </div>
         <div className="spec">
-          <small>{t('landing_city')}</small>
-          <b>{item.city}</b>
+          <Typography variant="caption" color="muted">
+            {t('landing_city')}
+          </Typography>
+          <Typography variant="body" weight="bold">
+            {item.city}
+          </Typography>
         </div>
         <div className="spec">
-          <small>{t('completed')}</small>
-          <b>{t('landing_tagVerified')}</b>
+          <Typography variant="caption" color="muted">
+            {t('completed')}
+          </Typography>
+          <Typography variant="body" weight="bold">
+            {t('landing_tagVerified')}
+          </Typography>
         </div>
       </div>
     );
