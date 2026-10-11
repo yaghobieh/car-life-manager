@@ -10,9 +10,17 @@ import {
   VIEW_MODE_GALLERY,
   VIEW_MODE_360,
   VIEW_MODE_MAP,
-  INQUIRY_MSG_PREFIX,
-  INQUIRY_MSG_ROOMS,
+  ITEM_CAT_CAR,
+  SELLER_TYPE_AGENCY,
 } from './LandingItemDetail.const';
+import {
+  formatItemTitle,
+  formatItemSub,
+  cleanPhoneNumber,
+  buildInquiryMessage,
+  buildWhatsAppUrl,
+  buildTelegramUrl,
+} from './LandingItemDetail.utils';
 import type { LandingItemDetailProps } from './LandingItemDetail.types';
 import { LandingItemDetail360Viewer } from './components/LandingItemDetail360Viewer';
 import { LandingItemDetailGallery } from './components/LandingItemDetailGallery';
@@ -39,30 +47,19 @@ export function LandingItemDetail(props: LandingItemDetailProps) {
   } = props;
   const t = useTranslate();
 
-  const isCar = item.cat === 'car';
-  const isAgency = item.seller?.type === 'agency';
+  const isCar = item.cat === ITEM_CAT_CAR;
+  const isAgency = item.seller?.type === SELLER_TYPE_AGENCY;
   const sellerTag = isAgency ? t('landing_sellerAgency') : t('landing_sellerPrivate');
 
-  const itemTitle = isCar
-    ? `${item.maker} ${item.model}`
-    : `${item.rooms} ${t('landing_rooms')}, ${item.street}`;
-
-  const itemSub = isCar
-    ? `${item.year} · ${item.city}`
-    : `${item.city} · ${item.deal === 'sale' ? t('landing_dealSale') : t('landing_dealRent')}`;
+  const itemTitle = formatItemTitle(item, t('landing_rooms'));
+  const itemSub = formatItemSub(item, t('landing_dealSale'), t('landing_dealRent'));
 
   const phone = item.seller?.phone || DEFAULT_SELLER_PHONE;
-  const cleanPhone = phone.replace(/\D/g, '');
-  const cleanNoZero = cleanPhone.startsWith('0') ? cleanPhone.slice(1) : cleanPhone;
-  const msgDetails =
-    item.cat === 'apt'
-      ? `${item.rooms} ${INQUIRY_MSG_ROOMS} ${item.city}`
-      : `${item.maker} ${item.model}`;
-  const msgText = encodeURIComponent(`${INQUIRY_MSG_PREFIX} ${msgDetails}`);
-  const waUrl = `https://wa.me/972${cleanNoZero}?text=${msgText}`;
-  const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(
-    typeof window !== 'undefined' ? window.location.href : ''
-  )}&text=${msgText}`;
+  const cleanPhone = cleanPhoneNumber(phone);
+  const inquiryMessage = buildInquiryMessage(item);
+  const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const waUrl = buildWhatsAppUrl(cleanPhone, inquiryMessage);
+  const tgUrl = buildTelegramUrl(currentUrl, inquiryMessage);
 
   const renderActiveMediaMode = () => {
     switch (aptViewMode) {

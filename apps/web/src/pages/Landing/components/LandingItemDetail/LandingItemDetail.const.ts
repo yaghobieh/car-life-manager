@@ -28,3 +28,18 @@ export const MAP_EMBED_URL =
 
 export const INQUIRY_MSG_PREFIX = 'שלום, אני פונה לגבי המודעה שלך:';
 export const INQUIRY_MSG_ROOMS = 'חדרים ב';
+
+export const SUBTITLE_DOT_SEPARATOR = ' · ';
+export const COMMA_SPACE_SEPARATOR = ', ';
+export const DEAL_TYPE_SALE = 'sale';
+export const DEAL_TYPE_RENT = 'rent';
+export const ITEM_CAT_CAR = 'car';
+export const ITEM_CAT_APT = 'apt';
+export const SELLER_TYPE_AGENCY = 'agency';
+
+export const ISRAEL_PHONE_COUNTRY_CODE = '972';
+export const LEADING_ZERO = '0';
+export const PHONE_SLICE_INDEX = 1;
+export const NON_DIGIT_REGEX = /\D/g;
+export const WHATSAPP_BASE_URL = 'https://wa.me/';
+export const TELEGRAM_SHARE_BASE_URL = 'https://t.me/share/url';

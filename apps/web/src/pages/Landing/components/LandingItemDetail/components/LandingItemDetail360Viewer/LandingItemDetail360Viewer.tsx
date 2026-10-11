@@ -97,16 +97,6 @@ export function LandingItemDetail360Viewer(props: LandingItemDetail360ViewerProp
             src={item.imageUrl}
             alt={item.cat === 'car' ? `${item.maker} ${item.model}` : item.city}
             className="art card__img view-360-img"
-            style={{
-              maxWidth: '460px',
-              width: '100%',
-              height: '260px',
-              objectFit: 'cover',
-              borderRadius: 'var(--r-md)',
-              boxShadow: '0 12px 32px rgba(0,0,0,0.18)',
-              pointerEvents: 'none',
-              userSelect: 'none',
-            }}
           />
         ) : (
           <Box

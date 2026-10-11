@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@forgedevstack/bear';
+import { Box, Button } from '@forgedevstack/bear';
 import { renderArtSvg } from '@pages/Landing/Landing.art';
 import { GALLERY_MAIN_INDEX, GALLERY_THUMB_INDICES } from '../../LandingItemDetail.const';
 import type { LandingItemDetailGalleryProps } from '../../LandingItemDetail.types';
@@ -38,10 +38,9 @@ export function LandingItemDetailGallery(props: LandingItemDetailGalleryProps) {
       </Box>
       <Box className="thumbs">
         {GALLERY_THUMB_INDICES.map((i: number) => (
-          <Box
-            as="button"
+          <Button
             key={i}
-            type="button"
+            variant="ghost"
             className={selectedGalleryThumb === i ? 'is-active' : ''}
             onClick={() => setSelectedGalleryThumb(i)}
             aria-label={`Image ${i + 1}`}
@@ -58,7 +57,7 @@ export function LandingItemDetailGallery(props: LandingItemDetailGalleryProps) {
                 dangerouslySetInnerHTML={{ __html: renderArtSvg(item, i) }}
               />
             )}
-          </Box>
+          </Button>
         ))}
       </Box>
     </Box>
