@@ -125,14 +125,14 @@ export function LandingItemDetail(props: LandingItemDetailProps) {
         <div>
           <div className="seg field-spacing-bottom" role="tablist">
             <Button
-              variant="ghost"
+              variant={aptViewMode === VIEW_MODE_GALLERY ? 'primary' : 'ghost'}
               className={aptViewMode === VIEW_MODE_GALLERY ? 'is-active' : ''}
               onClick={() => setAptViewMode(VIEW_MODE_GALLERY)}
             >
               <SvgIcon name="sun" /> {t('landing_imagesLabel')}
             </Button>
             <Button
-              variant="ghost"
+              variant={aptViewMode === VIEW_MODE_360 ? 'primary' : 'ghost'}
               className={aptViewMode === VIEW_MODE_360 ? 'is-active' : ''}
               onClick={() => setAptViewMode(VIEW_MODE_360)}
             >
@@ -140,7 +140,7 @@ export function LandingItemDetail(props: LandingItemDetailProps) {
             </Button>
             {!isCar && (
               <Button
-                variant="ghost"
+                variant={aptViewMode === VIEW_MODE_MAP ? 'primary' : 'ghost'}
                 className={aptViewMode === VIEW_MODE_MAP ? 'is-active' : ''}
                 onClick={() => setAptViewMode(VIEW_MODE_MAP)}
               >

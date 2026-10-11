@@ -1,14 +1,17 @@
-import { Button } from '@forgedevstack/bear';
+import React from 'react';
+import { Box } from '@forgedevstack/bear';
 import { renderArtSvg } from '@pages/Landing/Landing.art';
 import { GALLERY_MAIN_INDEX, GALLERY_THUMB_INDICES } from '../../LandingItemDetail.const';
 import type { LandingItemDetailGalleryProps } from '../../LandingItemDetail.types';
 
-export function LandingItemDetailGallery({
-  item,
-  selectedGalleryThumb,
-  setSelectedGalleryThumb,
-  itemTitle,
-}: LandingItemDetailGalleryProps) {
+export function LandingItemDetailGallery(props: LandingItemDetailGalleryProps) {
+  const {
+    item,
+    selectedGalleryThumb,
+    setSelectedGalleryThumb,
+    itemTitle,
+  } = props;
+
   const renderMainMedia = () => {
     if (selectedGalleryThumb === GALLERY_MAIN_INDEX && item.imageUrl) {
       return (
@@ -21,7 +24,7 @@ export function LandingItemDetailGallery({
     }
 
     return (
-      <div
+      <Box
         className="art"
         dangerouslySetInnerHTML={{ __html: renderArtSvg(item, selectedGalleryThumb) }}
       />
@@ -29,26 +32,35 @@ export function LandingItemDetailGallery({
   };
 
   return (
-    <div className="gallery">
-      <div className="gallery__main">
+    <Box className="gallery">
+      <Box className="gallery__main">
         {renderMainMedia()}
-      </div>
-      <div className="thumbs">
+      </Box>
+      <Box className="thumbs">
         {GALLERY_THUMB_INDICES.map((i: number) => (
-          <Button
+          <Box
+            as="button"
             key={i}
-            variant="ghost"
+            type="button"
             className={selectedGalleryThumb === i ? 'is-active' : ''}
             onClick={() => setSelectedGalleryThumb(i)}
             aria-label={`Image ${i + 1}`}
           >
-            <div
-              className="art"
-              dangerouslySetInnerHTML={{ __html: renderArtSvg(item, i) }}
-            />
-          </Button>
+            {i === GALLERY_MAIN_INDEX && item.imageUrl ? (
+              <img
+                src={item.imageUrl}
+                alt={`${itemTitle} ${i + 1}`}
+                className="art card__img"
+              />
+            ) : (
+              <Box
+                className="art"
+                dangerouslySetInnerHTML={{ __html: renderArtSvg(item, i) }}
+              />
+            )}
+          </Box>
         ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

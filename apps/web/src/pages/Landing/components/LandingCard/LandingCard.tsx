@@ -1,20 +1,33 @@
 import React from 'react';
 import { useTranslate } from '@forgedevstack/lingo/react';
+import { Box, Typography, Badge, Button, Link } from '@forgedevstack/bear';
+import { BearIcons } from '@forgedevstack/bear-icons';
 import { formatPrice } from '@tavo/common';
 import { SvgIcon, renderArtSvg } from '../../Landing.art';
+import {
+  DEAL_TYPE_RENT,
+  DEAL_TYPE_SALE,
+  ITEM_CATEGORY_CAR,
+  LOCALE_HE_IL,
+  SELLER_TYPE_AGENCY,
+} from './LandingCard.const';
 import type { LandingCardProps } from './LandingCard.types';
 
-export function LandingCard({
-  item,
-  isFav = false,
-  onToggleFav,
-  onNavigate,
-  preview = false,
-}: LandingCardProps) {
+const HeartIcon = BearIcons.HeartIcon;
+
+export function LandingCard(props: LandingCardProps) {
+  const {
+    item,
+    isFav = false,
+    onToggleFav,
+    onNavigate,
+    preview = false,
+  } = props;
+
   const t = useTranslate();
 
-  const isCar = item.cat === 'car';
-  const isAgency = item.seller?.type === 'agency';
+  const isCar = item.cat === ITEM_CATEGORY_CAR;
+  const isAgency = item.seller?.type === SELLER_TYPE_AGENCY;
 
   const title = isCar
     ? `${item.maker} ${item.model}`
@@ -22,7 +35,7 @@ export function LandingCard({
 
   const sub = isCar
     ? `${item.year} · ${item.city}`
-    : `${item.city} · ${item.deal === 'sale' ? t('landing_dealSale') : t('landing_dealRent')}`;
+    : `${item.city} · ${item.deal === DEAL_TYPE_SALE ? t('landing_dealSale') : t('landing_dealRent')}`;
 
   const handleCardClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -39,9 +52,51 @@ export function LandingCard({
     }
   };
 
+  const renderCardMeta = () => {
+    if (isCar) {
+      return (
+        <>
+          <Box as="span">
+            <SvgIcon name="gauge" />
+            {Number(item.km).toLocaleString(LOCALE_HE_IL)} {t('landing_km')}
+          </Box>
+          <Box as="span">
+            <SvgIcon name="fuel" />
+            {item.fuel}
+          </Box>
+          <Box as="span">
+            {t('landing_hand')} {item.hand}
+          </Box>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <Box as="span">
+          <SvgIcon name="bed" />
+          {item.rooms} {t('landing_rooms')}
+        </Box>
+        <Box as="span">
+          <SvgIcon name="size" />
+          {item.size} {t('landing_sqm')}
+        </Box>
+        <Box as="span">
+          <SvgIcon name="floor" />
+          {t('landing_floor')} {item.floor}
+        </Box>
+      </>
+    );
+  };
+
   return (
-    <article className="card">
-      <div className="card__media">
+    <Box as="article" className="card">
+      <Box
+        className="card__media"
+        onClick={handleCardClick}
+        role={preview ? undefined : 'button'}
+        tabIndex={preview ? undefined : 0}
+      >
         {item.imageUrl ? (
           <img
             src={item.imageUrl}
@@ -49,87 +104,66 @@ export function LandingCard({
             className="art card__img"
           />
         ) : (
-          <div
+          <Box
             className="art"
             dangerouslySetInnerHTML={{ __html: renderArtSvg(item) }}
           />
         )}
 
-        <div className="card__tags">
-          <span className={`badge ${isAgency ? 'badge--brand' : 'badge--soft'}`}>
+        <Box className="card__tags">
+          <Badge
+            variant={isAgency ? 'primary' : 'neutral'}
+            className={isAgency ? 'badge--brand' : 'badge--soft'}
+          >
             {isAgency ? t('landing_tagAgency') : t('landing_tagPrivate')}
-          </span>
+          </Badge>
           {item.isNew && (
-            <span className="badge badge--accent">
+            <Badge variant="warning" className="badge--accent">
               {t('landing_newOnSite')}
-            </span>
+            </Badge>
           )}
-        </div>
+        </Box>
 
         {!preview && onToggleFav && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
             className={`card__fav ${isFav ? 'is-on' : ''}`}
             onClick={handleFavClick}
             aria-pressed={isFav}
             aria-label={isFav ? t('landing_removeFromFavs') : t('landing_saveToFavs')}
           >
-            <SvgIcon name="heart" />
-          </button>
+            <HeartIcon width={18} height={18} />
+          </Button>
         )}
-      </div>
+      </Box>
 
-      <div className="card__body">
-        <div className="price">
+      <Box className="card__body">
+        <Box className="price">
           {formatPrice(item.price)}
-          {item.cat === 'apt' && item.deal === 'rent' && <small> {t('landing_perMonth')}</small>}
-        </div>
+          {!isCar && item.deal === DEAL_TYPE_RENT && (
+            <Typography variant="caption">{t('landing_perMonth')}</Typography>
+          )}
+        </Box>
 
-        <h3 className="card__title">
+        <Typography variant="h3" className="card__title">
           {preview ? (
-            <span>{title}</span>
+            <Box as="span">{title}</Box>
           ) : (
-            <a href={`#/item/${item.id}`} onClick={handleCardClick}>
+            <Link href={`#/item/${item.id}`} onClick={handleCardClick}>
               {title}
-            </a>
+            </Link>
           )}
-        </h3>
+        </Typography>
 
-        <div className="card__sub">{sub}</div>
+        <Typography variant="body2" className="card__sub">
+          {sub}
+        </Typography>
 
-        <div className="card__meta">
-          {isCar ? (
-            <>
-              <span>
-                <SvgIcon name="gauge" />
-                {Number(item.km).toLocaleString('he-IL')} {t('landing_km')}
-              </span>
-              <span>
-                <SvgIcon name="fuel" />
-                {item.fuel}
-              </span>
-              <span>
-                {t('landing_hand')} {item.hand}
-              </span>
-            </>
-          ) : (
-            <>
-              <span>
-                <SvgIcon name="bed" />
-                {item.rooms} {t('landing_rooms')}
-              </span>
-              <span>
-                <SvgIcon name="size" />
-                {item.size} {t('landing_sqm')}
-              </span>
-              <span>
-                <SvgIcon name="floor" />
-                {t('landing_floor')} {item.floor}
-              </span>
-            </>
-          )}
-        </div>
-      </div>
-    </article>
+        <Box className="card__meta">
+          {renderCardMeta()}
+        </Box>
+      </Box>
+    </Box>
   );
 }

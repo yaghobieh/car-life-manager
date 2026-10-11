@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { Button } from '@forgedevstack/bear';
+import { Box, Button, Badge } from '@forgedevstack/bear';
 import { SvgIcon, renderArtSvg } from '@pages/Landing/Landing.art';
 import {
   ANGLE_FRONT,
@@ -15,15 +15,17 @@ import {
 } from '../../LandingItemDetail.const';
 import type { LandingItemDetail360ViewerProps } from '../../LandingItemDetail.types';
 
-export function LandingItemDetail360Viewer({
-  item,
-  view360Angle,
-  setView360Angle,
-  autoRotate360,
-  toggleAutoRotate360,
-  rotate360Left,
-  rotate360Right,
-}: LandingItemDetail360ViewerProps) {
+export function LandingItemDetail360Viewer(props: LandingItemDetail360ViewerProps) {
+  const {
+    item,
+    view360Angle,
+    setView360Angle,
+    autoRotate360,
+    toggleAutoRotate360,
+    rotate360Left,
+    rotate360Right,
+  } = props;
+
   const t = useTranslate();
   const isDraggingRef = useRef(false);
   const startXRef = useRef(0);
@@ -62,11 +64,11 @@ export function LandingItemDetail360Viewer({
   }, []);
 
   return (
-    <div className="view-360-container">
-      <div className="view-360-header">
-        <span className="badge badge--brand">
+    <Box className="view-360-container">
+      <Box className="view-360-header">
+        <Badge variant="primary" className="badge badge--brand">
           <SvgIcon name="view360" /> {t('landing_view360')} — {normalizedAngle}°
-        </span>
+        </Badge>
         <Button
           variant="ghost"
           size="sm"
@@ -75,9 +77,9 @@ export function LandingItemDetail360Viewer({
         >
           ↻ {autoRotate360 ? t('landing_stopAutoRotate') : t('landing_autoRotate')}
         </Button>
-      </div>
+      </Box>
 
-      <div
+      <Box
         className="view-360-canvas-box"
         style={{
           transform: `perspective(${PERSPECTIVE_PX}px) rotateY(${view360Angle}deg) scale(${SCALE_FACTOR})`,
@@ -90,15 +92,33 @@ export function LandingItemDetail360Viewer({
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
       >
-        <div
-          className="view-360-art-wrap"
-          dangerouslySetInnerHTML={{
-            __html: renderArtSvg(item, current360ArtIndex),
-          }}
-        />
-      </div>
+        {item.imageUrl ? (
+          <img
+            src={item.imageUrl}
+            alt={item.cat === 'car' ? `${item.maker} ${item.model}` : item.city}
+            className="art card__img view-360-img"
+            style={{
+              maxWidth: '460px',
+              width: '100%',
+              height: '260px',
+              objectFit: 'cover',
+              borderRadius: 'var(--r-md)',
+              boxShadow: '0 12px 32px rgba(0,0,0,0.18)',
+              pointerEvents: 'none',
+              userSelect: 'none',
+            }}
+          />
+        ) : (
+          <Box
+            className="view-360-art-wrap"
+            dangerouslySetInnerHTML={{
+              __html: renderArtSvg(item, current360ArtIndex),
+            }}
+          />
+        )}
+      </Box>
 
-      <div className="view-360-actions">
+      <Box className="view-360-actions">
         <Button variant="ghost" size="sm" className="btn btn--ghost btn--sm" onClick={rotate360Left}>
           {t('landing_rotateLeft')}
         </Button>
@@ -117,7 +137,7 @@ export function LandingItemDetail360Viewer({
         <Button variant="ghost" size="sm" className="btn btn--ghost btn--sm" onClick={rotate360Right}>
           {t('landing_rotateRight')}
         </Button>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
