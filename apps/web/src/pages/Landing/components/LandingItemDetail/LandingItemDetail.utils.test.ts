@@ -38,6 +38,7 @@ describe('LandingItemDetail.utils', () => {
     floors: 5,
     price: 3200000,
     desc: 'דירה יפה',
+    feats: [],
   };
 
   it('formats item title correctly for cars and apartments', () => {
