@@ -3,4 +3,5 @@ export interface CarArtProps {
   model?: string | null;
   color?: string | null;
   view?: string;
+  imageUrl?: string | null;
 }

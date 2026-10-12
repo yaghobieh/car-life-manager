@@ -14,6 +14,11 @@ describe('vehicleImageSrc', () => {
     expect(vehiclePaintHex(null)).toBe(null);
   });
 
+  it('uses the real vehicle photo when imageUrl is provided', () => {
+    const customPhoto = 'https://example.com/my-car.jpg';
+    expect(vehicleImageSrc('Kia', customPhoto)).toBe(customPhoto);
+  });
+
   it('falls back to our default photo when the make is unknown', () => {
     expect(vehicleImageSrc(null)).toBe(VEHICLE_IMAGE_DEFAULT);
     expect(vehicleImageSrc('Unknown Maker')).toBe(VEHICLE_IMAGE_DEFAULT);

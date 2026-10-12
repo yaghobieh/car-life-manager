@@ -1,7 +1,10 @@
 import { EMPTY_STRING, VEHICLE_IMAGE_DEFAULT } from '@const';
 import { VEHICLE_COLOR_HEX, VEHICLE_IMAGE_BY_MAKE } from './CarArt.const';
 
-export function vehicleImageSrc(make: string | null | undefined): string {
+export function vehicleImageSrc(make: string | null | undefined, imageUrl?: string | null): string {
+  if (imageUrl && imageUrl.trim() !== EMPTY_STRING) {
+    return imageUrl.trim();
+  }
   if (!make) return VEHICLE_IMAGE_DEFAULT;
   const trimmed = make.trim();
   if (trimmed === EMPTY_STRING) return VEHICLE_IMAGE_DEFAULT;
