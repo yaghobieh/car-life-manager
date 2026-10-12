@@ -185,6 +185,7 @@ export const SOURCE_UNKNOWN = 'unknown';
 export const SOURCE_PROVIDER = 'provider';
 export const VEHICLE_TAB_OVERVIEW = 'overview';
 export const VEHICLE_TAB_DETAILS = 'details';
+export const VEHICLE_TAB_OWNERSHIP = 'ownership';
 export const VEHICLE_TAB_DOCUMENTS = 'documents';
 export const VEHICLE_TAB_SERVICES = 'services';
 export const VEHICLE_TAB_EXPENSES = 'expenses';

@@ -25,5 +25,7 @@ export interface VehicleFilePanelInput {
   handLabel: string;
   licenseLabel: string;
   testLabel: string;
+  ownershipLabel?: string;
+  roadEntryLabel?: string;
   timelineTitle: (type: string) => string;
 }
