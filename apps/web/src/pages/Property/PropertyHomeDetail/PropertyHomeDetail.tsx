@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Badge } from '@forgedevstack/bear';
 import { useLingoFormat, useTranslate } from '@forgedevstack/lingo/react';
@@ -8,6 +9,7 @@ import {
   EMPTY_STRING,
   FEATURE_AIRCON,
   FEATURE_ELEVATOR,
+  HOME_VIEW_360,
   HOME_VIEW_GALLERY,
   SVG_EMPTY_PROPERTY,
   YAD2_OFFICIAL_URL,
@@ -16,7 +18,7 @@ import {
 import { AreaPriceList } from '@components/AreaPriceList';
 import { HomeCardMedia } from '@components/HomeCard/HomeCardMedia';
 import { OfficialLink } from '@components/OfficialLink';
-import { ClmEmpty, ClmPageHead } from '@common';
+import { ClmButton, ClmEmpty, ClmPageHead } from '@common';
 import { usePropertyState } from '@hooks';
 import { featureLabelKey, homeAddress, homeHasFeature, listedByFromFeatures } from '../Property.utils';
 
@@ -47,7 +49,11 @@ export function PropertyHomeDetail() {
   const { homeId } = useParams();
   const { homes, areaPrices, areaSearching, areaSearchError } = usePropertyState();
   const home = homes.find((item) => item.id === homeId);
+  const [imageIndex, setImageIndex] = useState(ZERO);
+  const [view, setView] = useState(HOME_VIEW_GALLERY);
   if (!home) return <HomeMissing />;
+  const photoCount = home.imageUrls.length;
+  const safeIndex = photoCount === ZERO ? ZERO : imageIndex % photoCount;
 
   const listedKey = `listed_${listedByFromFeatures(home.features)}`;
   const price = home.price === null ? t('noPrice') : formatCurrency(home.price, CURRENCY_ILS);
@@ -64,11 +70,19 @@ export function PropertyHomeDetail() {
       <article className="Clm-listing">
         <HomeCardMedia
           home={home}
-          view={HOME_VIEW_GALLERY}
-          imageIndex={ZERO}
-          onPrev={() => undefined}
-          onNext={() => undefined}
+          view={view}
+          imageIndex={safeIndex}
+          onPrev={() => setImageIndex((current) => (photoCount === ZERO ? ZERO : (current + photoCount - 1) % photoCount))}
+          onNext={() => setImageIndex((current) => (photoCount === ZERO ? ZERO : (current + 1) % photoCount))}
         />
+        <div className="Clm-tabs">
+          <ClmButton kind={view === HOME_VIEW_GALLERY ? 'primary' : 'outline'} onClick={() => setView(HOME_VIEW_GALLERY)}>
+            {t('homeViewPhotos')}
+          </ClmButton>
+          <ClmButton kind={view === HOME_VIEW_360 ? 'primary' : 'outline'} onClick={() => setView(HOME_VIEW_360)}>
+            {t('homeView360')}
+          </ClmButton>
+        </div>
         <div className="Clm-listing-body">
           <div className="Clm-listing-price">
             {price}

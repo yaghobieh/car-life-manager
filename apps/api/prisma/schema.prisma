@@ -11,6 +11,7 @@ datasource db {
 model User {
   id              String   @id @default(cuid())
   email           String?  @unique
+  username        String?  @unique
   phone           String?
   name            String?
   imageUrl        String?
@@ -66,8 +67,7 @@ model Vehicle {
   serviceConnections          ServiceConnection[]
 
   @@index([userId])
-  @@index([registrationNumber])
-  @@unique([userId, registrationNumber])
+  @@unique([registrationNumber])
 }
 
 model Task {
@@ -115,10 +115,13 @@ model VehicleDocument {
   vehicle    Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
   type       String
   title      String
-  notes      String?
-  expiresAt  String?
-  storageKey String
-  createdAt  DateTime @default(now())
+  notes        String?
+  expiresAt    String?
+  storageKey   String
+  originalName String?
+  mimeType     String?
+  fileSize     Int?
+  createdAt    DateTime @default(now())
 }
 
 model MaintenanceRecord {

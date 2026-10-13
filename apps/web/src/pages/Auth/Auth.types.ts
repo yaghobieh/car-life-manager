@@ -12,7 +12,9 @@ export interface AuthProviderButtonProps {
 export interface AuthGoogleButtonProps extends AuthProviderButtonProps {}
 
 export interface AuthFormState {
+  identifier: string;
   email: string;
+  username: string;
   password: string;
   name: string;
 }
@@ -29,4 +31,14 @@ export interface AuthRegisterPanelProps {
   onRoleChange: (value: string) => void;
   city: string;
   onCityChange: (value: string) => void;
+}
+
+export interface AuthIdentifierFieldProps {
+  isRegister: boolean;
+  email: string;
+  identifier: string;
+  emailLabel: string;
+  identifierLabel: string;
+  onEmailChange: (value: string) => void;
+  onIdentifierChange: (value: string) => void;
 }

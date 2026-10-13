@@ -3,6 +3,7 @@ import { Button, Card, Flex, Typography } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import { sourceFromProvenance } from '@clm/shared';
 import { CARD_RADIUS_XL, COLOR_MUTED, FLEX_GAP_LG, FLEX_GAP_SM, SPACE, TYPO_PAGE_TITLE, ZERO } from '@const';
+import { CarArt } from '@components/CarArt';
 import { SourceBadge } from '@components/SourceBadge';
 import { useAppState } from '@hooks';
 import { VEHICLE_TABS } from './VehicleFile.const';
@@ -23,6 +24,7 @@ export function VehicleFile() {
   return (
     <Card className="Bear-VehicleFile" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
+        <CarArt make={vehicle.make} model={vehicle.model} color={vehicle.color} />
         <Typography variant={TYPO_PAGE_TITLE}>
           {[vehicle.make, vehicle.model].filter(Boolean).join(SPACE) || t('unknown')}
         </Typography>

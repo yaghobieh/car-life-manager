@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Flex, Input, Select } from '@forgedevstack/bear';
+import { Button, Input, Select } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
 import type { ExpenseCategory } from '@clm/shared';
 import { api } from '@api';
@@ -7,9 +7,9 @@ import {
   DATE_SLICE_LENGTH,
   EMPTY_STRING,
   EXPENSE_CATEGORY_FUEL,
-  FLEX_GAP_MD,
   QUERY_CATEGORY,
 } from '@const';
+import { ClmSectionTitle } from '@common';
 import { useAppState } from '@hooks';
 import { useSearchParams } from 'react-router-dom';
 import { EXPENSE_CATEGORY_OPTIONS } from './Expenses.const';
@@ -49,7 +49,8 @@ export function ExpensesForm() {
   }
 
   return (
-    <Flex className="Bear-ExpensesForm" direction="column" gap={FLEX_GAP_MD}>
+    <div className="Clm-form-card Bear-ExpensesForm">
+      <ClmSectionTitle title={t('expenseFormTitle')} />
       <Select
         label={t('category')}
         value={category}
@@ -60,13 +61,17 @@ export function ExpensesForm() {
           label: t(`expense_${value}`),
         }))}
       />
-      <Input label={t('amount')} type="number" value={amount} onChange={(event) => setAmount(event.target.value)} fullWidth />
-      <Input label={t('date')} type="date" value={occurredAt} onChange={(event) => setOccurredAt(event.target.value)} fullWidth />
-      <Input label={t('merchant')} value={merchant} onChange={(event) => setMerchant(event.target.value)} fullWidth />
-      <Input label={t('description')} value={description} onChange={(event) => setDescription(event.target.value)} fullWidth />
+      <div className="Clm-form-row">
+        <Input label={t('amount')} type="number" value={amount} onChange={(event) => setAmount(event.target.value)} fullWidth />
+        <Input label={t('date')} type="date" value={occurredAt} onChange={(event) => setOccurredAt(event.target.value)} fullWidth />
+      </div>
+      <div className="Clm-form-row">
+        <Input label={t('merchant')} value={merchant} onChange={(event) => setMerchant(event.target.value)} fullWidth />
+        <Input label={t('description')} value={description} onChange={(event) => setDescription(event.target.value)} fullWidth />
+      </div>
       <Button variant="primary" loading={busy} loadingText={t('saving')} onClick={() => void submit()}>
         {t('addExpense')}
       </Button>
-    </Flex>
+    </div>
   );
 }

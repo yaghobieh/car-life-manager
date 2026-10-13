@@ -1,3 +1,7 @@
+export interface PropertyHomeFormProps {
+  initialDealType?: string;
+}
+
 export interface HomeBoardFilter {
   deal: string;
   listedBy: string;

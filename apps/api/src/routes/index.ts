@@ -5,6 +5,8 @@ import { registerIdentityRoutes } from "./identity.routes";
 import { registerTaskRoutes } from "./tasks.routes";
 import { registerPropertyRoutes } from "./property.routes";
 import { registerVehicleRoutes } from "./vehicles.routes";
+import { registerListingsRoutes } from "./listings.routes";
+import { registerAiRoutes } from "./ai.routes";
 
 export const apiRouter = Router();
 
@@ -14,3 +16,5 @@ registerVehicleRoutes(apiRouter);
 registerTaskRoutes(apiRouter);
 registerIdentityRoutes(apiRouter);
 registerPropertyRoutes(apiRouter);
+registerListingsRoutes(apiRouter);
+registerAiRoutes(apiRouter);

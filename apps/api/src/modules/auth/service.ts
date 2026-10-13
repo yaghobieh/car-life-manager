@@ -30,9 +30,12 @@ import {
   PROVIDER_EMAIL,
   PROVIDER_GOOGLE,
   AUTH_ROLES,
+  EMAIL_TAKEN_CODE,
+  INVALID_USERNAME_CODE,
   ROLE_LAWYER,
   ROLE_OWNER,
   SESSION_MAX_AGE_MS,
+  USERNAME_TAKEN_CODE,
 } from "./auth.const";
 import type {
   Auth0TokenResponse,
@@ -44,32 +47,50 @@ import type {
 } from "./auth.types";
 import {
   hashPassword,
+  isEmailIdentifier,
   isValidEmail,
   isValidPhone,
+  isValidUsername,
   normalizeEmail,
   normalizePhone,
+  normalizeUsername,
   randomToken,
   serializeAuthUser,
   verifyPassword,
 } from "./auth.utils";
 
-export async function registerUser(email: string, password: string, name?: string, role?: string): Promise<AuthUserPayload> {
+export async function registerUser(
+  email: string,
+  password: string,
+  name?: string,
+  role?: string,
+  username?: string,
+): Promise<AuthUserPayload> {
   const normalized = normalizeEmail(email);
+  const nextUsername = normalizeUsername(username ?? "");
   if (!isValidEmail(normalized)) {
     throw new HttpError("Invalid email", HTTP_BAD_REQUEST, "invalid_email");
+  }
+  if (!isValidUsername(nextUsername)) {
+    throw new HttpError("Invalid username", HTTP_BAD_REQUEST, INVALID_USERNAME_CODE);
   }
   if (password.length < PASSWORD_MIN_LENGTH) {
     throw new HttpError("Password is too short", HTTP_BAD_REQUEST, "password_short");
   }
   const nextRole = AUTH_ROLES.includes(role as (typeof AUTH_ROLES)[number]) ? role as string : ROLE_OWNER;
-  const existing = await prisma.user.findUnique({ where: { email: normalized } });
-  if (existing) {
-    throw new HttpError("Email already registered", HTTP_CONFLICT, "email_taken");
+  const existingEmail = await prisma.user.findUnique({ where: { email: normalized } });
+  if (existingEmail) {
+    throw new HttpError("Email already registered", HTTP_CONFLICT, EMAIL_TAKEN_CODE);
+  }
+  const existingUsername = await prisma.user.findUnique({ where: { username: nextUsername } });
+  if (existingUsername) {
+    throw new HttpError("Username already registered", HTTP_CONFLICT, USERNAME_TAKEN_CODE);
   }
   const displayName = name?.trim() || null;
   const user = await prisma.user.create({
     data: {
       email: normalized,
+      username: nextUsername,
       name: displayName,
       role: nextRole,
       passwordHash: hashPassword(password),
@@ -87,8 +108,11 @@ export async function registerUser(email: string, password: string, name?: strin
   return serializeAuthUser(user);
 }
 
-export async function loginUser(email: string, password: string): Promise<AuthUserPayload> {
-  const user = await prisma.user.findUnique({ where: { email: normalizeEmail(email) } });
+export async function loginUser(identifier: string, password: string): Promise<AuthUserPayload> {
+  const trimmed = identifier.trim();
+  const user = isEmailIdentifier(trimmed)
+    ? await prisma.user.findUnique({ where: { email: normalizeEmail(trimmed) } })
+    : await prisma.user.findUnique({ where: { username: normalizeUsername(trimmed) } });
   if (!user?.passwordHash || !verifyPassword(password, user.passwordHash)) {
     throw new HttpError("Invalid credentials", HTTP_UNAUTHORIZED, "invalid_credentials");
   }
@@ -303,10 +327,24 @@ export async function updateProfile(userId: string, input: ProfileUpdateInput): 
   if (name && name.length > NAME_MAX_LENGTH) {
     throw new HttpError("Name is too long", HTTP_BAD_REQUEST, "invalid_name");
   }
+  let nextUsername: string | undefined;
+  if (input.username !== undefined) {
+    nextUsername = normalizeUsername(input.username);
+    if (!isValidUsername(nextUsername)) {
+      throw new HttpError("Invalid username", HTTP_BAD_REQUEST, INVALID_USERNAME_CODE);
+    }
+    const taken = await prisma.user.findFirst({
+      where: { username: nextUsername, NOT: { id: userId } },
+    });
+    if (taken) {
+      throw new HttpError("Username already registered", HTTP_CONFLICT, USERNAME_TAKEN_CODE);
+    }
+  }
   const user = await prisma.user.update({
     where: { id: userId },
     data: {
       ...(name !== undefined ? { name } : {}),
+      ...(nextUsername !== undefined ? { username: nextUsername } : {}),
       ...(input.phone !== undefined ? { phone: normalizePhone(input.phone) } : {}),
       ...(input.notifyEmail !== undefined ? { notifyEmail: input.notifyEmail } : {}),
       ...(input.notifySms !== undefined ? { notifySms: input.notifySms } : {}),

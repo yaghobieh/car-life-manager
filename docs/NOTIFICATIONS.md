@@ -12,6 +12,8 @@ Reminders are stored in PostgreSQL. Delivery is honest: a channel sends only whe
 
 Due reminders are dispatched when the dashboard loads or a reminder is created. Each reminder is sent once per channel (`userId + sourceKey + channel`).
 
+Creating a reminder also sends a **scheduled** SMS (`reminder:{id}:scheduled:sms`) when Twilio is configured, the user turned SMS on, and a phone number is saved. The later due SMS still uses `reminder:{id}:sms`. Settings can send a real test SMS (`POST /api/auth/sms/test`) and a real test email (`POST /api/auth/email/test`). Israeli numbers like `050…` are stored and sent as `+97250…`. The API never marks a channel as sent unless the provider accepted it.
+
 ## Email (Resend)
 
 1. Create a Resend account and verify a sending domain
@@ -22,15 +24,14 @@ RESEND_API_KEY=re_...
 NOTIFY_FROM_EMAIL="Car Life Manager <noreply@your-domain.com>"
 ```
 
-Without `RESEND_API_KEY`, email stays `skipped` with `not_configured`.
+Without `RESEND_API_KEY`, email stays `skipped` with `not_configured`. Settings can send a test to the signed-in user's email (`POST /api/auth/email/test`).
+
+Run the API with `apps/api/.env` (`npm run dev:api`). Docker Compose only starts Postgres. A catcher inbox in Docker will not send real mail.
 
 ## SMS (Twilio)
 
-Sign up here: https://www.twilio.com/try-twilio
-
-1. Create a Twilio account (trial is enough to test)
-2. Buy or use a sending number (Israel: `+972…`)
-3. Copy Account SID, Auth Token, and From number into Vercel and `apps/api/.env`:
+1. Use an existing Twilio account and sending number (Israel: `+972…`)
+2. Copy Account SID, Auth Token, and From number into Vercel and `apps/api/.env`:
 
 ```
 TWILIO_ACCOUNT_SID=AC...
@@ -40,7 +41,7 @@ TWILIO_FROM_NUMBER=+972...
 
 SID and token alone are not enough. Buy or verify a sending number and set `TWILIO_FROM_NUMBER`. Until that exists, Settings says the sender is missing and SMS stays `skipped`.
 
-Put the user’s mobile in Settings. Without Twilio, SMS stays `skipped`.
+Put the user’s mobile in Settings (Israeli `05…` is stored as `+972…`). Use **Send test SMS** after Twilio is configured. Without Twilio, SMS stays `skipped`.
 
 ## Calendar
 

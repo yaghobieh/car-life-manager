@@ -1,6 +1,7 @@
 export interface AuthUserPayload {
   id: string;
   email: string | null;
+  username: string | null;
   name: string | null;
   phone: string | null;
   imageUrl: string | null;
@@ -11,6 +12,7 @@ export interface AuthUserPayload {
 
 export interface ProfileUpdateInput {
   name?: string;
+  username?: string;
   phone?: string;
   notifyEmail?: boolean;
   notifySms?: boolean;

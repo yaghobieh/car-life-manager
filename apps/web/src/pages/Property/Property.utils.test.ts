@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import type { Home } from '@clm/shared';
 import {
   addressSubtitle,
+  dealForHomeIntent,
+  homeDealType,
   addressTitle,
   featureLabelKey,
   filterHomes,
@@ -15,7 +17,7 @@ import {
   mergeHomeFeatures,
   parseCsvList,
 } from './Property.utils';
-import { FEATURE_AIRCON, FEATURE_BROKER, FEATURE_ELEVATOR, FILTER_ALL, LISTED_BROKER, LISTED_PRIVATE, PRICE_WITH, ROUTE_PROPERTY_HOMES } from '@const';
+import { DEAL_OWNED, DEAL_RENT, DEAL_SALE, FEATURE_AIRCON, FEATURE_BROKER, FEATURE_ELEVATOR, FILTER_ALL, HOME_INTENT_EXISTING, HOME_INTENT_INTEREST, LISTED_BROKER, LISTED_PRIVATE, PRICE_WITH, ROUTE_PROPERTY_HOMES } from '@const';
 
 const home = {
   id: 'h1',
@@ -150,6 +152,16 @@ describe('filterHomesBoard', () => {
       city: '',
       street: '',
     })).toEqual([home]);
+  });
+});
+
+describe('dealForHomeIntent', () => {
+  it('maps existing and interest paths', () => {
+    expect(homeDealType(DEAL_RENT)).toBe(DEAL_RENT);
+    expect(homeDealType('unknown')).toBe(DEAL_OWNED);
+    expect(dealForHomeIntent(HOME_INTENT_EXISTING)).toBe(DEAL_OWNED);
+    expect(dealForHomeIntent(HOME_INTENT_INTEREST)).toBe(DEAL_SALE);
+    expect(dealForHomeIntent(null)).toBeUndefined();
   });
 });
 

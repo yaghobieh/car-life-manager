@@ -10,3 +10,5 @@ export const INVALID_PHONE_CODE = "invalid_phone";
 export const ADDRESS_CITY_REQUIRED_CODE = "address_city_required";
 export const LAWYER_NAME_MIN = 2;
 export const NOTES_MAX_LENGTH = 240;
+export const ZERO = 0;
+export const EMPTY_LENGTH = 0;

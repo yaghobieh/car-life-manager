@@ -10,7 +10,6 @@ import {
   ROUTE_SERVICES,
   ROUTE_TASKS,
   STATUS_KIND_HEALTHY,
-  SVG_HERO_CAR,
   SVG_STATUS_ALERT,
   SVG_STATUS_OK,
   SVG_EMPTY_REPORT,
@@ -27,9 +26,10 @@ import {
   ClmSectionTitle,
   ClmStatCard,
 } from '@common';
+import { CarArt } from '@components/CarArt';
 import { OfficialLink } from '@components/OfficialLink';
-import { TaskDrawer } from '@components/TaskDrawer';
-import { TaskRow } from '@components/TaskRow';
+import { TaskDrawer } from '@connected/TaskDrawer';
+import { TaskRow } from '@connected/TaskRow';
 import { useAppState } from '@hooks';
 import { OVERVIEW_VIEW_EMPTY, OVERVIEW_VIEW_LOADING } from './Overview.const';
 import { OverviewRecalls } from './Overview.recalls';
@@ -79,7 +79,7 @@ export function Overview() {
         eyebrow={t('activeVehicle')}
         title={title}
         plate={vehicle.formattedRegistrationNumber}
-        carSrc={SVG_HERO_CAR}
+        car={<CarArt make={vehicle.make} model={vehicle.model} color={vehicle.color} />}
         carAlt={title}
         pills={[
           { label: t('licenseValidShort'), tone: toneForKind(status.license.kind) },

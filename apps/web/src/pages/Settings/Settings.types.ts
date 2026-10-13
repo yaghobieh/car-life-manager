@@ -1,5 +1,6 @@
 export interface SettingsFormState {
   name: string;
+  username: string;
   phone: string;
   notifyEmail: boolean;
   notifySms: boolean;
