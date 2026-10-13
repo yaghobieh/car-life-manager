@@ -18,8 +18,8 @@ import type { CarArtProps } from './CarArt.types';
 import { vehicleImageSrc, vehiclePaintHex } from './CarArt.utils';
 
 export function CarArt(props: CarArtProps) {
-  const { make, model, color, view } = props;
-  const src = vehicleImageSrc(make);
+  const { make, model, color, view, imageUrl } = props;
+  const src = vehicleImageSrc(make, imageUrl);
   const paint = vehiclePaintHex(color);
   const isDesktop = useIsDesktop();
   const is3d = view === CAR_ART_VIEW_3D;

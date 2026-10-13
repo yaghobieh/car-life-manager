@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Image,
   Pressable,
   ScrollView,
   Text,
@@ -151,62 +152,74 @@ export function LandingScreen(props: LandingScreenProps) {
         <ActivityIndicator size="large" color={colors.blue} style={{ marginVertical: 32 }} />
       ) : activeTab === 'apt' ? (
         <View style={styles.list}>
-          {filteredApts.map((apt) => (
-            <View
-              key={apt.id}
-              style={[
-                styles.card,
-                { backgroundColor: colors.surface, borderColor: colors.line, borderStartColor: '#0B7A75' },
-              ]}
-            >
-              <View style={styles.cardHeader}>
-                <Text style={[styles.price, { color: '#0B7A75' }]}>
-                  {fmt(apt.price)}
-                  {apt.deal === 'rent' ? ' / חודש' : ''}
+          {filteredApts.map((apt) => {
+            const aptImage = apt.imageUrl || apt.photos?.[0];
+            return (
+              <View
+                key={apt.id}
+                style={[
+                  styles.card,
+                  { backgroundColor: colors.surface, borderColor: colors.line, borderStartColor: '#0B7A75' },
+                ]}
+              >
+                <View style={styles.cardHeader}>
+                  <Text style={[styles.price, { color: '#0B7A75' }]}>
+                    {fmt(apt.price)}
+                    {apt.deal === 'rent' ? ' / חודש' : ''}
+                  </Text>
+                  <Text style={[styles.badge, { backgroundColor: '#EAF7F6', color: '#0A6360' }]}>
+                    {apt.deal === 'sale' ? 'למכירה' : 'להשכרה'}
+                  </Text>
+                </View>
+                {aptImage ? (
+                  <Image source={{ uri: aptImage }} style={styles.cardImage} resizeMode="cover" />
+                ) : null}
+                <Text style={[styles.title, { color: colors.ink }]}>
+                  {apt.rooms} חדרים · {apt.street}
                 </Text>
-                <Text style={[styles.badge, { backgroundColor: '#EAF7F6', color: '#0A6360' }]}>
-                  {apt.deal === 'sale' ? 'למכירה' : 'להשכרה'}
+                <Text style={[styles.sub, { color: colors.inkSoft }]}>
+                  {apt.city} · קומה {apt.floor} מתוך {apt.floors} · {apt.size} מ״ר
+                </Text>
+                <Text style={[styles.desc, { color: colors.inkSoft }]} numberOfLines={2}>
+                  {apt.desc}
                 </Text>
               </View>
-              <Text style={[styles.title, { color: colors.ink }]}>
-                {apt.rooms} חדרים · {apt.street}
-              </Text>
-              <Text style={[styles.sub, { color: colors.inkSoft }]}>
-                {apt.city} · קומה {apt.floor} מתוך {apt.floors} · {apt.size} מ״ר
-              </Text>
-              <Text style={[styles.desc, { color: colors.inkSoft }]} numberOfLines={2}>
-                {apt.desc}
-              </Text>
-            </View>
-          ))}
+            );
+          })}
         </View>
       ) : (
         <View style={styles.list}>
-          {filteredCars.map((car) => (
-            <View
-              key={car.id}
-              style={[
-                styles.card,
-                { backgroundColor: colors.surface, borderColor: colors.line, borderStartColor: '#2F4FC4' },
-              ]}
-            >
-              <View style={styles.cardHeader}>
-                <Text style={[styles.price, { color: '#2F4FC4' }]}>{fmt(car.price)}</Text>
-                <Text style={[styles.badge, { backgroundColor: '#EEF2FE', color: '#1F347F' }]}>
-                  {car.fuel}
+          {filteredCars.map((car) => {
+            const carImage = car.imageUrl || car.photos?.[0];
+            return (
+              <View
+                key={car.id}
+                style={[
+                  styles.card,
+                  { backgroundColor: colors.surface, borderColor: colors.line, borderStartColor: '#2F4FC4' },
+                ]}
+              >
+                <View style={styles.cardHeader}>
+                  <Text style={[styles.price, { color: '#2F4FC4' }]}>{fmt(car.price)}</Text>
+                  <Text style={[styles.badge, { backgroundColor: '#EEF2FE', color: '#1F347F' }]}>
+                    {car.fuel}
+                  </Text>
+                </View>
+                {carImage ? (
+                  <Image source={{ uri: carImage }} style={styles.cardImage} resizeMode="cover" />
+                ) : null}
+                <Text style={[styles.title, { color: colors.ink }]}>
+                  {car.maker} {car.model} ({car.year})
+                </Text>
+                <Text style={[styles.sub, { color: colors.inkSoft }]}>
+                  {car.city} · {Number(car.km).toLocaleString('he-IL')} ק״מ · יד {car.hand} · {car.gear}
+                </Text>
+                <Text style={[styles.desc, { color: colors.inkSoft }]} numberOfLines={2}>
+                  {car.desc}
                 </Text>
               </View>
-              <Text style={[styles.title, { color: colors.ink }]}>
-                {car.maker} {car.model} ({car.year})
-              </Text>
-              <Text style={[styles.sub, { color: colors.inkSoft }]}>
-                {car.city} · {Number(car.km).toLocaleString('he-IL')} ק״מ · יד {car.hand} · {car.gear}
-              </Text>
-              <Text style={[styles.desc, { color: colors.inkSoft }]} numberOfLines={2}>
-                {car.desc}
-              </Text>
-            </View>
-          ))}
+            );
+          })}
         </View>
       )}
 

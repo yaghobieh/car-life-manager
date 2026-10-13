@@ -43,6 +43,7 @@ export const styles = StyleSheet.create({
   price: { fontSize: 19, fontWeight: '900' },
   badge: { fontSize: 12, fontWeight: '700', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 999 },
   title: { fontSize: 17, fontWeight: '800', textAlign: 'right' },
+  cardImage: { width: '100%', height: 180, borderRadius: 10, marginBottom: 8 },
   sub: { fontSize: 13, textAlign: 'right' },
   desc: { fontSize: 13, lineHeight: 18, textAlign: 'right', marginTop: 4 },
   footer: { borderRadius: 16, padding: 18, marginHorizontal: 16, marginTop: 12, gap: 4 },

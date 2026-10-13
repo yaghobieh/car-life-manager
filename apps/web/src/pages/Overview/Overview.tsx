@@ -79,7 +79,7 @@ export function Overview() {
         eyebrow={t('activeVehicle')}
         title={title}
         plate={vehicle.formattedRegistrationNumber}
-        car={<CarArt make={vehicle.make} model={vehicle.model} color={vehicle.color} />}
+        car={<CarArt make={vehicle.make} model={vehicle.model} color={vehicle.color} imageUrl={vehicle.imageUrl} />}
         carAlt={title}
         pills={[
           { label: t('licenseValidShort'), tone: toneForKind(status.license.kind) },
