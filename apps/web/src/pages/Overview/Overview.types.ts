@@ -1,9 +1,20 @@
 import type { ExpenseSummary, Reminder, VehicleRecall } from '@clm/shared';
+import type { ClmTone } from '@common';
 
 export interface TaskFilterCounts {
   all: number;
   overdue: number;
   important: number;
+}
+
+export interface OverviewPillItem {
+  label: string;
+  tone: ClmTone;
+}
+
+export interface OverviewMetaItem {
+  label: string;
+  value: string;
 }
 
 export type OverviewView = 'loading' | 'empty' | 'ready';

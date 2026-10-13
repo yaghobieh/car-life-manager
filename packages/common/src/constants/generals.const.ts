@@ -199,3 +199,5 @@ export const CAR_ART_VIEW_3D = '3d';
 export const WINDOW_BLANK = '_blank';
 export const WINDOW_NOREFERRER = 'noreferrer';
 export const ICS_PATH_SUFFIX = '/calendar.ics';
+export const BUTTON_KIND_OUTLINE = 'outline';
+export const BUTTON_KIND_PRIMARY = 'primary';
