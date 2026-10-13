@@ -31,5 +31,3 @@ export const PALETTE_DARK = {
   white: COLOR_WHITE,
   bad: '#FF6B6E',
 };
-
-export type ThemeColors = typeof PALETTE_LIGHT;

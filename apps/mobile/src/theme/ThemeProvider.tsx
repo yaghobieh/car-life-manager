@@ -1,14 +1,6 @@
-import React, { createContext, useContext, useState, type ReactNode } from 'react';
-import { PALETTE_DARK, PALETTE_LIGHT, type ThemeColors } from './colors.const';
-
-export type ThemeMode = 'light' | 'dark';
-
-interface ThemeContextValue {
-  theme: ThemeMode;
-  colors: ThemeColors;
-  toggleTheme: () => void;
-  setTheme: (theme: ThemeMode) => void;
-}
+import React, { createContext, useContext, useState } from 'react';
+import { PALETTE_DARK, PALETTE_LIGHT } from './colors.const';
+import type { ThemeContextValue, ThemeMode, ThemeProviderProps } from './theme.types';
 
 const ThemeContext = createContext<ThemeContextValue>({
   theme: 'light',
@@ -17,7 +9,7 @@ const ThemeContext = createContext<ThemeContextValue>({
   setTheme: () => {},
 });
 
-export function ThemeProvider({ children, initial = 'light' }: { children: ReactNode; initial?: ThemeMode }) {
+export function ThemeProvider({ children, initial = 'light' }: ThemeProviderProps) {
   const [theme, setTheme] = useState<ThemeMode>(initial);
   const colors = theme === 'dark' ? PALETTE_DARK : PALETTE_LIGHT;
 
