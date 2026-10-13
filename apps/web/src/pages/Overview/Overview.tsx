@@ -3,16 +3,17 @@ import { useLingoFormat, useTranslate } from '@forgedevstack/lingo/react';
 import { useNavigate } from 'react-router-dom';
 import { nextTasks, vehicleStatusFromDates, type Task } from '@clm/shared';
 import {
+  BUTTON_KIND_OUTLINE,
   CURRENCY_ILS,
   INSURANCE_OFFICIAL_URL,
-  SVG_EMPTY_VEHICLE,
   ROUTE_ONBOARDING,
   ROUTE_SERVICES,
   ROUTE_TASKS,
   STATUS_KIND_HEALTHY,
+  SVG_EMPTY_REPORT,
+  SVG_EMPTY_VEHICLE,
   SVG_STATUS_ALERT,
   SVG_STATUS_OK,
-  SVG_EMPTY_REPORT,
   VISIBLE_TASK_COUNT,
   ZERO,
 } from '@const';
@@ -31,9 +32,64 @@ import { OfficialLink } from '@components/OfficialLink';
 import { TaskDrawer } from '@connected/TaskDrawer';
 import { TaskRow } from '@connected/TaskRow';
 import { useAppState } from '@hooks';
-import { OVERVIEW_VIEW_EMPTY, OVERVIEW_VIEW_LOADING } from './Overview.const';
+import {
+  KEY_ACTIVE_VEHICLE,
+  KEY_ADD_VEHICLE,
+  KEY_EXPENSE_NOTE_DEFAULT,
+  KEY_EXPENSE_PREFIX,
+  KEY_INSURANCE,
+  KEY_INSURANCE_HELP_NOTE,
+  KEY_LAST_TEST_ON,
+  KEY_LEFTOVER,
+  KEY_LEFTOVER_HELP,
+  KEY_LICENSE,
+  KEY_LOADING,
+  KEY_NO_INSURANCE_OFFICIAL,
+  KEY_NO_TASKS,
+  KEY_NO_VEHICLES,
+  KEY_NO_VEHICLES_BODY,
+  KEY_OFFICIAL_SITE,
+  KEY_OVERVIEW,
+  KEY_PAGE_SUB_OVERVIEW,
+  KEY_PAYMENTS_COUNT,
+  KEY_PROVIDER_NOTE_INSURANCE,
+  KEY_SERVICES,
+  KEY_STATUS_PREFIX,
+  KEY_TEST,
+  KEY_THIS_MONTH,
+  KEY_UNKNOWN,
+  KEY_VALID_UNTIL,
+  KEY_VIEW_ALL,
+  OVERVIEW_TONE_BAD,
+  OVERVIEW_VIEW_EMPTY,
+  OVERVIEW_VIEW_LOADING,
+} from './Overview.const';
 import { OverviewRecalls } from './Overview.recalls';
-import { formatOverviewDate, resolveOverviewView, toneForKind, vehicleTitle } from './Overview.utils';
+import {
+  buildOverviewMeta,
+  buildOverviewPills,
+  formatOverviewDate,
+  resolveOverviewView,
+  vehicleTitle,
+} from './Overview.utils';
+
+function renderOverviewTasks(
+  tasks: Task[],
+  t: (key: string) => string,
+  onOpen: (task: Task) => void,
+) {
+  if (tasks.length === ZERO) {
+    return <ClmEmpty iconSrc={SVG_EMPTY_VEHICLE} title={t(KEY_NO_TASKS)} body={t(KEY_LEFTOVER_HELP)} />;
+  } else {
+    return (
+      <ClmList>
+        {tasks.map((task) => (
+          <TaskRow key={task.id} task={task} onOpen={onOpen} />
+        ))}
+      </ClmList>
+    );
+  }
+}
 
 export function Overview() {
   const { dashboard, loading, vehicles } = useAppState();
@@ -44,18 +100,18 @@ export function Overview() {
   const view = resolveOverviewView(loading, dashboard, vehicles);
 
   if (view === OVERVIEW_VIEW_LOADING) {
-    return <ClmPageHead title={t('loading')} />;
+    return <ClmPageHead title={t(KEY_LOADING)} />;
   }
 
   if (view === OVERVIEW_VIEW_EMPTY || !dashboard) {
     return (
       <>
-        <ClmPageHead title={t('overview')} subtitle={t('pageSubOverview')} />
+        <ClmPageHead title={t(KEY_OVERVIEW)} subtitle={t(KEY_PAGE_SUB_OVERVIEW)} />
         <ClmEmpty
           iconSrc={SVG_EMPTY_VEHICLE}
-          title={t('noVehicles')}
-          body={t('noVehiclesBody')}
-          action={<ClmButton onClick={() => navigate(ROUTE_ONBOARDING)}>{t('addVehicle')}</ClmButton>}
+          title={t(KEY_NO_VEHICLES)}
+          body={t(KEY_NO_VEHICLES_BODY)}
+          action={<ClmButton onClick={() => navigate(ROUTE_ONBOARDING)}>{t(KEY_ADD_VEHICLE)}</ClmButton>}
         />
       </>
     );
@@ -65,82 +121,69 @@ export function Overview() {
   const status = vehicleStatusFromDates(vehicle);
   const visibleTasks = nextTasks(tasks, VISIBLE_TASK_COUNT);
   const title = vehicle.modelYear
-    ? `${vehicleTitle(vehicle.make, vehicle.model, t('unknown'))} · ${vehicle.modelYear}`
-    : vehicleTitle(vehicle.make, vehicle.model, t('unknown'));
+    ? `${vehicleTitle(vehicle.make, vehicle.model, t(KEY_UNKNOWN))} · ${vehicle.modelYear}`
+    : vehicleTitle(vehicle.make, vehicle.model, t(KEY_UNKNOWN));
   const topCategory = expenseSummary.byCategory[ZERO];
   const monthNote = expenseSummary.hasData
-    ? `${expenses?.length ?? ZERO} ${t('paymentsCount')}`
-    : t('expenseNoteDefault');
+    ? `${expenses?.length ?? ZERO} ${t(KEY_PAYMENTS_COUNT)}`
+    : t(KEY_EXPENSE_NOTE_DEFAULT);
+
+  const pills = buildOverviewPills(status.license.kind, status.test.kind, t);
+  const meta = buildOverviewMeta(vehicle, locale, t);
 
   return (
     <div className="Bear-Overview">
-      <ClmPageHead title={t('overview')} subtitle={t('pageSubOverview')} />
+      <ClmPageHead title={t(KEY_OVERVIEW)} subtitle={t(KEY_PAGE_SUB_OVERVIEW)} />
       <ClmHero
-        eyebrow={t('activeVehicle')}
+        eyebrow={t(KEY_ACTIVE_VEHICLE)}
         title={title}
         plate={vehicle.formattedRegistrationNumber}
         car={<CarArt make={vehicle.make} model={vehicle.model} color={vehicle.color} imageUrl={vehicle.imageUrl} />}
         carAlt={title}
-        pills={[
-          { label: t('licenseValidShort'), tone: toneForKind(status.license.kind) },
-          { label: t('testValidShort'), tone: toneForKind(status.test.kind) },
-          { label: t('insuranceDisconnected'), tone: 'bad' },
-        ]}
-        meta={[
-          { label: t('hand'), value: vehicle.ownershipSequence != null ? String(vehicle.ownershipSequence) : t('unknown') },
-          { label: t('color'), value: vehicle.color ?? t('unknown') },
-          { label: t('roadEntry'), value: formatOverviewDate(vehicle.registrationDate, locale, t('unknown')) },
-        ]}
+        pills={pills}
+        meta={meta}
       />
       <div className="Clm-grid">
         <ClmStatCard
-          title={t('license')}
-          value={t(`status_${status.license.kind}`)}
-          note={`${t('validUntil')} ${formatOverviewDate(vehicle.registrationExpiry, locale, t('unknown'))}`}
+          title={t(KEY_LICENSE)}
+          value={t(`${KEY_STATUS_PREFIX}${status.license.kind}`)}
+          note={`${t(KEY_VALID_UNTIL)} ${formatOverviewDate(vehicle.registrationExpiry, locale, t(KEY_UNKNOWN))}`}
           iconSrc={status.license.kind === STATUS_KIND_HEALTHY ? SVG_STATUS_OK : SVG_STATUS_ALERT}
         />
         <ClmStatCard
-          title={t('test')}
-          value={formatOverviewDate(vehicle.nextTestDate, locale, t('unknown'))}
-          note={`${t('lastTestOn')} ${formatOverviewDate(vehicle.lastTestDate, locale, t('unknown'))}`}
+          title={t(KEY_TEST)}
+          value={formatOverviewDate(vehicle.nextTestDate, locale, t(KEY_UNKNOWN))}
+          note={`${t(KEY_LAST_TEST_ON)} ${formatOverviewDate(vehicle.lastTestDate, locale, t(KEY_UNKNOWN))}`}
           iconSrc={status.test.kind === STATUS_KIND_HEALTHY ? SVG_STATUS_OK : SVG_STATUS_ALERT}
         />
         <ClmStatCard
-          title={t('insurance')}
-          value={t('noInsuranceOfficial')}
-          note={t('insuranceHelpNote')}
+          title={t(KEY_INSURANCE)}
+          value={t(KEY_NO_INSURANCE_OFFICIAL)}
+          note={t(KEY_INSURANCE_HELP_NOTE)}
           iconSrc={SVG_STATUS_ALERT}
-          noteTone="bad"
+          noteTone={OVERVIEW_TONE_BAD}
         />
         <ClmStatCard
-          title={t('thisMonth')}
+          title={t(KEY_THIS_MONTH)}
           value={formatCurrency(expenseSummary.currentMonth, CURRENCY_ILS)}
-          note={topCategory ? `${t(`expense_${topCategory.category}`)} · ${monthNote}` : monthNote}
+          note={topCategory ? `${t(`${KEY_EXPENSE_PREFIX}${topCategory.category}`)} · ${monthNote}` : monthNote}
           iconSrc={SVG_EMPTY_REPORT}
         />
       </div>
-      <ClmSectionTitle title={t('insurance')} />
+      <ClmSectionTitle title={t(KEY_INSURANCE)} />
       <ClmList>
         <ClmRow
           iconSrc={SVG_STATUS_ALERT}
-          title={t('noInsuranceOfficial')}
-          subtitle={t('providerNote_mandatory_insurance')}
-          action={<OfficialLink href={INSURANCE_OFFICIAL_URL} label={t('officialSite')} />}
+          title={t(KEY_NO_INSURANCE_OFFICIAL)}
+          subtitle={t(KEY_PROVIDER_NOTE_INSURANCE)}
+          action={<OfficialLink href={INSURANCE_OFFICIAL_URL} label={t(KEY_OFFICIAL_SITE)} />}
         />
       </ClmList>
-      <ClmButton kind="outline" onClick={() => navigate(ROUTE_SERVICES)}>{t('services')}</ClmButton>
+      <ClmButton kind={BUTTON_KIND_OUTLINE} onClick={() => navigate(ROUTE_SERVICES)}>{t(KEY_SERVICES)}</ClmButton>
       <OverviewRecalls recalls={recalls} />
-      <ClmSectionTitle title={t('leftover')} />
-      {visibleTasks.length === ZERO ? (
-        <ClmEmpty iconSrc={SVG_EMPTY_VEHICLE} title={t('noTasks')} body={t('leftoverHelp')} />
-      ) : (
-        <ClmList>
-          {visibleTasks.map((task) => (
-            <TaskRow key={task.id} task={task} onOpen={setOpenTask} />
-          ))}
-        </ClmList>
-      )}
-      <ClmButton kind="outline" onClick={() => navigate(ROUTE_TASKS)}>{t('viewAll')}</ClmButton>
+      <ClmSectionTitle title={t(KEY_LEFTOVER)} />
+      {renderOverviewTasks(visibleTasks, t, setOpenTask)}
+      <ClmButton kind={BUTTON_KIND_OUTLINE} onClick={() => navigate(ROUTE_TASKS)}>{t(KEY_VIEW_ALL)}</ClmButton>
       <TaskDrawer task={openTask} onClose={() => setOpenTask(null)} />
     </div>
   );

@@ -4,6 +4,7 @@ import {
   VEHICLE_TAB_EXPENSES,
   VEHICLE_TAB_MAINTENANCE,
   VEHICLE_TAB_OVERVIEW,
+  VEHICLE_TAB_OWNERSHIP,
   VEHICLE_TAB_SERVICES,
   VEHICLE_TAB_TIMELINE,
 } from '@const';
@@ -11,6 +12,7 @@ import {
 export const VEHICLE_TABS = [
   { id: VEHICLE_TAB_OVERVIEW, labelKey: 'overview' },
   { id: VEHICLE_TAB_DETAILS, labelKey: 'vehicleDetails' },
+  { id: VEHICLE_TAB_OWNERSHIP, labelKey: 'ownership' },
   { id: VEHICLE_TAB_DOCUMENTS, labelKey: 'documents' },
   { id: VEHICLE_TAB_SERVICES, labelKey: 'services' },
   { id: VEHICLE_TAB_EXPENSES, labelKey: 'expenses' },

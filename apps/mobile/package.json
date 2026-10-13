@@ -6,6 +6,8 @@
   "scripts": {
     "start": "expo start",
     "web": "expo start --web",
+    "ios": "expo start --ios",
+    "android": "expo start --android",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

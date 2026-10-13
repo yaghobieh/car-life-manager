@@ -24,7 +24,7 @@ export function VehicleFile() {
   return (
     <Card className="Bear-VehicleFile" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
       <Flex direction="column" gap={FLEX_GAP_LG}>
-        <CarArt make={vehicle.make} model={vehicle.model} color={vehicle.color} />
+        <CarArt make={vehicle.make} model={vehicle.model} color={vehicle.color} imageUrl={vehicle.imageUrl} />
         <Typography variant={TYPO_PAGE_TITLE}>
           {[vehicle.make, vehicle.model].filter(Boolean).join(SPACE) || t('unknown')}
         </Typography>
@@ -53,6 +53,8 @@ export function VehicleFile() {
             yearLabel: t('year'),
             colorLabel: t('color'),
             handLabel: t('hand'),
+            ownershipLabel: t('ownership'),
+            roadEntryLabel: t('roadEntry'),
             licenseLabel: t('licenseExpiry'),
             testLabel: t('test'),
             timelineTitle: (type) => t(`timeline_${type}`),

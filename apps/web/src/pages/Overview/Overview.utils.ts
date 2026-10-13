@@ -1,9 +1,18 @@
 import type { ExpenseSummary, Reminder, Task, Vehicle } from '@clm/shared';
 import { HOUR_EVENING, HOUR_NOON, SPACE, STATUS_KIND_HEALTHY, STATUS_KIND_UNKNOWN, SUBTITLE_SEPARATOR, TASK_PRIORITY_IMPORTANT, TASK_PRIORITY_OVERDUE, ZERO } from '@const';
 import type { ClmTone } from '@common';
-import type { OverviewView, TaskFilterCounts } from './Overview.types';
+import type { OverviewMetaItem, OverviewPillItem, OverviewView, TaskFilterCounts } from './Overview.types';
 import {
+  KEY_COLOR,
+  KEY_HAND,
+  KEY_INSURANCE_DISCONNECTED,
+  KEY_LICENSE_VALID_SHORT,
+  KEY_ROAD_ENTRY,
+  KEY_TEST_VALID_SHORT,
+  KEY_UNKNOWN,
   OVERVIEW_DATE_OPTIONS,
+  OVERVIEW_TONE_BAD,
+  OVERVIEW_TONE_GOOD,
   OVERVIEW_VIEW_EMPTY,
   OVERVIEW_VIEW_LOADING,
   OVERVIEW_VIEW_READY,
@@ -11,7 +20,41 @@ import {
 } from './Overview.const';
 
 export function toneForKind(kind: string): ClmTone {
-  return kind === STATUS_KIND_HEALTHY ? 'good' : 'bad';
+  return kind === STATUS_KIND_HEALTHY ? OVERVIEW_TONE_GOOD : OVERVIEW_TONE_BAD;
+}
+
+export function buildOverviewPills(
+  licenseKind: string,
+  testKind: string,
+  t: (key: string) => string,
+): OverviewPillItem[] {
+  return [
+    { label: t(KEY_LICENSE_VALID_SHORT), tone: toneForKind(licenseKind) },
+    { label: t(KEY_TEST_VALID_SHORT), tone: toneForKind(testKind) },
+    { label: t(KEY_INSURANCE_DISCONNECTED), tone: OVERVIEW_TONE_BAD },
+  ];
+}
+
+export function buildOverviewMeta(
+  vehicle: Vehicle,
+  locale: string,
+  t: (key: string) => string,
+): OverviewMetaItem[] {
+  const unknown = t(KEY_UNKNOWN);
+  return [
+    {
+      label: t(KEY_HAND),
+      value: vehicle.ownershipSequence != null ? String(vehicle.ownershipSequence) : unknown,
+    },
+    {
+      label: t(KEY_COLOR),
+      value: vehicle.color ?? unknown,
+    },
+    {
+      label: t(KEY_ROAD_ENTRY),
+      value: formatOverviewDate(vehicle.registrationDate, locale, unknown),
+    },
+  ];
 }
 
 export function formatOverviewDate(value: string | null, locale: string, unknownLabel: string): string {
