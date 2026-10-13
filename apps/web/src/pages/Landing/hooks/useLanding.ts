@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTranslate } from '@forgedevstack/lingo/react';
 import { useAppState } from '@hooks';
 import { useBearMode } from '@forgedevstack/bear';
 import {
@@ -45,8 +46,6 @@ import {
   SORT_OPTION_DESC,
   SORT_OPTION_NEW,
   TOAST_DURATION_MS,
-  TOAST_FAVORITE_ADDED,
-  TOAST_FAVORITE_REMOVED,
 } from '../Landing.const';
 import type {
   AptFilterState,
@@ -63,6 +62,7 @@ import type {
 } from '../Landing.types';
 
 export function useLanding() {
+  const t = useTranslate();
   const { user } = useAppState();
   const navigate = useNavigate();
   const location = useLocation();
@@ -219,9 +219,9 @@ export function useLanding() {
     }
     applyThemeMode(next);
     showToast(
-      `ערכת נושא: ${next === 'light' ? 'מצב בהיר ☀️' : next === 'dark' ? 'מצב כהה 🌙' : 'מצב מערכת 💻'}`
+      `${t('landing_themeLabel')} ${next === 'light' ? t('landing_themeLight') : next === 'dark' ? t('landing_themeDark') : t('landing_themeSystem')}`
     );
-  }, [themeMode, applyThemeMode, showToast]);
+  }, [themeMode, applyThemeMode, showToast, t]);
 
   const toggleFavorite = useCallback(
     (id: string) => {
@@ -229,10 +229,10 @@ export function useLanding() {
         const next = new Set(prev);
         if (next.has(id)) {
           next.delete(id);
-          showToast(TOAST_FAVORITE_REMOVED);
+          showToast(t('landing_removedFromFavs'));
         } else {
           next.add(id);
-          showToast(TOAST_FAVORITE_ADDED);
+          showToast(t('landing_savedToFavs'));
         }
         try {
           localStorage.setItem('nuvo-favs', JSON.stringify([...next]));
@@ -242,7 +242,7 @@ export function useLanding() {
         return next;
       });
     },
-    [showToast]
+    [showToast, t]
   );
 
   // Rotation controls
@@ -433,7 +433,7 @@ export function useLanding() {
             if (matched.deal) setAptFilters((p) => ({ ...p, deal: matched.deal }));
             goTo('/apartments');
           }
-          showToast(`תוצאות חיפוש חכם: "${query}"`);
+          showToast(`${t('landing_smartSearchPrefix')} "${query}"`);
           return;
         }
       } catch {
@@ -454,9 +454,9 @@ export function useLanding() {
         if (foundCity) setAptFilters((p) => ({ ...p, city: foundCity }));
         goTo('/apartments');
       }
-      showToast(`חיפוש: ${query}`);
+      showToast(`${t('landing_searchPrefix')} ${query}`);
     },
-    [makers, cities, goTo, showToast]
+    [makers, cities, goTo, showToast, t]
   );
 
   const onSmartSearchSubmit = useCallback(

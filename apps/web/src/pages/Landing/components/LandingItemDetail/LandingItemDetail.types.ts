@@ -18,3 +18,29 @@ export interface LandingItemDetailProps {
   onNavigate: (path: string) => void;
   showToast: (msg: string) => void;
 }
+
+export interface LandingItemDetail360ViewerProps {
+  item: WebListingItem;
+  view360Angle: number;
+  setView360Angle: (angle: number | ((prev: number) => number)) => void;
+  autoRotate360: boolean;
+  toggleAutoRotate360: () => void;
+  rotate360Left: () => void;
+  rotate360Right: () => void;
+}
+
+export interface LandingItemDetailGalleryProps {
+  item: WebListingItem;
+  selectedGalleryThumb: number;
+  setSelectedGalleryThumb: (thumb: number) => void;
+  itemTitle: string;
+}
+
+export interface LandingItemDetailSpecsProps {
+  item: WebListingItem;
+  isCar: boolean;
+}
+
+export interface LandingItemDetailMapProps {
+  item: WebListingItem;
+}

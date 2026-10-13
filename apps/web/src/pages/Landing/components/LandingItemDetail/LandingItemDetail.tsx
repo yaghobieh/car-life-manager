@@ -1,254 +1,100 @@
-import React from 'react';
 import { useTranslate } from '@forgedevstack/lingo/react';
+import { Button, Link, Typography } from '@forgedevstack/bear';
 import { formatPrice } from '@tavo/common';
-import { SvgIcon, renderArtSvg } from '../../Landing.art';
-import { FEATS } from '../../Landing.const';
+import { SvgIcon } from '@pages/Landing/Landing.art';
+import { FEATS } from '@pages/Landing/Landing.const';
+import {
+  DEFAULT_SELLER_PHONE,
+  DEFAULT_SELLER_NAME,
+  DEFAULT_SELLER_AVATAR,
+  VIEW_MODE_GALLERY,
+  VIEW_MODE_360,
+  VIEW_MODE_MAP,
+  ITEM_CAT_CAR,
+  SELLER_TYPE_AGENCY,
+} from './LandingItemDetail.const';
+import {
+  formatItemTitle,
+  formatItemSub,
+  cleanPhoneNumber,
+  buildInquiryMessage,
+  buildWhatsAppUrl,
+  buildTelegramUrl,
+} from './LandingItemDetail.utils';
 import type { LandingItemDetailProps } from './LandingItemDetail.types';
+import { LandingItemDetail360Viewer } from './components/LandingItemDetail360Viewer';
+import { LandingItemDetailGallery } from './components/LandingItemDetailGallery';
+import { LandingItemDetailSpecs } from './components/LandingItemDetailSpecs';
+import { LandingItemDetailMap } from './components/LandingItemDetailMap';
 
-export function LandingItemDetail({
-  item,
-  aptViewMode,
-  setAptViewMode,
-  selectedGalleryThumb,
-  setSelectedGalleryThumb,
-  view360Angle,
-  setView360Angle,
-  autoRotate360,
-  toggleAutoRotate360,
-  rotate360Left,
-  rotate360Right,
-  phoneRevealed,
-  setPhoneRevealed,
-  setContactModalOpen,
-  onNavigate,
-}: LandingItemDetailProps) {
+export function LandingItemDetail(props: LandingItemDetailProps) {
+  const {
+    item,
+    aptViewMode,
+    setAptViewMode,
+    selectedGalleryThumb,
+    setSelectedGalleryThumb,
+    view360Angle,
+    setView360Angle,
+    autoRotate360,
+    toggleAutoRotate360,
+    rotate360Left,
+    rotate360Right,
+    phoneRevealed,
+    setPhoneRevealed,
+    setContactModalOpen,
+    onNavigate,
+  } = props;
   const t = useTranslate();
 
-  const isCar = item.cat === 'car';
-  const isAgency = item.seller?.type === 'agency';
+  const isCar = item.cat === ITEM_CAT_CAR;
+  const isAgency = item.seller?.type === SELLER_TYPE_AGENCY;
   const sellerTag = isAgency ? t('landing_sellerAgency') : t('landing_sellerPrivate');
 
-  const itemTitle = isCar
-    ? `${item.maker} ${item.model}`
-    : `${item.rooms} ${t('landing_rooms')}, ${item.street}`;
+  const itemTitle = formatItemTitle(item, t('landing_rooms'));
+  const itemSub = formatItemSub(item, t('landing_dealSale'), t('landing_dealRent'));
 
-  const itemSub = isCar
-    ? `${item.year} · ${item.city}`
-    : `${item.city} · ${item.deal === 'sale' ? t('landing_dealSale') : t('landing_dealRent')}`;
-
-  const phone = item.seller?.phone || '050-123-4567';
-  const cleanPhone = phone.replace(/\D/g, '');
-  const cleanNoZero = cleanPhone.startsWith('0') ? cleanPhone.slice(1) : cleanPhone;
-  const msgText = encodeURIComponent(
-    `שלום, אני פונה לגבי המודעה שלך: ${
-      item.cat === 'apt'
-        ? `${item.rooms} חדרים ב${item.city}`
-        : `${item.maker} ${item.model}`
-    }`
-  );
-  const waUrl = `https://wa.me/972${cleanNoZero}?text=${msgText}`;
-  const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(
-    typeof window !== 'undefined' ? window.location.href : ''
-  )}&text=${msgText}`;
-
-  const normalizedAngle = Math.round(((view360Angle % 360) + 360) % 360);
-  const current360ArtIndex = Math.abs(Math.floor(view360Angle / 90)) % 4;
-
-  const renderSpecs = () => {
-    if (isCar) {
-      return (
-        <div className="specs">
-          <div className="spec">
-            <small>{t('landing_yearLabel')}</small>
-            <b>{item.year}</b>
-          </div>
-          <div className="spec">
-            <small>{t('landing_kmLabel')}</small>
-            <b>{Number(item.km).toLocaleString('he-IL')} {t('landing_km')}</b>
-          </div>
-          <div className="spec">
-            <small>{t('landing_hand')}</small>
-            <b>{item.hand}</b>
-          </div>
-          <div className="spec">
-            <small>{t('landing_fuel')}</small>
-            <b>{item.fuel}</b>
-          </div>
-          <div className="spec">
-            <small>{t('landing_gear')}</small>
-            <b>{item.gear}</b>
-          </div>
-          <div className="spec">
-            <small>{t('validUntil')}</small>
-            <b>03/2027</b>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className="specs">
-        <div className="spec">
-          <small>{t('landing_rooms')}</small>
-          <b>{item.rooms}</b>
-        </div>
-        <div className="spec">
-          <small>{t('landing_areaLabel')}</small>
-          <b>{item.size} {t('landing_sqm')}</b>
-        </div>
-        <div className="spec">
-          <small>{t('landing_floor')}</small>
-          <b>{item.floor} / {item.floors}</b>
-        </div>
-        <div className="spec">
-          <small>{t('landing_dealType')}</small>
-          <b>{item.deal === 'sale' ? t('landing_dealSale') : t('landing_dealRent')}</b>
-        </div>
-        <div className="spec">
-          <small>{t('landing_city')}</small>
-          <b>{item.city}</b>
-        </div>
-        <div className="spec">
-          <small>{t('completed')}</small>
-          <b>{t('landing_tagVerified')}</b>
-        </div>
-      </div>
-    );
-  };
+  const phone = item.seller?.phone || DEFAULT_SELLER_PHONE;
+  const cleanPhone = cleanPhoneNumber(phone);
+  const inquiryMessage = buildInquiryMessage(item);
+  const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const waUrl = buildWhatsAppUrl(cleanPhone, inquiryMessage);
+  const tgUrl = buildTelegramUrl(currentUrl, inquiryMessage);
 
   const renderActiveMediaMode = () => {
-    if (aptViewMode === 'gallery') {
-      return (
-        <div className="gallery">
-          <div className="gallery__main">
-            {selectedGalleryThumb === 0 && item.imageUrl ? (
-              <img
-                src={item.imageUrl}
-                alt={itemTitle}
-                className="art card__img"
-              />
-            ) : (
-              <div
-                className="art"
-                dangerouslySetInnerHTML={{ __html: renderArtSvg(item, selectedGalleryThumb) }}
-              />
-            )}
-          </div>
-          <div className="thumbs">
-            {[0, 1, 2, 3].map((i) => (
-              <button
-                key={i}
-                type="button"
-                className={selectedGalleryThumb === i ? 'is-active' : ''}
-                onClick={() => setSelectedGalleryThumb(i)}
-                aria-label={`Image ${i + 1}`}
-              >
-                <div
-                  className="art"
-                  dangerouslySetInnerHTML={{ __html: renderArtSvg(item, i) }}
-                />
-              </button>
-            ))}
-          </div>
-        </div>
-      );
+    switch (aptViewMode) {
+      case VIEW_MODE_360:
+        return (
+          <LandingItemDetail360Viewer
+            item={item}
+            view360Angle={view360Angle}
+            setView360Angle={setView360Angle}
+            autoRotate360={autoRotate360}
+            toggleAutoRotate360={toggleAutoRotate360}
+            rotate360Left={rotate360Left}
+            rotate360Right={rotate360Right}
+          />
+        );
+      case VIEW_MODE_MAP:
+        return <LandingItemDetailMap item={item} />;
+      case VIEW_MODE_GALLERY:
+      default:
+        return (
+          <LandingItemDetailGallery
+            item={item}
+            selectedGalleryThumb={selectedGalleryThumb}
+            setSelectedGalleryThumb={setSelectedGalleryThumb}
+            itemTitle={itemTitle}
+          />
+        );
     }
-
-    if (aptViewMode === '360') {
-      return (
-        <div className="view-360-container">
-          <div className="view-360-header">
-            <span className="badge badge--brand">
-              <SvgIcon name="view360" /> {t('landing_view360')} — {normalizedAngle}°
-            </span>
-            <button
-              type="button"
-              className="btn btn--ghost btn--sm"
-              onClick={toggleAutoRotate360}
-            >
-              ↻ {autoRotate360 ? t('landing_stopAutoRotate') : t('landing_autoRotate')}
-            </button>
-          </div>
-
-          <div
-            className="view-360-canvas-box"
-            style={{
-              transform: `perspective(800px) rotateY(${view360Angle}deg) scale(1.04)`,
-              transition: autoRotate360 ? 'none' : 'transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1)',
-            }}
-          >
-            <div
-              className="view-360-art-wrap"
-              dangerouslySetInnerHTML={{
-                __html: renderArtSvg(item, current360ArtIndex),
-              }}
-            />
-          </div>
-
-          <div className="view-360-actions">
-            <button type="button" className="btn btn--ghost btn--sm" onClick={rotate360Left}>
-              {t('landing_rotateLeft')}
-            </button>
-            <button type="button" className="btn btn--ghost btn--sm" onClick={() => setView360Angle(0)}>
-              {t('landing_angleFront')}
-            </button>
-            <button type="button" className="btn btn--ghost btn--sm" onClick={() => setView360Angle(90)}>
-              {t('landing_angleSide')}
-            </button>
-            <button type="button" className="btn btn--ghost btn--sm" onClick={() => setView360Angle(180)}>
-              {t('landing_angleBack')}
-            </button>
-            <button type="button" className="btn btn--ghost btn--sm" onClick={() => setView360Angle(270)}>
-              {t('landing_angleSide2')}
-            </button>
-            <button type="button" className="btn btn--ghost btn--sm" onClick={rotate360Right}>
-              {t('landing_rotateRight')}
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className="apartment-map-card">
-        <iframe
-          className="apartment-map-frame"
-          title={`Map of ${item.city}`}
-          src="https://www.openstreetmap.org/export/embed.html?bbox=34.75%2C32.05%2C34.85%2C32.12&layer=mapnik&marker=32.0853%2C34.7818"
-        />
-        <div className="apartment-map-footer">
-          <div>
-            <b>{'street' in item ? `${item.street}, ` : ''}{item.city}</b>
-            <div className="muted">{t('landing_tagVerified')}</div>
-          </div>
-          <div className="row">
-            <a
-              href={`https://waze.com/ul?q=${encodeURIComponent(`${'street' in item ? item.street + ' ' : ''}${item.city}`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn--secondary btn--sm"
-            >
-              {t('landing_wazeNav')}
-            </a>
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${'street' in item ? item.street + ' ' : ''}${item.city}`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn--secondary btn--sm"
-            >
-              {t('landing_googleMaps')}
-            </a>
-          </div>
-        </div>
-      </div>
-    );
   };
 
   return (
     <div className="container page-container-padded">
       <div className="page-head">
         <nav className="crumbs" aria-label={t('landing_crumbHome')}>
-          <a
+          <Link
             href="#/"
             onClick={(e) => {
               e.preventDefault();
@@ -256,9 +102,9 @@ export function LandingItemDetail({
             }}
           >
             {t('landing_crumbHome')}
-          </a>
+          </Link>
           <SvgIcon name="chev" />
-          <a
+          <Link
             href={isCar ? '#/cars' : '#/apartments'}
             onClick={(e) => {
               e.preventDefault();
@@ -266,7 +112,7 @@ export function LandingItemDetail({
             }}
           >
             {isCar ? t('landing_cars') : t('landing_apartments')}
-          </a>
+          </Link>
           <SvgIcon name="chev" />
           <span>{itemTitle}</span>
         </nav>
@@ -275,28 +121,28 @@ export function LandingItemDetail({
       <div className="detail">
         <div>
           <div className="seg field-spacing-bottom" role="tablist">
-            <button
-              type="button"
-              className={aptViewMode === 'gallery' ? 'is-active' : ''}
-              onClick={() => setAptViewMode('gallery')}
+            <Button
+              variant={aptViewMode === VIEW_MODE_GALLERY ? 'primary' : 'ghost'}
+              className={aptViewMode === VIEW_MODE_GALLERY ? 'is-active' : ''}
+              onClick={() => setAptViewMode(VIEW_MODE_GALLERY)}
             >
               <SvgIcon name="sun" /> {t('landing_imagesLabel')}
-            </button>
-            <button
-              type="button"
-              className={aptViewMode === '360' ? 'is-active' : ''}
-              onClick={() => setAptViewMode('360')}
+            </Button>
+            <Button
+              variant={aptViewMode === VIEW_MODE_360 ? 'primary' : 'ghost'}
+              className={aptViewMode === VIEW_MODE_360 ? 'is-active' : ''}
+              onClick={() => setAptViewMode(VIEW_MODE_360)}
             >
               <SvgIcon name="view360" /> {t('landing_view360')}
-            </button>
+            </Button>
             {!isCar && (
-              <button
-                type="button"
-                className={aptViewMode === 'map' ? 'is-active' : ''}
-                onClick={() => setAptViewMode('map')}
+              <Button
+                variant={aptViewMode === VIEW_MODE_MAP ? 'primary' : 'ghost'}
+                className={aptViewMode === VIEW_MODE_MAP ? 'is-active' : ''}
+                onClick={() => setAptViewMode(VIEW_MODE_MAP)}
               >
                 <SvgIcon name="pin" /> {t('landing_wazeNav')}
-              </button>
+              </Button>
             )}
           </div>
 
@@ -305,8 +151,12 @@ export function LandingItemDetail({
           <div className="panel detail-panel-spaced">
             <div className="row">
               <div>
-                <h2>{itemTitle}</h2>
-                <p className="muted">{itemSub}</p>
+                <Typography variant="h2">
+                  {itemTitle}
+                </Typography>
+                <Typography variant="body" color="muted">
+                  {itemSub}
+                </Typography>
               </div>
               <div className="price">
                 {formatPrice(item.price)}
@@ -314,12 +164,16 @@ export function LandingItemDetail({
               </div>
             </div>
 
-            {renderSpecs()}
+            <LandingItemDetailSpecs item={item} isCar={isCar} />
           </div>
 
           <div className="panel detail-panel-spaced">
-            <h2>{t('landing_description')}</h2>
-            <p className="generals-card__body">{item.desc}</p>
+            <Typography variant="h2">
+              {t('landing_description')}
+            </Typography>
+            <Typography variant="body" className="generals-card__body">
+              {item.desc}
+            </Typography>
             {!isCar && item.feats && item.feats.length > 0 && (
               <div className="feat">
                 {item.feats.map((f: string) => (
@@ -337,59 +191,58 @@ export function LandingItemDetail({
           <div className="panel">
             <div className="seller">
               <div className="avatar">
-                {item.seller?.name ? item.seller.name.charAt(0) : 'מ'}
+                {item.seller?.name ? item.seller.name.charAt(0) : DEFAULT_SELLER_AVATAR}
               </div>
               <div>
-                <b>{item.seller?.name || 'דני כהן'}</b>
-                <div className="muted">
+                <Typography variant="body1" weight="bold">{item.seller?.name || DEFAULT_SELLER_NAME}</Typography>
+                <Typography variant="body2" color="muted" className="muted">
                   {sellerTag} · {t('landing_memberSince')}
-                </div>
+                </Typography>
               </div>
             </div>
 
             <div className="detail-seller-actions">
-              <a
+              <Link
                 href={`tel:${phone}`}
                 className="btn btn--lg btn--block"
                 onClick={() => setPhoneRevealed(true)}
               >
                 <SvgIcon name="phone" />
                 {phoneRevealed ? <span dir="ltr">{phone}</span> : t('landing_showPhone')}
-              </a>
+              </Link>
 
-              <a
+              <Link
                 href={waUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                external
                 className="btn btn--secondary btn--lg btn--block"
               >
                 <SvgIcon name="whatsapp" /> {t('landing_whatsapp')}
-              </a>
+              </Link>
 
-              <a
+              <Link
                 href={tgUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                external
                 className="btn btn--secondary btn--lg btn--block"
               >
                 <SvgIcon name="telegram" /> {t('landing_telegram')}
-              </a>
+              </Link>
 
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="lg"
                 className="btn btn--ghost btn--lg btn--block"
                 onClick={() => setContactModalOpen(true)}
               >
                 <SvgIcon name="chat" /> {t('landing_sendMessage')}
-              </button>
+              </Button>
             </div>
           </div>
 
           <div className="alert alert--info">
             <SvgIcon name="shield" />
             <div>
-              <b>{t('landing_safetyTip')}</b>
-              {t('landing_safetyTipDesc')}
+              <Typography variant="body1" weight="bold">{t('landing_safetyTip')}</Typography>
+              <Typography variant="body2">{t('landing_safetyTipDesc')}</Typography>
             </div>
           </div>
         </aside>
