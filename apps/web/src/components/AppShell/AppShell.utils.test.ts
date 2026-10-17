@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ROUTE_HOME, ROUTE_SERVICES } from '@const';
-import { searchHits } from './AppShell.utils';
+import { searchHits, userInitials } from './AppShell.utils';
 import type { ServiceProviderInfo, Task, Vehicle } from '@clm/shared';
 
 const vehicle = {
@@ -31,6 +31,12 @@ function t(key: string): string {
   if (key === 'provider_ministry_of_transport') return 'Ministry of Transport';
   return key;
 }
+
+describe('userInitials', () => {
+  it('uses the first letters of a two-part name', () => {
+    expect(userInitials('יוחנן יעקבייה', 'a@b.com')).toBe('י.י');
+  });
+});
 
 describe('searchHits', () => {
   it('finds vehicles, translated tasks and official services', () => {

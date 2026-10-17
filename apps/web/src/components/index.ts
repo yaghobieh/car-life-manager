@@ -1,10 +1,15 @@
 export { AppShell } from './AppShell';
+export { AppLoader, isAppBootLoading } from './AppLoader';
+export { ClmGridTable } from './ClmGridTable';
 export { LocaleSelect } from './LocaleSelect';
 export { CarArt } from './CarArt';
 export { EmptyState } from './EmptyState';
 export { Logo } from './Logo';
+export { PageHeader } from './PageHeader';
+export { PlateBadge } from './PlateBadge';
 export { ProviderMark } from './ProviderMark';
 export { StatusBadge } from './StatusBadge';
+export { SvgAsset } from './SvgAsset';
 export { TaskRow } from './TaskRow';
 export { SourceBadge } from './SourceBadge';
 export { TaskDrawer } from './TaskDrawer';

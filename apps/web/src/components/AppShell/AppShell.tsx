@@ -1,50 +1,53 @@
 import { useState } from 'react';
-import {
-  Box,
-  Button,
-  Flex,
-  Select,
-  Typography,
-  useIsDesktop,
-} from '@forgedevstack/bear';
+import { Flex, Select, Typography, useIsDesktop } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { BearIcons, MenuIcon, UserIcon } from '@forgedevstack/bear-icons';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   BOOLEAN_FALSE,
   BOOLEAN_TRUE,
-  COLOR_BG,
-  COLOR_CARD,
-  COLOR_NAVY_DEEP,
-  COLOR_WHITE,
   EMPTY_STRING,
-  FLEX_GAP_MD,
   FLEX_GAP_SM,
-  ROUTE_ONBOARDING,
+  ROUTE_SERVICES,
   ROUTE_SETTINGS,
-  SIDEBAR_WIDTH,
-  ZERO,
+  SVG_BELL,
+  SVG_BELL_SIZE,
+  SVG_LOGO_MARK,
+  SVG_LOGO_SIZE,
+  SVG_NAV_SIZE,
 } from '@const';
-import { LocaleSelect } from '@components/LocaleSelect';
-import { Logo } from '@components/Logo';
+import { ClmBanner, ClmPlate } from '@common';
 import { useAppState } from '@hooks';
+import { connectedServiceCount } from '../../pages/Services/Services.utils';
 import { NAV_ITEMS } from './AppShell.const';
 import { AppShellMenu } from './AppShellMenu';
 import { AppShellSearch } from './components/AppShellSearch';
-import { activeNavId, isMoreNavActive, mobilePrimaryItems, navButtonVariant, vehicleOptionLabel } from './AppShell.utils';
+import { AppShellSidebar } from './components/AppShellSidebar';
+import {
+  activeNavId,
+  isMoreNavActive,
+  mobilePrimaryItems,
+  sidebarGroups,
+  userInitials,
+  vehicleShortName,
+} from './AppShell.utils';
 
 export function AppShell() {
-  const { vehicles, currentId, select, user } = useAppState();
+  const { vehicles, currentId, select, user, dashboard } = useAppState();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const t = useTranslate();
   const isDesktop = useIsDesktop();
   const [menuOpen, setMenuOpen] = useState(BOOLEAN_FALSE);
   const [query, setQuery] = useState(EMPTY_STRING);
+  const [bannerOpen, setBannerOpen] = useState(BOOLEAN_TRUE);
   const current = vehicles.find((item) => item.id === currentId);
   const activeId = activeNavId(pathname, NAV_ITEMS);
   const primaryItems = mobilePrimaryItems(NAV_ITEMS);
   const moreActive = isMoreNavActive(activeId);
+  const groups = sidebarGroups(NAV_ITEMS, t);
+  const initials = userInitials(user?.name, user?.email);
+  const connectedCount = connectedServiceCount(dashboard?.services ?? []);
+  const showBanner = bannerOpen && connectedCount === 0;
 
   function goTo(to: string) {
     setMenuOpen(BOOLEAN_FALSE);
@@ -52,127 +55,90 @@ export function AppShell() {
   }
 
   return (
-    <Box bg={COLOR_BG} className="Bear-AppShell bear-min-h-screen">
-      <Flex className="bear-min-h-screen">
-        {isDesktop && (
-          <Box
-            as="aside"
-            bg={COLOR_NAVY_DEEP}
-            p={3}
-            className="bear-min-h-screen"
-            style={{ width: SIDEBAR_WIDTH }}
-          >
-            <Flex direction="column" gap={FLEX_GAP_MD} className="bear-h-full">
-              <Logo onDark />
-              <Flex direction="column" gap={FLEX_GAP_SM} className="bear-flex-1">
-                {NAV_ITEMS.map((item) => (
-                  <Button
-                    key={item.id}
-                    variant={navButtonVariant(item.id === activeId)}
-                    fullWidth
-                    disableElevation
-                    className="bear-justify-start"
-                    style={{ borderWidth: ZERO }}
-                    onClick={() => navigate(item.to)}
-                  >
-                    {t(item.labelKey)}
-                  </Button>
-                ))}
-              </Flex>
-            </Flex>
-          </Box>
-        )}
-        <Flex direction="column" className="bear-flex-1">
-          <Box as="header" bg={COLOR_CARD} px={isDesktop ? 6 : 3} py={isDesktop ? 4 : 3} shadow="sm">
-            {isDesktop ? (
-              <Flex align="center" justify="between" gap={FLEX_GAP_MD}>
-                <AppShellSearch query={query} onQueryChange={setQuery} />
-                <Flex align="center" gap={FLEX_GAP_MD}>
-                  <LocaleSelect />
-                  <Button variant="ghost" iconOnly aria-label={t('notifications')}>
-                    <BearIcons.Communication.BellIcon />
-                  </Button>
-                  {user?.name && <Typography>{user.name}</Typography>}
-                  <Button variant="ghost" iconOnly aria-label={t('account')} onClick={() => navigate(ROUTE_SETTINGS)}>
-                    <UserIcon />
-                  </Button>
-                </Flex>
-              </Flex>
-            ) : (
-              <Flex direction="column" gap={FLEX_GAP_SM}>
-                <Flex align="center" justify="between" gap={FLEX_GAP_SM}>
-                  <Logo compact />
-                  <Flex align="center" gap={FLEX_GAP_SM}>
-                    <Button variant="ghost" iconOnly aria-label={t('menu')} onClick={() => setMenuOpen(BOOLEAN_TRUE)}>
-                      <MenuIcon />
-                    </Button>
-                    <Button variant="ghost" iconOnly aria-label={t('notifications')}>
-                      <BearIcons.Communication.BellIcon />
-                    </Button>
-                    <Button variant="ghost" iconOnly aria-label={t('account')} onClick={() => navigate(ROUTE_SETTINGS)}>
-                      <UserIcon />
-                    </Button>
-                  </Flex>
-                </Flex>
-                <AppShellSearch query={query} onQueryChange={setQuery} />
-              </Flex>
-            )}
-          </Box>
-          <Box as="main" p={isDesktop ? 6 : 3} className="bear-flex-1">
-            <Flex
-              direction={isDesktop ? 'row' : 'column'}
-              justify="between"
-              align={isDesktop ? 'center' : 'stretch'}
-              gap={FLEX_GAP_MD}
-              className="bear-mb-4"
-            >
+    <div className="Clm-app">
+      {isDesktop && (
+        <AppShellSidebar
+          groups={groups}
+          activeId={activeId}
+          onNavigate={goTo}
+          footer={t('officialFooter')}
+        />
+      )}
+      <div className="Clm-main">
+        <header className="Clm-topbar">
+          {isDesktop ? (
+            <>
+              <AppShellSearch query={query} onQueryChange={setQuery} />
               {current && (
-                <Select
-                  aria-label={t('selectVehicle')}
-                  value={current.id}
-                  onChange={select}
-                  fullWidth={!isDesktop}
-                  options={vehicles.map((vehicle) => ({
-                    value: vehicle.id,
-                    label: vehicleOptionLabel(vehicle),
-                  }))}
-                />
+                <div className="Clm-vehicle-select">
+                  <Select
+                    aria-label={t('selectVehicle')}
+                    value={current.id}
+                    onChange={select}
+                    renderValue={() => (
+                      <Flex align="center" gap={FLEX_GAP_SM}>
+                        <ClmPlate plate={current.formattedRegistrationNumber} compact />
+                        <Typography>{vehicleShortName(current)}</Typography>
+                      </Flex>
+                    )}
+                    options={vehicles.map((vehicle) => ({
+                      value: vehicle.id,
+                      label: vehicleShortName(vehicle),
+                    }))}
+                  />
+                </div>
               )}
-              <Button variant="primary" fullWidth={!isDesktop} onClick={() => navigate(ROUTE_ONBOARDING)}>
-                {t('addVehicle')}
-              </Button>
-            </Flex>
-            <Outlet />
-          </Box>
-          {!isDesktop && (
-            <Box as="nav" bg={COLOR_NAVY_DEEP} px={2} py={2} className="bear-sticky bear-bottom-0">
-              <Flex justify="around" align="center">
-                {primaryItems.map((item) => (
-                  <Button
-                    key={item.id}
-                    variant={navButtonVariant(item.id === activeId)}
-                    compact
-                    disableElevation
-                    style={{ borderWidth: ZERO }}
-                    onClick={() => goTo(item.to)}
-                  >
-                    <Typography color={COLOR_WHITE}>{t(item.shortLabelKey ?? item.labelKey)}</Typography>
-                  </Button>
-                ))}
-                <Button
-                  variant={navButtonVariant(moreActive)}
-                  compact
-                  disableElevation
-                  style={{ borderWidth: ZERO }}
-                  onClick={() => setMenuOpen(BOOLEAN_TRUE)}
-                >
-                  <Typography color={COLOR_WHITE}>{t('more')}</Typography>
-                </Button>
-              </Flex>
-            </Box>
+              <div className="Clm-topbar-spacer" />
+              <button type="button" className="Clm-icon-btn" aria-label={t('notifications')} onClick={() => navigate(ROUTE_SETTINGS)}>
+                <img src={SVG_BELL} alt="" width={SVG_BELL_SIZE} height={SVG_BELL_SIZE} />
+              </button>
+              <button type="button" className="Clm-user-chip" onClick={() => navigate(ROUTE_SETTINGS)}>
+                <span>{user?.name || t('account')}</span>
+                <span className="Clm-avatar">{initials || '·'}</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="Clm-logo">
+                <img src={SVG_LOGO_MARK} alt={t('brand')} width={SVG_LOGO_SIZE} height={SVG_LOGO_SIZE} />
+              </div>
+              <div className="Clm-topbar-spacer" />
+              <button type="button" className="Clm-icon-btn" aria-label={t('menu')} onClick={() => setMenuOpen(BOOLEAN_TRUE)}>☰</button>
+              <button type="button" className="Clm-icon-btn" aria-label={t('notifications')} onClick={() => navigate(ROUTE_SETTINGS)}>
+                <img src={SVG_BELL} alt="" width={SVG_BELL_SIZE} height={SVG_BELL_SIZE} />
+              </button>
+            </>
           )}
-        </Flex>
-      </Flex>
+        </header>
+        {!isDesktop && <div className="Clm-content" style={{ paddingBottom: 0 }}><AppShellSearch query={query} onQueryChange={setQuery} /></div>}
+        <div className="Clm-content">
+          {showBanner && (
+            <ClmBanner
+              title={t('bannerConnectionsTitle')}
+              body={t('bannerConnectionsBody')}
+              actionLabel={t('bannerConnectionsCta')}
+              onAction={() => navigate(ROUTE_SERVICES)}
+              onClose={() => setBannerOpen(BOOLEAN_FALSE)}
+              closeLabel={t('close')}
+            />
+          )}
+          <Outlet />
+        </div>
+        {!isDesktop && (
+          <nav className="Clm-mobile-bar">
+            {primaryItems.map((item) => (
+              <button key={item.id} type="button" onClick={() => goTo(item.to)}>
+                <img src={item.iconSrc} alt="" width={SVG_NAV_SIZE} height={SVG_NAV_SIZE} />
+                <div>{t(item.shortLabelKey ?? item.labelKey)}</div>
+              </button>
+            ))}
+            <button type="button" onClick={() => setMenuOpen(BOOLEAN_TRUE)}>
+              {t('more')}
+              {moreActive ? ' ·' : ''}
+            </button>
+          </nav>
+        )}
+      </div>
       <AppShellMenu
         isOpen={menuOpen}
         items={NAV_ITEMS}
@@ -180,6 +146,6 @@ export function AppShell() {
         onClose={() => setMenuOpen(BOOLEAN_FALSE)}
         onNavigate={goTo}
       />
-    </Box>
+    </div>
   );
 }

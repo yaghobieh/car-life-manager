@@ -1,7 +1,8 @@
 import { Box, Button, Flex, Typography } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { COLOR_MENU_SCRIM, COLOR_NAVY_DEEP, COLOR_WHITE, FLEX_GAP_MD, ZERO } from '@const';
+import { COLOR_MENU_SCRIM, COLOR_NAVY_DEEP, COLOR_WHITE, FLEX_GAP_MD, FLEX_GAP_SM, SVG_NAV_SIZE, ZERO } from '@const';
 import { LocaleSelect } from '@components/LocaleSelect';
+import { SvgAsset } from '@components/SvgAsset';
 import type { AppShellMenuProps } from './AppShell.types';
 import { navButtonVariant } from './AppShell.utils';
 
@@ -27,7 +28,10 @@ export function AppShellMenu(props: AppShellMenuProps) {
               style={{ borderWidth: ZERO }}
               onClick={() => onNavigate(item.to)}
             >
-              {t(item.labelKey)}
+              <Flex align="center" gap={FLEX_GAP_SM}>
+                <SvgAsset src={item.iconSrc} alt="" width={SVG_NAV_SIZE} height={SVG_NAV_SIZE} />
+                <Typography color={COLOR_WHITE}>{t(item.labelKey)}</Typography>
+              </Flex>
             </Button>
           ))}
           <LocaleSelect fullWidth />

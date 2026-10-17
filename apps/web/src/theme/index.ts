@@ -8,3 +8,4 @@ export {
   fontFamilyForLocale,
 } from './bear.theme';
 export { DirectedBear } from './DirectedBear';
+export { CLM_GRID_BEAR_OVERRIDE, CLM_GRID_THEME } from './grid-table.theme';

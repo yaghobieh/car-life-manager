@@ -9,8 +9,11 @@ import {
   CAR_COLOR_OVERLAY_ALPHA,
   COLOR_CAR_ART_END,
   COLOR_CAR_ART_START,
+  SVG_CAR_ART,
+  SVG_CAR_ART_HEIGHT,
+  SVG_CAR_ART_WIDTH,
 } from '@const';
-import { CarArtSvg } from './helpers/CarArtSvg';
+import { SvgAsset } from '@components/SvgAsset';
 import type { CarArtProps } from './CarArt.types';
 import { vehicleImageSrc, vehiclePaintHex } from './CarArt.utils';
 
@@ -55,7 +58,7 @@ export function CarArt(props: CarArtProps) {
             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
           />
         ) : (
-          <CarArtSvg />
+          <SvgAsset src={SVG_CAR_ART} alt="" width={SVG_CAR_ART_WIDTH} height={SVG_CAR_ART_HEIGHT} />
         )}
         {paint && (
           <Box

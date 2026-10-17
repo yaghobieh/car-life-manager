@@ -29,3 +29,5 @@ Point `DATABASE_URL` at the Neon pooled URL and `DATABASE_DIRECT_URL` at the non
 Users must sign in. Email + password register/login is live. Google/Gmail is live when `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set. Anonymous cookie users are gone.
 
 Step-by-step Gmail + Vercel redirect setup: `docs/GMAIL.md`.
+
+Clerk is removed. Sign-in is email/password plus Google when `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set. Auth0 is not used on the login page.

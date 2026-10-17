@@ -21,7 +21,7 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path={ROUTE_LANDING} element={<Landing />} />
-      <Route path={ROUTE_AUTH} element={<Auth />} />
+      <Route path={`${ROUTE_AUTH}/*`} element={<Auth />} />
       <Route path={ROUTE_ONBOARDING} element={<Onboarding />} />
       <Route path={ROUTE_HOME} element={<Gate />}>
         <Route index element={<Overview />} />
