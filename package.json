@@ -1,8 +1,8 @@
 {
-  "name": "car-life-manager",
-  "version": "1.0.2",
+  "name": "tavo",
+  "version": "1.0.3",
   "private": true,
-  "description": "Israeli vehicle ownership platform — everything you need for your car, in one place.",
+  "description": "Tavo (טאבו) — Car & Home (רכב ודירה). Verified Israel marketplace, API, and platform.",
   "workspaces": [
     "apps/*",
     "packages/*"

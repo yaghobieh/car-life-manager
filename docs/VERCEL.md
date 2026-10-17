@@ -15,10 +15,11 @@ The site is a Vite frontend plus `/api` serverless functions (`vercel.json`).
 | Name | Why |
 | --- | --- |
 | `DATABASE_DIRECT_URL` | Non-pooler URL used for `prisma migrate deploy` during build |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `GOOGLE_REDIRECT_URI` | Gmail button |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `GOOGLE_REDIRECT_URI` | Google sign-in button |
 | `RESEND_API_KEY` / `NOTIFY_FROM_EMAIL` | Email reminders |
 | `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_FROM_NUMBER` | SMS reminders |
-| `APP_VERSION` | Shown as `1.0.2` |
+| `APP_VERSION` | Shown as `1.0.3` |
+| `CLOUDINARY_URL` | Document vault. `cloudinary://API_KEY:API_SECRET@CLOUD_NAME` |
 
 ## Build
 
@@ -32,7 +33,9 @@ If `DATABASE_URL` is missing at build time, migrate is skipped and Production wi
 
 ## After deploy
 
-1. Open `/welcome` then `/auth`
+1. Open `/` then `/auth` (or `/car`, `/carlife`, `/property`, `/apartment`, which send you to auth with `next`)
+2. Add custom domains `homelife.app`, `car.homelife.app`, `apartment.homelife.app` when purchased
+3. Set Google + Auth0 callback URLs to this Vercel origin
 2. Register or use Gmail
 3. Add a vehicle
 4. Open Reminders and confirm ICS downloads

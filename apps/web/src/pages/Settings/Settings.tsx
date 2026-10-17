@@ -1,37 +1,48 @@
 import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { Button, Card, Flex, Input, Typography } from '@forgedevstack/bear';
+import { Input } from '@forgedevstack/bear';
 import { useTranslate } from '@forgedevstack/lingo/react';
-import { api } from '@api';
-import {
-  BOOLEAN_FALSE,
-  BOOLEAN_TRUE,
-  CARD_RADIUS_XL,
-  COLOR_MUTED,
-  EMPTY_STRING,
-  FLEX_GAP_LG,
-  FLEX_GAP_MD,
-  ROUTE_AUTH,
-  TYPO_SECTION_TITLE,
-} from '@const';
+import { api, ApiError } from '@api';
+import { BOOLEAN_FALSE, BOOLEAN_TRUE, EMPTY_STRING, ROUTE_AUTH } from '@const';
+import { ClmButton, ClmList, ClmPageHead, ClmRow, ClmStatusPill } from '@common';
+import { LocaleSelect } from '@components/LocaleSelect';
 import { useAppState } from '@hooks';
 import { logger } from '@logger';
-import { SETTINGS_AVATAR_SIZE } from './Settings.const';
-import { SettingsPhoto } from './helpers/SettingsPhoto';
 import { SettingsStatus } from './helpers/SettingsStatus';
-import { SettingsToggle } from './helpers/SettingsToggle';
+import {
+  emailHelpKey,
+  emailTestResultKey,
+  profileErrorKey,
+  smsHelpKey,
+  smsTestResultKey,
+} from './Settings.utils';
 
 export function Settings() {
-  const { user, refresh, emailNotifyReady, smsNotifyReady } = useAppState();
+  const {
+    user,
+    refresh,
+    emailNotifyReady,
+    smsNotifyReady,
+    smsAccountReady = BOOLEAN_FALSE,
+    sendTestSms,
+    sendTestEmail,
+  } = useAppState();
   const navigate = useNavigate();
   const t = useTranslate();
   const [name, setName] = useState(user?.name ?? EMPTY_STRING);
+  const [username, setUsername] = useState(user?.username ?? EMPTY_STRING);
   const [phone, setPhone] = useState(user?.phone ?? EMPTY_STRING);
+  const hasPhone = Boolean(phone);
+  const hasEmail = Boolean(user?.email);
   const [notifyEmail, setNotifyEmail] = useState(user?.notifyEmail ?? BOOLEAN_TRUE);
   const [notifySms, setNotifySms] = useState(user?.notifySms ?? BOOLEAN_FALSE);
   const [busy, setBusy] = useState(BOOLEAN_FALSE);
   const [saved, setSaved] = useState(BOOLEAN_FALSE);
   const [errorKey, setErrorKey] = useState(EMPTY_STRING);
+  const [smsResultKey, setSmsResultKey] = useState(EMPTY_STRING);
+  const [emailResultKey, setEmailResultKey] = useState(EMPTY_STRING);
+  const [smsBusy, setSmsBusy] = useState(BOOLEAN_FALSE);
+  const [emailBusy, setEmailBusy] = useState(BOOLEAN_FALSE);
 
   if (!user) return <Navigate to={ROUTE_AUTH} replace />;
 
@@ -42,68 +53,112 @@ export function Settings() {
     navigate(ROUTE_AUTH);
   }
 
+  async function sendSmsCheck() {
+    setSmsBusy(BOOLEAN_TRUE);
+    setSmsResultKey(EMPTY_STRING);
+    try {
+      const result = await sendTestSms();
+      setSmsResultKey(smsTestResultKey(result.status));
+    } catch {
+      setSmsResultKey('smsTestFailed');
+    } finally {
+      setSmsBusy(BOOLEAN_FALSE);
+    }
+  }
+
+  async function sendEmailCheck() {
+    setEmailBusy(BOOLEAN_TRUE);
+    setEmailResultKey(EMPTY_STRING);
+    try {
+      const result = await sendTestEmail();
+      setEmailResultKey(emailTestResultKey(result.status));
+    } catch {
+      setEmailResultKey('emailTestFailed');
+    } finally {
+      setEmailBusy(BOOLEAN_FALSE);
+    }
+  }
+
   async function saveProfile() {
     setBusy(BOOLEAN_TRUE);
     setSaved(BOOLEAN_FALSE);
     setErrorKey(EMPTY_STRING);
     try {
-      await api.updateProfile({ name, phone, notifyEmail, notifySms });
+      await api.updateProfile({ name, username, phone, notifyEmail, notifySms });
       logger.info('profile updated');
       await refresh();
       setSaved(BOOLEAN_TRUE);
-    } catch {
-      setErrorKey('invalidPhone');
+    } catch (error) {
+      setErrorKey(profileErrorKey(error instanceof ApiError ? error.code : undefined));
     } finally {
       setBusy(BOOLEAN_FALSE);
     }
   }
 
-  const displayName = user.name ?? t('unknown');
-  const emailReadyLabel = emailNotifyReady ? t('notifyEmailReady') : t('notifyEmailMissing');
-  const smsReadyLabel = smsNotifyReady ? t('notifySmsReady') : t('notifySmsMissing');
-
   return (
-    <Card className="Bear-Settings" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
-      <Flex direction="column" gap={FLEX_GAP_LG}>
-        <Typography variant={TYPO_SECTION_TITLE}>{t('account')}</Typography>
-        <Flex align="center" gap={FLEX_GAP_MD}>
-          <SettingsPhoto imageUrl={user.imageUrl} displayName={displayName} size={SETTINGS_AVATAR_SIZE} />
-          <Flex direction="column" gap={FLEX_GAP_MD}>
-            <Typography weight="bold">{displayName}</Typography>
-            <Typography color={COLOR_MUTED}>{user.email ?? t('unknown')}</Typography>
-          </Flex>
-        </Flex>
-        <Typography variant={TYPO_SECTION_TITLE}>{t('editProfile')}</Typography>
+    <div className="Bear-Settings">
+      <ClmPageHead title={t('settings')} subtitle={t('pageSubSettings')} />
+      <ClmList>
+        <ClmRow
+          title={t('interfaceLanguage')}
+          subtitle={t('hebrew')}
+          action={<LocaleSelect showLabel={BOOLEAN_FALSE} />}
+        />
+        <ClmRow
+          title={t('emailAlerts')}
+          subtitle={t(emailHelpKey(emailNotifyReady, hasEmail))}
+        />
+        <ClmRow
+          title={t('connectedAccounts')}
+          subtitle={t('sourceOfficial')}
+          action={<ClmStatusPill tone="good" label={t('active')} />}
+        />
+      </ClmList>
+      <div className="Clm-form-card">
         <Input label={t('name')} value={name} onChange={(event) => setName(event.target.value)} fullWidth />
+        <Input label={t('username')} value={username} onChange={(event) => setUsername(event.target.value)} fullWidth />
         <Input label={t('phone')} type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} fullWidth />
-        <Typography variant={TYPO_SECTION_TITLE}>{t('notifications')}</Typography>
-        <Typography color={COLOR_MUTED}>{t('notifyHelp')}</Typography>
-        <Flex gap={FLEX_GAP_MD} wrap="wrap">
-          <SettingsToggle
-            active={notifyEmail}
-            label={t('notifyEmail')}
-            onClick={() => setNotifyEmail(!notifyEmail)}
+        <ClmButton kind="outline" onClick={() => setNotifyEmail(!notifyEmail)}>
+          {t('notifyEmail')}: {notifyEmail ? t('active') : t('change')}
+        </ClmButton>
+        <ClmButton kind="outline" disabled={emailBusy || !hasEmail} onClick={() => void sendEmailCheck()}>
+          {emailBusy ? t('saving') : t('sendTestEmail')}
+        </ClmButton>
+        {emailResultKey ? (
+          <SettingsStatus
+            errorKey={emailResultKey === 'emailTestSent' ? EMPTY_STRING : emailResultKey}
+            saved={emailResultKey === 'emailTestSent'}
+            errorText={t(emailResultKey)}
+            savedText={t(emailResultKey)}
           />
-          <SettingsToggle
-            active={notifySms}
-            label={t('notifySms')}
-            onClick={() => setNotifySms(!notifySms)}
+        ) : null}
+        <ClmRow
+          title={t('notifySms')}
+          subtitle={t(smsHelpKey(smsNotifyReady, smsAccountReady, hasPhone))}
+        />
+        <ClmButton kind="outline" onClick={() => setNotifySms(!notifySms)}>
+          {t('notifySms')}: {notifySms ? t('active') : t('change')}
+        </ClmButton>
+        <ClmButton kind="outline" disabled={smsBusy || !hasPhone} onClick={() => void sendSmsCheck()}>
+          {smsBusy ? t('saving') : t('sendTestSms')}
+        </ClmButton>
+        {smsResultKey ? (
+          <SettingsStatus
+            errorKey={smsResultKey === 'smsTestSent' ? EMPTY_STRING : smsResultKey}
+            saved={smsResultKey === 'smsTestSent'}
+            errorText={t(smsResultKey)}
+            savedText={t(smsResultKey)}
           />
-        </Flex>
-        <Typography color={COLOR_MUTED}>{emailReadyLabel}</Typography>
-        <Typography color={COLOR_MUTED}>{smsReadyLabel}</Typography>
-        <Typography color={COLOR_MUTED}>{t('calendarHelp')}</Typography>
+        ) : null}
         <SettingsStatus
           errorKey={errorKey}
           saved={saved}
           errorText={t(errorKey || 'invalidPhone')}
           savedText={t('profileSaved')}
         />
-        <Button variant="primary" loading={busy} loadingText={t('saving')} onClick={() => void saveProfile()}>
-          {t('save')}
-        </Button>
-        <Button variant="ghost" onClick={() => void logout()}>{t('logout')}</Button>
-      </Flex>
-    </Card>
+        <ClmButton disabled={busy} onClick={() => void saveProfile()}>{busy ? t('saving') : t('save')}</ClmButton>
+        <ClmButton kind="outline" onClick={() => void logout()}>{t('logout')}</ClmButton>
+      </div>
+    </div>
   );
 }

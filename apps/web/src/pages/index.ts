@@ -1,5 +1,19 @@
 export { Auth } from './Auth';
 export { Gate } from './Gate';
+export { Platform } from './Platform';
+export {
+  PropertyDocuments,
+  PropertyExpenses,
+  PropertyGate,
+  PropertyHome,
+  PropertyHomeDetail,
+  PropertyHomes,
+  PropertyLawyers,
+  PropertyLookup,
+  PropertySaved,
+  PropertySearch,
+  PropertySettings,
+} from './Property';
 export { Overview } from './Overview';
 export { Onboarding } from './Onboarding';
 export { Settings } from './Settings';
@@ -9,6 +23,7 @@ export { Services } from './Services';
 export { Expenses } from './Expenses';
 export { Documents } from './Documents';
 export { Reminders } from './Reminders';
+export { CalendarEvent } from './CalendarEvent';
 export { Landing } from './Landing';
 export { Maintenance } from './Maintenance';
 export { Reports } from './Reports';

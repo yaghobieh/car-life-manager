@@ -29,3 +29,15 @@ Point `DATABASE_URL` at the Neon pooled URL and `DATABASE_DIRECT_URL` at the non
 Users must sign in. Email + password register/login is live. Google/Gmail is live when `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set. Anonymous cookie users are gone.
 
 Step-by-step Gmail + Vercel redirect setup: `docs/GMAIL.md`.
+
+Clerk is removed. One login serves CarLife and NadLife (same `User` row in Postgres).
+
+Sign-in options:
+
+- Email / password
+- Google when `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set
+- Auth0 when `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, and `AUTH0_CLIENT_SECRET` are set
+
+Auth0 dashboard: https://manage.auth0.com/ — Allowed Callback URLs must include `{WEB_ORIGIN}/api/auth/auth0/callback` exactly.
+
+`?next=/car` or `?next=/property` is stored for Google and Auth0 so both products return to the site that asked for login.

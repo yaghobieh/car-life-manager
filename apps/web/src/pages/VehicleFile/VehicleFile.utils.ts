@@ -4,6 +4,7 @@ import {
   VEHICLE_TAB_EXPENSES,
   VEHICLE_TAB_MAINTENANCE,
   VEHICLE_TAB_OVERVIEW,
+  VEHICLE_TAB_OWNERSHIP,
   VEHICLE_TAB_SERVICES,
   VEHICLE_TAB_TIMELINE,
 } from '@const';
@@ -19,6 +20,14 @@ const ROW_BUILDERS: Record<VehicleTabId, (input: VehicleFilePanelInput) => Vehic
       { key: 'hand', title: `${input.handLabel}: ${vehicle.ownershipSequence ?? input.unknownLabel}` },
       { key: 'license', title: `${input.licenseLabel}: ${vehicle.registrationExpiry ?? input.unknownLabel}` },
       { key: 'test', title: `${input.testLabel}: ${vehicle.nextTestDate ?? input.unknownLabel}` },
+    ];
+  },
+  [VEHICLE_TAB_OWNERSHIP]: (input) => {
+    const vehicle = input.dashboard.vehicle;
+    return [
+      { key: 'hand', title: `${input.handLabel}: ${vehicle.ownershipSequence ?? input.unknownLabel}` },
+      { key: 'ownershipType', title: `${input.ownershipLabel ?? 'בעלות'}: ${vehicle.ownershipType ?? input.unknownLabel}` },
+      { key: 'roadEntry', title: `${input.roadEntryLabel ?? 'עלייה לכביש'}: ${vehicle.registrationDate ?? input.unknownLabel}` },
     ];
   },
   [VEHICLE_TAB_DOCUMENTS]: (input) =>

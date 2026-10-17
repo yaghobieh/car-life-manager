@@ -1,0 +1,47 @@
+import { Box, Button, Flex, Typography } from '@forgedevstack/bear';
+import { useTranslate } from '@forgedevstack/lingo/react';
+import { COLOR_MENU_SCRIM, COLOR_NAVY_DEEP, COLOR_WHITE, FLEX_GAP_MD, FLEX_GAP_SM, SVG_NAV_SIZE, ZERO } from '@const';
+import { LocaleSelect } from '@components/LocaleSelect';
+import { SvgAsset } from '@components/SvgAsset';
+import type { AppShellMenuProps } from './AppShell.types';
+import { navButtonVariant } from './AppShell.utils';
+
+export function AppShellMenu(props: AppShellMenuProps) {
+  const { isOpen, items, activeId, onClose, onNavigate, productsLabel, onProductsClick } = props;
+  const t = useTranslate();
+
+  if (!isOpen) return null;
+
+  return (
+    <Box className="Bear-AppShellMenu bear-fixed bear-inset-0 bear-z-50">
+      <Box className="bear-absolute bear-inset-0" bg={COLOR_MENU_SCRIM} onClick={onClose} />
+      <Box as="nav" bg={COLOR_NAVY_DEEP} p={4} className="bear-absolute bear-bottom-0 bear-left-0 bear-right-0">
+        <Flex direction="column" gap={FLEX_GAP_MD}>
+          <Typography color={COLOR_WHITE} weight="bold">{t('menu')}</Typography>
+          {productsLabel && onProductsClick ? (
+            <Button variant="ghost" fullWidth disableElevation onClick={onProductsClick}>
+              <Typography color={COLOR_WHITE}>{productsLabel}</Typography>
+            </Button>
+          ) : null}
+          {items.map((item) => (
+            <Button
+              key={item.id}
+              variant={navButtonVariant(item.id === activeId)}
+              fullWidth
+              disableElevation
+              className="bear-justify-start"
+              style={{ borderWidth: ZERO }}
+              onClick={() => onNavigate(item.to)}
+            >
+              <Flex align="center" gap={FLEX_GAP_SM}>
+                <SvgAsset src={item.iconSrc} alt="" width={SVG_NAV_SIZE} height={SVG_NAV_SIZE} />
+                <Typography color={COLOR_WHITE}>{t(item.labelKey)}</Typography>
+              </Flex>
+            </Button>
+          ))}
+          <LocaleSelect fullWidth />
+        </Flex>
+      </Box>
+    </Box>
+  );
+}

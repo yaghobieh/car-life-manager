@@ -1,30 +1,26 @@
 import { useState } from 'react';
-import { Button, Card, Flex, Input, Typography } from '@forgedevstack/bear';
-import { useTranslate } from '@forgedevstack/lingo/react';
-import { googleCalendarUrl } from '@clm/shared';
+import { useNavigate } from 'react-router-dom';
+import { Button, Input, Typography } from '@forgedevstack/bear';
+import { useLocale, useTranslate } from '@forgedevstack/lingo/react';
 import { api } from '@api';
-import {
-  CARD_RADIUS_XL,
-  COLOR_MUTED,
-  DATE_SLICE_LENGTH,
-  EMPTY_STRING,
-  FLEX_GAP_LG,
-  FLEX_GAP_SM,
-  WINDOW_BLANK,
-  WINDOW_NOREFERRER,
-  ZERO,
-} from '@const';
+import { EMPTY_STRING, SVG_EMPTY_REMINDER, ZERO } from '@const';
+import { ClmButton, ClmEmpty, ClmList, ClmPageHead, ClmRow, ClmSectionTitle } from '@common';
 import { useAppState } from '@hooks';
+import { reminderEventPath } from '../CalendarEvent';
 import { ReminderCalendarDownload } from './helpers/ReminderCalendarDownload';
-import { ReminderEmpty } from './helpers/ReminderEmpty';
+import { formatDisplayDate, todayInputDate } from './Reminders.utils';
 
 export function Reminders() {
-  const { dashboard, currentId, refresh } = useAppState();
+  const { dashboard, currentId, refresh, user, smsNotifyReady } = useAppState();
+  const navigate = useNavigate();
   const t = useTranslate();
+  const { locale } = useLocale();
   const reminders = dashboard?.reminders ?? [];
+  const [showForm, setShowForm] = useState(reminders.length > ZERO);
   const [title, setTitle] = useState(EMPTY_STRING);
-  const [dueDate, setDueDate] = useState(new Date().toISOString().slice(0, DATE_SLICE_LENGTH));
+  const [dueDate, setDueDate] = useState(todayInputDate());
   const [busy, setBusy] = useState(false);
+  const smsReady = Boolean(smsNotifyReady && user?.notifySms && user.phone);
 
   async function submit() {
     if (!currentId) return;
@@ -32,6 +28,7 @@ export function Reminders() {
     try {
       await api.addReminder(currentId, { title, dueDate });
       setTitle(EMPTY_STRING);
+      setDueDate(todayInputDate());
       await refresh();
     } finally {
       setBusy(false);
@@ -39,37 +36,52 @@ export function Reminders() {
   }
 
   return (
-    <Card className="Bear-Reminders" variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
-      <Flex direction="column" gap={FLEX_GAP_LG}>
-        <Typography color={COLOR_MUTED}>{t('remindersOfficial')}</Typography>
-        <Typography color={COLOR_MUTED}>{t('calendarHelp')}</Typography>
-        <ReminderCalendarDownload vehicleId={currentId} label={t('downloadCalendar')} />
-        <Input label={t('title')} value={title} onChange={(event) => setTitle(event.target.value)} fullWidth />
-        <Input label={t('date')} type="date" value={dueDate} onChange={(event) => setDueDate(event.target.value)} fullWidth />
-        <Button variant="primary" loading={busy} loadingText={t('saving')} onClick={() => void submit()}>
-          {t('addReminder')}
-        </Button>
-        <ReminderEmpty visible={reminders.length === ZERO} title={t('noReminders')} body={t('remindersOfficial')} />
-        {reminders.map((reminder) => (
-          <Flex key={reminder.id} direction="column" gap={FLEX_GAP_SM}>
-            <Typography weight="bold">{reminder.title}</Typography>
-            <Typography color={COLOR_MUTED}>{reminder.dueDate}</Typography>
-            <Button
-              variant="ghost"
-              compact
-              onClick={() =>
-                window.open(
-                  googleCalendarUrl({ uid: reminder.id, title: reminder.title, date: reminder.dueDate }),
-                  WINDOW_BLANK,
-                  WINDOW_NOREFERRER,
-                )
-              }
-            >
-              {t('addToGoogleCalendar')}
-            </Button>
-          </Flex>
-        ))}
-      </Flex>
-    </Card>
+    <div className="Bear-Reminders">
+      <ClmPageHead title={t('reminders')} subtitle={t('pageSubReminders')} />
+      {reminders.length === ZERO && !showForm ? (
+        <ClmEmpty
+          iconSrc={SVG_EMPTY_REMINDER}
+          title={t('noRemindersTitle')}
+          body={t('noRemindersBody')}
+          action={<ClmButton onClick={() => setShowForm(true)}>{t('setReminder')}</ClmButton>}
+        />
+      ) : (
+        <>
+          {reminders.length > ZERO && (
+            <ClmList>
+              {reminders.map((reminder) => (
+                <ClmRow
+                  key={reminder.id}
+                  iconSrc={SVG_EMPTY_REMINDER}
+                  title={reminder.title}
+                  subtitle={formatDisplayDate(reminder.dueDate, locale)}
+                  action={(
+                    <ClmButton
+                      kind="outline"
+                      onClick={() => navigate(reminderEventPath(reminder.id))}
+                    >
+                      {t('openCalendarEvent')}
+                    </ClmButton>
+                  )}
+                />
+              ))}
+            </ClmList>
+          )}
+          <div className="Clm-form-card">
+            <ClmSectionTitle title={t('reminderFormTitle')} />
+            <Typography>{t('reminderFormHelp')}</Typography>
+            {smsReady ? <Typography>{t('reminderSmsHint')}</Typography> : null}
+            <Input label={t('title')} value={title} onChange={(event) => setTitle(event.target.value)} fullWidth />
+            <Input label={t('date')} type="date" value={dueDate} onChange={(event) => setDueDate(event.target.value)} fullWidth />
+            <div className="Clm-form-row">
+              <Button variant="primary" disabled={busy} onClick={() => void submit()}>
+                {busy ? t('saving') : t('setReminder')}
+              </Button>
+              <ReminderCalendarDownload vehicleId={currentId} label={t('downloadCalendar')} />
+            </div>
+          </div>
+        </>
+      )}
+    </div>
   );
 }

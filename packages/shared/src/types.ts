@@ -104,6 +104,7 @@ export interface Vehicle {
   ownershipSequence: number | null;
   ownershipType: string | null;
   mileage: number | null;
+  imageUrl?: string | null;
   dataSource: string;
   dataProvenance: DataProvenance;
   dataSourceUpdatedAt: string;
@@ -184,6 +185,10 @@ export interface VehicleDocument {
   notes: string | null;
   expiresAt: string | null;
   storageKey: string;
+  originalName: string | null;
+  mimeType: string | null;
+  fileSize: number | null;
+  hasFile: boolean;
   createdAt: string;
 }
 

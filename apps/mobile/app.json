@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "HomeLife",
+    "slug": "homelife",
+    "version": "1.0.3",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.homelife.mobile"
+    },
+    "android": {
+      "package": "app.homelife.mobile"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

@@ -11,6 +11,7 @@ datasource db {
 model User {
   id              String   @id @default(cuid())
   email           String?  @unique
+  username        String?  @unique
   phone           String?
   name            String?
   imageUrl        String?
@@ -18,6 +19,7 @@ model User {
   emailVerifiedAt DateTime?
   notifyEmail     Boolean  @default(true)
   notifySms       Boolean  @default(false)
+  role            String   @default("owner")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   vehicles        Vehicle[]
@@ -26,6 +28,10 @@ model User {
   sessions        AuthSession[]
   connections     ProviderConnection[]
   notifications   Notification[]
+  lawyers         Lawyer[]
+  savedAddresses  SavedAddress[]
+  homes           Home[]
+  propertyExpenses PropertyExpense[]
 }
 
 model Vehicle {
@@ -61,8 +67,7 @@ model Vehicle {
   serviceConnections          ServiceConnection[]
 
   @@index([userId])
-  @@index([registrationNumber])
-  @@unique([userId, registrationNumber])
+  @@unique([registrationNumber])
 }
 
 model Task {
@@ -110,10 +115,13 @@ model VehicleDocument {
   vehicle    Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
   type       String
   title      String
-  notes      String?
-  expiresAt  String?
-  storageKey String
-  createdAt  DateTime @default(now())
+  notes        String?
+  expiresAt    String?
+  storageKey   String
+  originalName String?
+  mimeType     String?
+  fileSize     Int?
+  createdAt    DateTime @default(now())
 }
 
 model MaintenanceRecord {
@@ -228,6 +236,77 @@ model Notification {
   @@unique([userId, sourceKey, channel])
   @@index([userId])
   @@index([scheduledAt])
+}
+
+model Lawyer {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  city       String?
+  specialty  String?
+  phone      String?
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Home {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dealType     String
+  city         String
+  street       String?
+  houseNumber  String?
+  neighborhood String?
+  rooms        Float?
+  sqm          Int?
+  floor        Int?
+  price        Float?
+  currency     String   @default("ILS")
+  features     String?
+  imageUrls    String?
+  model3dUrl   String?
+  nextDueDate  String?
+  nextDueTitle String?
+  notes        String?
+  source       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model PropertyExpense {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category    String
+  amount      Float
+  currency    String   @default("ILS")
+  occurredAt  DateTime
+  description String?
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+model SavedAddress {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  city       String
+  street     String?
+  cityCode   String?
+  streetCode String?
+  region     String?
+  source     String
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
 }
 
 model AuditLog {
