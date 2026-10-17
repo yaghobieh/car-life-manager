@@ -6,5 +6,7 @@ describe("probeProviderHub", () => {
   it("stays unsupported when no hub or provider API is configured", async () => {
     expect(await probeProviderHub("pango")).toBe(CONNECTION_NOT_SUPPORTED);
     expect(await probeProviderHub("cello")).toBe(CONNECTION_NOT_SUPPORTED);
+    expect(await probeProviderHub("highway-6")).toBe(CONNECTION_NOT_SUPPORTED);
+    expect(await probeProviderHub("highway-6-north")).toBe(CONNECTION_NOT_SUPPORTED);
   });
 });
