@@ -2,7 +2,7 @@
   "expo": {
     "name": "HomeLife",
     "slug": "homelife",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,

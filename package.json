@@ -1,6 +1,6 @@
 {
   "name": "tavo",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "description": "Tavo (טאבו) — Car & Home (רכב ודירה). Verified Israel marketplace, API, and platform.",
   "workspaces": [
