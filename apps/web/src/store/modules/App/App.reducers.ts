@@ -10,12 +10,20 @@ export function refreshFailed(message: string) {
   return { error: message, loading: BOOLEAN_FALSE, authReady: BOOLEAN_TRUE };
 }
 
-export function refreshUnauthenticated(googleEnabled: boolean, emailNotifyReady: boolean, smsNotifyReady: boolean) {
+export function refreshUnauthenticated(
+  googleEnabled: boolean,
+  auth0Enabled: boolean,
+  emailNotifyReady: boolean,
+  smsNotifyReady: boolean,
+  smsAccountReady: boolean,
+) {
   return {
     user: null,
     googleEnabled,
+    auth0Enabled,
     emailNotifyReady,
     smsNotifyReady,
+    smsAccountReady,
     vehicles: [],
     currentId: null,
     dashboard: null,
@@ -28,8 +36,10 @@ export function refreshUnauthenticated(googleEnabled: boolean, emailNotifyReady:
 export function refreshSucceeded(
   user: AuthUser,
   googleEnabled: boolean,
+  auth0Enabled: boolean,
   emailNotifyReady: boolean,
   smsNotifyReady: boolean,
+  smsAccountReady: boolean,
   vehicles: Vehicle[],
   currentId: string | null,
   dashboard: DashboardPayload | null,
@@ -37,8 +47,10 @@ export function refreshSucceeded(
   return {
     user,
     googleEnabled,
+    auth0Enabled,
     emailNotifyReady,
     smsNotifyReady,
+    smsAccountReady,
     vehicles,
     currentId,
     dashboard,

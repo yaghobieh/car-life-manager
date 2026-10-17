@@ -15,14 +15,15 @@ import {
   ONBOARDING_STEP_CONFIRM,
   ONBOARDING_STEP_PLATE,
   ONBOARDING_STEP_WELCOME,
-  ROUTE_AUTH,
   ROUTE_HOME,
+  ROUTE_ONBOARDING,
   TITLE_SEPARATOR,
   TYPO_PAGE_TITLE,
   ZERO,
 } from '@const';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
+import { authHref } from '../../Route.utils';
 import { lookupTitle, resolveOnboardingStep, sliceDate } from './Onboarding.utils';
 
 export function Onboarding() {
@@ -46,7 +47,7 @@ export function Onboarding() {
     );
   }
 
-  if (!user) return <Navigate to={ROUTE_AUTH} replace />;
+  if (!user) return <Navigate to={authHref(ROUTE_ONBOARDING)} replace />;
 
   async function findVehicle() {
     setBusy(true);

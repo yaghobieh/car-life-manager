@@ -1,5 +1,6 @@
 import type { ExpenseSummary, Reminder, Task, Vehicle } from '@clm/shared';
-import { HOUR_EVENING, HOUR_NOON, SPACE, STATUS_KIND_UNKNOWN, SUBTITLE_SEPARATOR, TASK_PRIORITY_IMPORTANT, TASK_PRIORITY_OVERDUE, ZERO } from '@const';
+import { HOUR_EVENING, HOUR_NOON, SPACE, STATUS_KIND_HEALTHY, STATUS_KIND_UNKNOWN, SUBTITLE_SEPARATOR, TASK_PRIORITY_IMPORTANT, TASK_PRIORITY_OVERDUE, ZERO } from '@const';
+import type { ClmTone } from '@common';
 import type { OverviewView, TaskFilterCounts } from './Overview.types';
 import {
   OVERVIEW_DATE_OPTIONS,
@@ -8,6 +9,10 @@ import {
   OVERVIEW_VIEW_READY,
   STATUS_KIND_COLOR,
 } from './Overview.const';
+
+export function toneForKind(kind: string): ClmTone {
+  return kind === STATUS_KIND_HEALTHY ? 'good' : 'bad';
+}
 
 export function formatOverviewDate(value: string | null, locale: string, unknownLabel: string): string {
   return value ? new Date(value).toLocaleDateString(locale, OVERVIEW_DATE_OPTIONS) : unknownLabel;

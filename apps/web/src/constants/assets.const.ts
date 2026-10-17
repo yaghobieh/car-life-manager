@@ -1,4 +1,7 @@
 export const SVG_LOGO_MARK = '/svg/logo-mark.svg';
+export const LOGO_CAR = '/brand/logo-carlife.png';
+export const LOGO_PROPERTY = '/brand/logo-nadlife.png';
+export const SVG_NAV_LAWYERS = '/svg/nav-lawyers.svg';
 export const SVG_LOADER_CAR = '/svg/loader-car.svg';
 export const SVG_LOADER_SCENE = '/svg/loader-scene.svg';
 export const SVG_HERO_CAR = '/svg/hero-car.svg';
@@ -24,3 +27,8 @@ export const SVG_EMPTY_REPORT = '/svg/empty-report.svg';
 export const SVG_CAR_ART = '/svg/car-art.svg';
 export const SVG_BANNER_WARN = '/svg/banner-warn.svg';
 export const SVG_GOOGLE = '/svg/google.svg';
+export const SVG_EMPTY_PROPERTY = '/svg/empty-property.svg';
+export const SVG_NAV_SAVED = '/svg/nav-saved.svg';
+export const SVG_NAV_SEARCH = '/svg/nav-search.svg';
+export const SVG_PRODUCT_CAR = '/svg/nav-vehicles.svg';
+export const SVG_PRODUCT_PROPERTY = '/svg/empty-property.svg';

@@ -1,6 +1,6 @@
 import { Box, Select } from '@forgedevstack/bear';
 import { useLocale, useTranslate } from '@forgedevstack/lingo/react';
-import { LOCALE_EN, LOCALE_HE, LOCALE_SELECT_MIN_WIDTH } from '@const';
+import { LOCALE_EN, LOCALE_HE } from '@const';
 import { LOCALE_OPTION_KEYS } from './LocaleSelect.const';
 import type { LocaleSelectProps } from './LocaleSelect.types';
 
@@ -8,15 +8,10 @@ export function LocaleSelect(props: LocaleSelectProps) {
   const { id, fullWidth, showLabel = true } = props;
   const { locale, setLocale } = useLocale();
   const t = useTranslate();
+  const widthClass = fullWidth ? 'Bear-LocaleSelect Bear-LocaleSelect--full' : 'Bear-LocaleSelect';
 
   return (
-    <Box
-      className="Bear-LocaleSelect"
-      style={{
-        minWidth: LOCALE_SELECT_MIN_WIDTH,
-        width: fullWidth ? '100%' : LOCALE_SELECT_MIN_WIDTH,
-      }}
-    >
+    <Box className={widthClass}>
       <Select
         id={id}
         aria-label={t('language')}

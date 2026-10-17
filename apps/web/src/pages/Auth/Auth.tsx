@@ -4,6 +4,7 @@ import { Box, Button, Card, Flex, Input, Typography } from '@forgedevstack/bear'
 import { useTranslate } from '@forgedevstack/lingo/react';
 import { api, ApiError } from '@api';
 import {
+  AUTH_NEXT_QUERY,
   CARD_RADIUS_XL,
   COLOR_BG,
   COLOR_DANGER,
@@ -17,18 +18,23 @@ import { LocaleSelect } from '@components/LocaleSelect';
 import { Logo } from '@components/Logo';
 import { useAppState } from '@hooks';
 import { logger } from '@logger';
-import { AUTH_ERROR_QUERY, AUTH_MODE_LOGIN, AUTH_MODE_REGISTER } from './Auth.const';
+import { AUTH_DEFAULT_ROLE, AUTH_ERROR_QUERY, AUTH_MODE_LOGIN, AUTH_MODE_REGISTER } from './Auth.const';
 import type { AuthMode } from './Auth.types';
+import { oauthStartHref } from '../../Route.utils';
 import { afterAuthPath, authErrorKey, nextAuthMode } from './Auth.utils';
 import { AuthGoogleButton } from './helpers/AuthGoogleButton';
+import { AuthProviderButton } from './helpers/AuthProviderButton';
+import { AuthRegisterPanel } from './helpers/AuthRegisterPanel';
 
 export function Auth() {
-  const { user, vehicles, loading, authReady, googleEnabled, refresh } = useAppState();
+  const { user, vehicles, loading, authReady, googleEnabled, auth0Enabled, refresh } = useAppState();
   const t = useTranslate();
   const [mode, setMode] = useState<AuthMode>(AUTH_MODE_LOGIN);
   const [email, setEmail] = useState(EMPTY_STRING);
   const [password, setPassword] = useState(EMPTY_STRING);
   const [name, setName] = useState(EMPTY_STRING);
+  const [role, setRole] = useState(AUTH_DEFAULT_ROLE);
+  const [city, setCity] = useState(EMPTY_STRING);
   const [busy, setBusy] = useState(false);
   const [errorKey, setErrorKey] = useState(EMPTY_STRING);
   const [params] = useSearchParams();
@@ -40,13 +46,13 @@ export function Auth() {
     return null;
   }
 
-  if (user) return <Navigate to={afterAuthPath(vehicles.length)} replace />;
+  if (user) return <Navigate to={afterAuthPath(vehicles.length, params.get(AUTH_NEXT_QUERY), user.role)} replace />;
 
   async function submit() {
     setBusy(true);
     setErrorKey(EMPTY_STRING);
     try {
-      if (isRegister) await api.register(email, password, name);
+      if (isRegister) await api.register(email, password, name, role);
       else await api.login(email, password);
       logger.info('auth success', mode);
       await refresh();
@@ -77,11 +83,27 @@ export function Auth() {
               enabled={googleEnabled}
               label={t('connectWithGoogle')}
               unavailableText={t('authGoogleUnavailable')}
+              href={oauthStartHref(api.googleStart, params.get(AUTH_NEXT_QUERY))}
               onUnavailable={() => setErrorKey('authGoogleUnavailable')}
+            />
+            <AuthProviderButton
+              enabled={Boolean(auth0Enabled)}
+              label={t('connectWithAuth0')}
+              unavailableText={t('authAuth0Unavailable')}
+              href={oauthStartHref(api.auth0Start, params.get(AUTH_NEXT_QUERY))}
+              onUnavailable={() => setErrorKey('authAuth0Unavailable')}
             />
             <Flex direction="column" gap={FLEX_GAP_LG}>
               {isRegister && (
                 <Input label={t('name')} value={name} onChange={(event) => setName(event.target.value)} fullWidth />
+              )}
+              {isRegister && (
+                <AuthRegisterPanel
+                  role={role}
+                  onRoleChange={setRole}
+                  city={city}
+                  onCityChange={setCity}
+                />
               )}
               <Input label={t('email')} type="email" value={email} onChange={(event) => setEmail(event.target.value)} fullWidth />
               <Input label={t('password')} type="password" value={password} onChange={(event) => setPassword(event.target.value)} fullWidth />

@@ -1,0 +1,1 @@
+export { PropertyLookup } from './PropertyLookup';

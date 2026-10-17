@@ -1,6 +1,7 @@
 import { Button } from '@forgedevstack/bear';
+import type { LandingSecondaryCtaProps } from '../Landing.types';
 
-export function LandingSecondaryCta(props: { hidden: boolean; label: string; onClick: () => void }) {
+export function LandingSecondaryCta(props: LandingSecondaryCtaProps) {
   const { hidden, label, onClick } = props;
   if (hidden) return null;
   return (

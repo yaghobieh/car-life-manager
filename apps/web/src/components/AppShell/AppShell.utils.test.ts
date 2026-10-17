@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { ROUTE_HOME, ROUTE_SERVICES } from '@const';
-import { searchHits, userInitials } from './AppShell.utils';
+import { NAV_OVERVIEW, NAV_PROPERTY_SEARCH, ROUTE_HOME, ROUTE_PROPERTY, ROUTE_PROPERTY_SEARCH, ROUTE_SERVICES } from '@const';
+import { activeNavId, searchHits, userInitials } from './AppShell.utils';
+import { NAV_ITEMS } from './AppShell.const';
+import { PROPERTY_NAV_ITEMS } from '../PropertyShell/PropertyShell.const';
 import type { ServiceProviderInfo, Task, Vehicle } from '@clm/shared';
 
 const vehicle = {
@@ -31,6 +33,13 @@ function t(key: string): string {
   if (key === 'provider_ministry_of_transport') return 'Ministry of Transport';
   return key;
 }
+
+describe('activeNavId', () => {
+  it('keeps car and property homes from colliding', () => {
+    expect(activeNavId(ROUTE_HOME, NAV_ITEMS, ROUTE_HOME)).toBe(NAV_OVERVIEW);
+    expect(activeNavId(ROUTE_PROPERTY_SEARCH, PROPERTY_NAV_ITEMS, ROUTE_PROPERTY)).toBe(NAV_PROPERTY_SEARCH);
+  });
+});
 
 describe('userInitials', () => {
   it('uses the first letters of a two-part name', () => {

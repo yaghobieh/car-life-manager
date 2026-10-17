@@ -15,9 +15,10 @@ export default defineConfig({
     'import.meta.env.VITE_BUILD_SHA': JSON.stringify(buildSha),
   },
   server: {
-    host: '127.0.0.1',
+    host: true,
     port: 5188,
     strictPort: true,
+    allowedHosts: ['.localhost', 'localhost'],
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:4173',

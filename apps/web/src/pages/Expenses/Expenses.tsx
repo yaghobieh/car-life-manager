@@ -1,9 +1,11 @@
 import { useLingoFormat, useTranslate } from '@forgedevstack/lingo/react';
 import { vehicleCostInsight } from '@clm/shared';
 import { CURRENCY_ILS, ZERO } from '@const';
+import { ClmGridTable } from '@components';
 import { ClmPageHead, ClmStatCard } from '@common';
 import { useAppState } from '@hooks';
 import { ExpensesForm } from './Expenses.form';
+import { expenseColumns, expenseRows } from './Expenses.utils';
 
 export function Expenses() {
   const { dashboard } = useAppState();
@@ -38,26 +40,10 @@ export function Expenses() {
         />
       </div>
       {expenses.length > ZERO && (
-        <table className="Clm-table">
-          <thead>
-            <tr>
-              <th>{t('date')}</th>
-              <th>{t('category')}</th>
-              <th>{t('description')}</th>
-              <th>{t('amount')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {expenses.map((expense) => (
-              <tr key={expense.id}>
-                <td>{new Date(expense.occurredAt).toLocaleDateString(locale)}</td>
-                <td>{t(`expense_${expense.category}`)}</td>
-                <td>{expense.description ?? expense.merchant ?? t('unknown')}</td>
-                <td className="Clm-amount">{formatCurrency(expense.amount, CURRENCY_ILS)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ClmGridTable
+          columns={expenseColumns(t)}
+          data={expenseRows(expenses, t, formatCurrency, locale)}
+        />
       )}
       <div className="Clm-form">
         <ExpensesForm />

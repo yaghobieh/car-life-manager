@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { nextTasks, vehicleStatusFromDates, type Task } from '@clm/shared';
 import {
   CURRENCY_ILS,
+  INSURANCE_OFFICIAL_URL,
   SVG_EMPTY_VEHICLE,
   ROUTE_ONBOARDING,
+  ROUTE_SERVICES,
   ROUTE_TASKS,
   STATUS_KIND_HEALTHY,
   SVG_HERO_CAR,
@@ -21,19 +23,17 @@ import {
   ClmHero,
   ClmList,
   ClmPageHead,
+  ClmRow,
   ClmSectionTitle,
   ClmStatCard,
-  type ClmTone,
 } from '@common';
+import { OfficialLink } from '@components/OfficialLink';
 import { TaskDrawer } from '@components/TaskDrawer';
 import { TaskRow } from '@components/TaskRow';
 import { useAppState } from '@hooks';
 import { OVERVIEW_VIEW_EMPTY, OVERVIEW_VIEW_LOADING } from './Overview.const';
-import { formatOverviewDate, resolveOverviewView, vehicleTitle } from './Overview.utils';
-
-function toneForKind(kind: string): ClmTone {
-  return kind === STATUS_KIND_HEALTHY ? 'good' : 'bad';
-}
+import { OverviewRecalls } from './Overview.recalls';
+import { formatOverviewDate, resolveOverviewView, toneForKind, vehicleTitle } from './Overview.utils';
 
 export function Overview() {
   const { dashboard, loading, vehicles } = useAppState();
@@ -61,7 +61,7 @@ export function Overview() {
     );
   }
 
-  const { vehicle, tasks, expenseSummary, expenses } = dashboard;
+  const { vehicle, tasks, expenseSummary, expenses, recalls } = dashboard;
   const status = vehicleStatusFromDates(vehicle);
   const visibleTasks = nextTasks(tasks, VISIBLE_TASK_COUNT);
   const title = vehicle.modelYear
@@ -119,6 +119,17 @@ export function Overview() {
           iconSrc={SVG_EMPTY_REPORT}
         />
       </div>
+      <ClmSectionTitle title={t('insurance')} />
+      <ClmList>
+        <ClmRow
+          iconSrc={SVG_STATUS_ALERT}
+          title={t('noInsuranceOfficial')}
+          subtitle={t('providerNote_mandatory_insurance')}
+          action={<OfficialLink href={INSURANCE_OFFICIAL_URL} label={t('officialSite')} />}
+        />
+      </ClmList>
+      <ClmButton kind="outline" onClick={() => navigate(ROUTE_SERVICES)}>{t('services')}</ClmButton>
+      <OverviewRecalls recalls={recalls} />
       <ClmSectionTitle title={t('leftover')} />
       {visibleTasks.length === ZERO ? (
         <ClmEmpty iconSrc={SVG_EMPTY_VEHICLE} title={t('noTasks')} body={t('leftoverHelp')} />

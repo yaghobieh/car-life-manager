@@ -1,8 +1,9 @@
 import { Badge, Card, Flex, Typography } from '@forgedevstack/bear';
 import { CARD_RADIUS_XL, FLEX_GAP_MD, FLEX_GAP_SM, TYPO_SECTION_TITLE } from '@const';
 import { LANDING_STEPS } from '../Landing.const';
+import type { LandingHowProps } from '../Landing.types';
 
-export function LandingHow(props: { title: string; translate: (key: string) => string }) {
+export function LandingHow(props: LandingHowProps) {
   const { title, translate } = props;
   return (
     <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>

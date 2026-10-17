@@ -9,6 +9,12 @@ export const config = {
     process.env.MINISTRY_TRANSPORT_RESOURCE_ID ?? "053cea08-09bc-40ec-8f7a-156f0677aff3",
   recallResourceId:
     process.env.MINISTRY_RECALL_RESOURCE_ID ?? "36bf1404-0be4-49d2-82dc-2f1ead4a8b93",
+  citiesResourceId:
+    process.env.ISRAEL_CITIES_RESOURCE_ID ?? "8f714b6f-c35c-4b40-a0e7-547b675eee0e",
+  streetsResourceId:
+    process.env.ISRAEL_STREETS_RESOURCE_ID ?? "bf185c7f-1a4e-4662-88c5-fa118a244bda",
+  housingLotteryResourceId:
+    process.env.HOUSING_LOTTERY_RESOURCE_ID ?? "7c8255d0-49ef-49db-8904-4cf917586031",
   lookupCacheTtlMs: Number(process.env.VEHICLE_LOOKUP_CACHE_TTL_MS ?? 86_400_000),
   vehicleDataSource: (process.env.VEHICLE_DATA_SOURCE ?? "official") as "official" | "development",
   webOrigin: process.env.WEB_ORIGIN ?? "http://127.0.0.1:5188",
@@ -53,6 +59,10 @@ export function isEmailNotifyReady(): boolean {
   return Boolean(config.resendApiKey);
 }
 
+export function isSmsAccountReady(): boolean {
+  return Boolean(config.twilioAccountSid && config.twilioAuthToken);
+}
+
 export function isSmsNotifyReady(): boolean {
-  return Boolean(config.twilioAccountSid && config.twilioAuthToken && config.twilioFromNumber);
+  return isSmsAccountReady() && Boolean(config.twilioFromNumber);
 }

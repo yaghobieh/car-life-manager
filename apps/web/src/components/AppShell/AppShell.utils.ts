@@ -42,7 +42,7 @@ export function sidebarGroups(items: NavItem[], t: (key: string) => string) {
       label: t('navManage'),
       items: items.filter((item) => item.group === NAV_GROUP_MANAGE),
     },
-  ];
+  ].filter((group) => group.items.length > ZERO);
 }
 
 export function vehicleOptionLabel(vehicle: Vehicle): string {
@@ -55,9 +55,9 @@ export function vehicleShortName(vehicle: Vehicle): string {
   return [vehicle.make, vehicle.model].filter(Boolean).join(SPACE) || vehicle.formattedRegistrationNumber;
 }
 
-export function activeNavId(pathname: string, items: NavItem[]): string {
-  const match = items.find((item) => item.to !== ROUTE_HOME && pathname.startsWith(item.to));
-  return match?.id ?? NAV_OVERVIEW;
+export function activeNavId(pathname: string, items: NavItem[], homeTo = ROUTE_HOME): string {
+  const match = items.find((item) => item.to !== homeTo && pathname.startsWith(item.to));
+  return match?.id ?? items[ZERO]?.id ?? NAV_OVERVIEW;
 }
 
 export function navButtonVariant(isActive: boolean): string {

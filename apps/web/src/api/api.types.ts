@@ -42,16 +42,19 @@ export interface AuthUser {
   imageUrl: string | null;
   notifyEmail: boolean;
   notifySms: boolean;
+  role: string;
 }
 
 export interface NotificationChannels {
   email: boolean;
   sms: boolean;
+  smsAccount: boolean;
 }
 
 export interface AuthMePayload {
   user: AuthUser | null;
   googleEnabled: boolean;
+  auth0Enabled: boolean;
   notificationChannels: NotificationChannels;
 }
 

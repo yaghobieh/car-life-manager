@@ -6,12 +6,16 @@ import { api } from '@api';
 import { BOOLEAN_FALSE, BOOLEAN_TRUE, EMPTY_STRING, ROUTE_AUTH } from '@const';
 import { ClmButton, ClmList, ClmPageHead, ClmRow, ClmStatusPill } from '@common';
 import { LocaleSelect } from '@components/LocaleSelect';
+import { OfficialLink } from '@components/OfficialLink';
 import { useAppState } from '@hooks';
 import { logger } from '@logger';
 import { SettingsStatus } from './helpers/SettingsStatus';
+import { smsActionHref, smsActionLabelKey, smsHelpKey } from './Settings.utils';
 
 export function Settings() {
-  const { user, refresh } = useAppState();
+  const { user, refresh, emailNotifyReady, smsNotifyReady, smsAccountReady = BOOLEAN_FALSE } = useAppState();
+  const smsHref = smsActionHref(smsNotifyReady, smsAccountReady);
+  const smsLabelKey = smsActionLabelKey(smsNotifyReady, smsAccountReady);
   const navigate = useNavigate();
   const t = useTranslate();
   const [name, setName] = useState(user?.name ?? EMPTY_STRING);
@@ -58,7 +62,7 @@ export function Settings() {
         />
         <ClmRow
           title={t('emailAlerts')}
-          subtitle={t('emailAlertsDesc')}
+          subtitle={emailNotifyReady ? t('notifyEmailReady') : t('notifyEmailMissing')}
           action={(
             <ClmButton kind="outline" onClick={() => setNotifyEmail(!notifyEmail)}>
               {notifyEmail ? t('manage') : t('change')}
@@ -74,6 +78,11 @@ export function Settings() {
       <div className="Clm-form">
         <Input label={t('name')} value={name} onChange={(event) => setName(event.target.value)} fullWidth />
         <Input label={t('phone')} type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} fullWidth />
+        <ClmRow
+          title={t('notifySms')}
+          subtitle={t(smsHelpKey(smsNotifyReady, smsAccountReady))}
+          action={smsHref && smsLabelKey ? <OfficialLink href={smsHref} label={t(smsLabelKey)} /> : undefined}
+        />
         <ClmButton kind="outline" onClick={() => setNotifySms(!notifySms)}>
           {t('notifySms')}: {notifySms ? t('active') : t('change')}
         </ClmButton>

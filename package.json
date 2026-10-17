@@ -1,8 +1,8 @@
 {
-  "name": "car-life-manager",
+  "name": "home-life",
   "version": "1.0.2",
   "private": true,
-  "description": "Israeli vehicle ownership platform — everything you need for your car, in one place.",
+  "description": "HomeLife — Car & Home (רכב ודירה). One account, one API, one database for CarLife and NadLife.",
   "workspaces": [
     "apps/*",
     "packages/*"
