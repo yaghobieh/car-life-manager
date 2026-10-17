@@ -43,4 +43,6 @@ export const LEGACY_REDIRECTS: Array<{ from: string; to: string }> = [
   { from: ROUTE_LEGACY_REMINDERS, to: ROUTE_REMINDERS },
   { from: ROUTE_LEGACY_REPORTS, to: ROUTE_REPORTS },
   { from: ROUTE_LEGACY_SETTINGS, to: ROUTE_SETTINGS },
+  { from: '/overview', to: ROUTE_CAR },
+  { from: '/file', to: ROUTE_VEHICLE },
 ];

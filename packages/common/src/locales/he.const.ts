@@ -346,6 +346,7 @@ export const he = {
   taskTitle_maintenance: 'תחזוקה',
   taskTitle_recall: 'קריאה לתיקון',
   taskCategory_ownership: 'בעלות',
+  ownership: 'בעלות',
   taskCategory_licensing: 'רישוי',
   taskCategory_test: 'טסט',
   taskCategory_insurance: 'ביטוח',

@@ -5,33 +5,52 @@ import {
   EXPENSE_CATEGORY_TOLLS,
   PROVIDER_STATUS_CONNECTED,
   PROVIDER_STATUS_OFFICIAL,
-  SERVICE_ANSWER_NO,
-  SERVICE_ANSWER_UNSURE,
-  SERVICE_ANSWER_YES,
 } from '@const';
-import type { ServiceAnswer } from '@clm/shared';
+import {
+  CATEGORY_INSURANCE,
+  CATEGORY_PARKING,
+  CATEGORY_TOLL,
+  KEY_ACTIVE,
+  KEY_MANUAL,
+  KEY_NOT_SUPPORTED,
+  KEY_OFFICIAL,
+  TONE_BAD,
+  TONE_GOOD,
+  TONE_WARN,
+} from './Services.const';
+import type { ServiceTone } from './Services.types';
+
+export { SERVICE_ANSWERS } from './Services.const';
 
 export function receiptCategory(category: string): string {
-  if (category === 'toll') return EXPENSE_CATEGORY_TOLLS;
-  if (category === 'insurance') return EXPENSE_CATEGORY_INSURANCE;
+  if (category === CATEGORY_TOLL) {
+    return EXPENSE_CATEGORY_TOLLS;
+  }
+  if (category === CATEGORY_INSURANCE) {
+    return EXPENSE_CATEGORY_INSURANCE;
+  }
   return EXPENSE_CATEGORY_PARKING;
 }
 
-export function serviceTone(status: string, category: string): 'good' | 'bad' | 'warn' {
-  if (status === PROVIDER_STATUS_OFFICIAL || status === PROVIDER_STATUS_CONNECTED) return 'good';
-  if (category === 'parking') return 'warn';
-  return 'bad';
+export function serviceTone(status: string, category: string): ServiceTone {
+  if (status === PROVIDER_STATUS_OFFICIAL || status === PROVIDER_STATUS_CONNECTED) {
+    return TONE_GOOD;
+  }
+  if (category === CATEGORY_PARKING) {
+    return TONE_WARN;
+  }
+  return TONE_BAD;
 }
 
 export function serviceToneLabelKey(status: string, category: string): string {
-  if (status === PROVIDER_STATUS_OFFICIAL) return 'official';
-  if (status === PROVIDER_STATUS_CONNECTED) return 'active';
-  if (category === 'parking') return 'manual';
-  return 'notSupported';
+  if (status === PROVIDER_STATUS_OFFICIAL) {
+    return KEY_OFFICIAL;
+  }
+  if (status === PROVIDER_STATUS_CONNECTED) {
+    return KEY_ACTIVE;
+  }
+  if (category === CATEGORY_PARKING) {
+    return KEY_MANUAL;
+  }
+  return KEY_NOT_SUPPORTED;
 }
-
-export const SERVICE_ANSWERS: Array<{ value: ServiceAnswer; labelKey: string }> = [
-  { value: SERVICE_ANSWER_YES, labelKey: 'answerYes' },
-  { value: SERVICE_ANSWER_NO, labelKey: 'answerNo' },
-  { value: SERVICE_ANSWER_UNSURE, labelKey: 'answerUnsure' },
-];

@@ -3,6 +3,8 @@ import type { serviceBadgeVariant } from '@locales';
 
 export type ServicesPageProps = Record<string, never>;
 
+export type ServiceTone = 'good' | 'bad' | 'warn';
+
 export interface ServiceItemProps {
   service: ServiceProviderInfo;
   name: string;
