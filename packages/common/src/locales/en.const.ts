@@ -346,6 +346,7 @@ export const en = {
   taskTitle_maintenance: 'Maintenance',
   taskTitle_recall: 'Safety recall',
   taskCategory_ownership: 'Ownership',
+  ownership: 'Ownership',
   taskCategory_licensing: 'Licensing',
   taskCategory_test: 'Test',
   taskCategory_insurance: 'Insurance',

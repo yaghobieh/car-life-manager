@@ -71,4 +71,12 @@ describe('AppRoutes', () => {
     renderPath(ROUTE_AUTH);
     expect(screen.getByText('התחברות לחשבון')).toBeTruthy();
   });
+
+  it('routes /car/overview and /car/file cleanly through car gate', () => {
+    renderPath('/car/overview');
+    expect(screen.getByText('התחברות לחשבון')).toBeTruthy();
+    cleanup();
+    renderPath('/car/file');
+    expect(screen.getByText('התחברות לחשבון')).toBeTruthy();
+  });
 });

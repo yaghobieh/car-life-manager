@@ -72,6 +72,8 @@ export function AppRoutes() {
       <Route path={ROUTE_ONBOARDING} element={<Onboarding />} />
       <Route path={ROUTE_CAR} element={<Gate />}>
         <Route index element={<Overview />} />
+        <Route path="overview" element={<Overview />} />
+        <Route path="file" element={<VehicleFile />} />
         <Route path={CAR_SEGMENT_VEHICLES} element={<Vehicles />} />
         <Route path={CAR_SEGMENT_VEHICLE} element={<VehicleFile />} />
         <Route path={CAR_SEGMENT_TASKS} element={<Tasks />} />
@@ -83,6 +85,7 @@ export function AppRoutes() {
         <Route path={`${CAR_SEGMENT_REMINDERS}/${CAR_SEGMENT_REMINDER_ID}`} element={<CalendarEvent />} />
         <Route path={CAR_SEGMENT_REPORTS} element={<Reports />} />
         <Route path={CAR_SEGMENT_SETTINGS} element={<Settings />} />
+        <Route path="*" element={<Navigate to={ROUTE_CAR} replace />} />
       </Route>
       <Route path={ROUTE_PROPERTY} element={<PropertyGate />}>
         <Route index element={<PropertyHome />} />
@@ -99,6 +102,7 @@ export function AppRoutes() {
       {LEGACY_REDIRECTS.map((item) => (
         <Route key={item.from} path={item.from} element={<Navigate to={item.to} replace />} />
       ))}
+      <Route path="*" element={<Navigate to={ROUTE_PLATFORM} replace />} />
     </Routes>
   );
 }
