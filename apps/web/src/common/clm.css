@@ -772,6 +772,10 @@
   color: var(--clm-muted);
 }
 
+.Clm-product-card[aria-disabled='true'] {
+  opacity: 0.55;
+}
+
 .Clm-discover {
   background: var(--clm-blue-soft);
   border-radius: var(--clm-radius-m);

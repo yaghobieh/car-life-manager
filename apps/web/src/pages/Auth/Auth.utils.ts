@@ -1,4 +1,5 @@
 import {
+  PROPERTY_PRODUCT_ENABLED,
   ROLE_CAR_SELLER,
   ROUTE_CAR,
   ROUTE_ONBOARDING,
@@ -22,7 +23,7 @@ export function afterAuthPath(vehicleCount: number, next?: string | null, role?:
     }
     return safe;
   }
-  if (role === ROLE_CAR_SELLER) {
+  if (role === ROLE_CAR_SELLER || !PROPERTY_PRODUCT_ENABLED) {
     return vehicleCount === ZERO ? ROUTE_ONBOARDING : ROUTE_CAR;
   }
   if (role && PROPERTY_AUTH_ROLES.includes(role as (typeof PROPERTY_AUTH_ROLES)[number])) {

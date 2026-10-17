@@ -1,6 +1,8 @@
 import {
+  BOOLEAN_TRUE,
   PRODUCT_ID_CAR,
   PRODUCT_ID_PROPERTY,
+  PROPERTY_PRODUCT_ENABLED,
   ROUTE_CAR,
   ROUTE_PROPERTY,
   SVG_PRODUCT_CAR,
@@ -16,6 +18,7 @@ export const PLATFORM_PRODUCTS: PlatformProduct[] = [
     titleKey: 'productCarTitle',
     bodyKey: 'productCarBody',
     ctaKey: 'productCarCta',
+    enabled: BOOLEAN_TRUE,
   },
   {
     id: PRODUCT_ID_PROPERTY,
@@ -23,6 +26,7 @@ export const PLATFORM_PRODUCTS: PlatformProduct[] = [
     iconSrc: SVG_PRODUCT_PROPERTY,
     titleKey: 'productPropertyTitle',
     bodyKey: 'productPropertyBody',
-    ctaKey: 'productPropertyCta',
+    ctaKey: PROPERTY_PRODUCT_ENABLED ? 'productPropertyCta' : 'productPropertySoon',
+    enabled: PROPERTY_PRODUCT_ENABLED,
   },
 ];

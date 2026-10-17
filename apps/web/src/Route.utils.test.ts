@@ -20,12 +20,12 @@ describe('authHref', () => {
 });
 
 describe('isSafeAppPath', () => {
-  it('accepts only car and property app paths', () => {
+  it('accepts only live car app paths while property is off', () => {
     expect(isCarAppPath(ROUTE_CAR)).toBe(true);
-    expect(isSafeAppPath(ROUTE_PROPERTY)).toBe(true);
+    expect(isSafeAppPath(ROUTE_PROPERTY)).toBe(false);
     expect(isSafeAppPath(`${ROUTE_CAR}/tasks`)).toBe(true);
     expect(isSafeAppPath(ROUTE_CARLIFE)).toBe(true);
-    expect(isSafeAppPath(ROUTE_APARTMENT)).toBe(true);
+    expect(isSafeAppPath(ROUTE_APARTMENT)).toBe(false);
     expect(isSafeAppPath('https://evil.example')).toBe(false);
     expect(isSafeAppPath('//evil.example')).toBe(false);
     expect(isSafeAppPath('/welcome')).toBe(false);
@@ -36,8 +36,8 @@ describe('productPathForHost', () => {
   it('maps car and apartment hosts to product routes', () => {
     expect(productPathForHost(DOMAIN_CAR)).toBe(ROUTE_CAR);
     expect(productPathForHost(HOST_LOCAL_CAR)).toBe(ROUTE_CAR);
-    expect(productPathForHost(DOMAIN_APARTMENT)).toBe(ROUTE_PROPERTY);
-    expect(productPathForHost(HOST_LOCAL_APARTMENT)).toBe(ROUTE_PROPERTY);
+    expect(productPathForHost(DOMAIN_APARTMENT)).toBe(ROUTE_CAR);
+    expect(productPathForHost(HOST_LOCAL_APARTMENT)).toBe(ROUTE_CAR);
     expect(productPathForHost('127.0.0.1')).toBeNull();
   });
 });

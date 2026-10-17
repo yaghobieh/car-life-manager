@@ -26,13 +26,12 @@ import {
   ROUTE_APARTMENT,
   ROUTE_CAR,
   ROUTE_CARLIFE,
-  ROUTE_PROPERTY,
 } from '@const';
 
 export const LEGACY_REDIRECTS: Array<{ from: string; to: string }> = [
   { from: ROUTE_WELCOME, to: ROUTE_PLATFORM },
   { from: ROUTE_CARLIFE, to: ROUTE_CAR },
-  { from: ROUTE_APARTMENT, to: ROUTE_PROPERTY },
+  { from: ROUTE_APARTMENT, to: ROUTE_CAR },
   { from: ROUTE_LEGACY_ONBOARDING, to: ROUTE_ONBOARDING },
   { from: ROUTE_LEGACY_VEHICLES, to: ROUTE_VEHICLES },
   { from: ROUTE_LEGACY_VEHICLE, to: ROUTE_VEHICLE },

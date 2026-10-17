@@ -41,6 +41,7 @@ export const TITLE_SEPARATOR = ' · ';
 export const SUBTITLE_SEPARATOR = ' • ';
 export const BOOLEAN_TRUE = true;
 export const BOOLEAN_FALSE = false;
+export const PROPERTY_PRODUCT_ENABLED = BOOLEAN_FALSE;
 export const FONT_FAMILY = 'Heebo, "Segoe UI", sans-serif';
 export const FONT_FAMILY_EN = 'Inter, "Segoe UI", Heebo, sans-serif';
 export const FONT_FAMILY_MONO = '"JetBrains Mono", ui-monospace, monospace';

@@ -16,3 +16,17 @@ export interface AuthFormState {
   password: string;
   name: string;
 }
+
+export interface AuthRegisterRoleSelectProps {
+  id?: string;
+  testId?: string;
+  role: string;
+  onRoleChange: (value: string) => void;
+}
+
+export interface AuthRegisterPanelProps {
+  role: string;
+  onRoleChange: (value: string) => void;
+  city: string;
+  onCityChange: (value: string) => void;
+}
