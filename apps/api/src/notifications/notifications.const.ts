@@ -1,0 +1,15 @@
+export const CHANNEL_EMAIL = "email";
+export const CHANNEL_SMS = "sms";
+export const CHANNEL_IN_APP = "in_app";
+export const STATUS_SENT = "sent";
+export const STATUS_SKIPPED = "skipped";
+export const STATUS_FAILED = "failed";
+export const SKIP_NOT_CONFIGURED = "not_configured";
+export const SKIP_PREFERENCE_OFF = "preference_off";
+export const SKIP_MISSING_TARGET = "missing_target";
+export const SOURCE_PREFIX_REMINDER = "reminder:";
+export const RESEND_EMAILS_URL = "https://api.resend.com/emails";
+export const TWILIO_API_BASE = "https://api.twilio.com/2010-04-01/Accounts";
+export const DEFAULT_FROM_EMAIL = "Car Life Manager <noreply@carlifemanager.app>";
+export const ISO_DATE_LENGTH = 10;
+export const REMINDER_STATUS_COMPLETED = "completed";

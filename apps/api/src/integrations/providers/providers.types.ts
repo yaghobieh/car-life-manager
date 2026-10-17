@@ -11,4 +11,6 @@ export interface StoredProviderConnection {
   providerId: string;
   status: string;
   note: string | null;
+  source?: string;
+  confirmedByUserAt?: string | null;
 }

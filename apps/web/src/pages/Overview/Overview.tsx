@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Badge, Button, Card, Flex, Grid, GridItem, Typography, useIsDesktop } from '@forgedevstack/bear';
 import { useLingoFormat, useTranslate } from '@forgedevstack/lingo/react';
 import { useNavigate } from 'react-router-dom';
-import { vehicleStatusFromDates } from '@clm/shared';
+import { nextTasks, sourceFromProvenance, vehicleStatusFromDates, type Task } from '@clm/shared';
 import {
   CARD_RADIUS_XL,
   CAR_ART_VIEW_3D,
@@ -21,10 +21,10 @@ import {
   ONE,
   ROUTE_SERVICES,
   ROUTE_TASKS,
+  ROUTE_VEHICLE,
   SERVICE_SPAN,
   STATUS_TILE_COLS,
   TASK_SPAN,
-  TASK_STATUS_COMPLETED,
   TYPO_PAGE_TITLE,
   TYPO_SECTION_TITLE,
   VISIBLE_TASK_COUNT,
@@ -33,6 +33,8 @@ import {
 import { CarArt } from '@components/CarArt';
 import { EmptyState } from '@components/EmptyState';
 import { ProviderMark } from '@components/ProviderMark';
+import { SourceBadge } from '@components/SourceBadge';
+import { TaskDrawer } from '@components/TaskDrawer';
 import { TaskRow } from '@components/TaskRow';
 import { useAppState } from '@hooks';
 import {
@@ -48,6 +50,7 @@ import { OverviewStatus } from './Overview.status';
 import { OVERVIEW_VIEW_EMPTY, OVERVIEW_VIEW_LOADING } from './Overview.const';
 import {
   formatOverviewDate,
+  greetingKey,
   resolveOverviewView,
   taskFilterCounts,
   vehicleSubtitle,
@@ -61,6 +64,7 @@ export function Overview() {
   const { locale } = useLingoFormat();
   const isDesktop = useIsDesktop();
   const [carView, setCarView] = useState(CAR_ART_VIEW_PHOTO);
+  const [openTask, setOpenTask] = useState<Task | null>(null);
   const view = resolveOverviewView(loading, dashboard, vehicles);
   const pageCols = isDesktop ? GRID_COLS : ONE;
   const carSpan = isDesktop ? HERO_CAR_SPAN : ONE;
@@ -88,14 +92,18 @@ export function Overview() {
 
   const { vehicle, tasks, services, expenseSummary, reminders, recalls } = dashboard;
   const status = vehicleStatusFromDates(vehicle);
-  const visibleTasks = tasks
-    .filter((task) => task.status !== TASK_STATUS_COMPLETED)
-    .slice(ZERO, VISIBLE_TASK_COUNT);
+  const visibleTasks = nextTasks(tasks, VISIBLE_TASK_COUNT);
   const counts = taskFilterCounts(tasks);
   const is3d = carView === CAR_ART_VIEW_3D;
 
   return (
     <Flex className="Bear-Overview" direction="column" gap={GRID_GAP}>
+      <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
+        <Flex direction="column" gap={FLEX_GAP_SM}>
+          <Typography variant={TYPO_PAGE_TITLE}>{t(greetingKey())}</Typography>
+          <Typography color={COLOR_MUTED}>{t('dashboardIntro')}</Typography>
+        </Flex>
+      </Card>
       <Card variant="elevated" padding="lg" radius={CARD_RADIUS_XL}>
         <Grid cols={pageCols} gap={GRID_GAP}>
           <GridItem colSpan={carSpan}>
@@ -157,9 +165,10 @@ export function Overview() {
                   <Typography>{vehicle.mileage ?? t('unknown')}</Typography>
                 </Flex>
               </Grid>
-              <Typography color={COLOR_MUTED}>
-                {t('source')}: {vehicle.dataSource}
-              </Typography>
+              <SourceBadge source={sourceFromProvenance(vehicle.dataProvenance)} updatedAt={vehicle.dataSourceUpdatedAt} />
+              <Button variant="secondary" compact onClick={() => navigate(ROUTE_VEHICLE)}>
+                {t('viewVehicle')}
+              </Button>
             </Flex>
           </GridItem>
         </Grid>
@@ -192,7 +201,7 @@ export function Overview() {
               </Flex>
               <Typography color={COLOR_MUTED}>{t('leftoverHelp')}</Typography>
               {visibleTasks.map((task) => (
-                <TaskRow key={task.id} task={task} />
+                <TaskRow key={task.id} task={task} onOpen={setOpenTask} />
               ))}
               <Button variant="ghost" compact disableElevation onClick={() => navigate(ROUTE_TASKS)}>
                 <Typography color={COLOR_BLUE}>{t('viewAll')}</Typography>
@@ -231,6 +240,7 @@ export function Overview() {
 
       <OverviewRecalls recalls={recalls ?? []} />
       <OverviewReminders reminders={reminders} />
+      <TaskDrawer task={openTask} onClose={() => setOpenTask(null)} />
     </Flex>
   );
 }

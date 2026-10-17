@@ -1,5 +1,5 @@
 import type { ExpenseSummary, Reminder, Task, Vehicle } from '@clm/shared';
-import { SPACE, STATUS_KIND_UNKNOWN, SUBTITLE_SEPARATOR, TASK_PRIORITY_IMPORTANT, TASK_PRIORITY_OVERDUE, ZERO } from '@const';
+import { HOUR_EVENING, HOUR_NOON, SPACE, STATUS_KIND_UNKNOWN, SUBTITLE_SEPARATOR, TASK_PRIORITY_IMPORTANT, TASK_PRIORITY_OVERDUE, ZERO } from '@const';
 import type { OverviewView, TaskFilterCounts } from './Overview.types';
 import {
   OVERVIEW_DATE_OPTIONS,
@@ -50,6 +50,13 @@ export function visibleReminders(reminders: Reminder[], limit: number): Reminder
 
 export function statusKindColor(kind: string): string {
   return STATUS_KIND_COLOR[kind as keyof typeof STATUS_KIND_COLOR] ?? STATUS_KIND_COLOR[STATUS_KIND_UNKNOWN];
+}
+
+export function greetingKey(now = new Date()): string {
+  const hour = now.getHours();
+  if (hour < HOUR_NOON) return 'greetingMorning';
+  if (hour < HOUR_EVENING) return 'greetingAfternoon';
+  return 'greetingEvening';
 }
 
 export function compareVehicleLabel(vehicle: Vehicle, unknownLabel: string): string {

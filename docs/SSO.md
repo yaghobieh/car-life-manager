@@ -27,3 +27,5 @@ Local development uses the Postgres container in `docker-compose.yml`. Do not us
 Point `DATABASE_URL` at the Neon pooled URL and `DATABASE_DIRECT_URL` at the non-pooler URL, then run `npm run db:migrate`.
 
 Users must sign in. Email + password register/login is live. Google/Gmail is live when `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set. Anonymous cookie users are gone.
+
+Step-by-step Gmail + Vercel redirect setup: `docs/GMAIL.md`.

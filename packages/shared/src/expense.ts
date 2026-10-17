@@ -45,3 +45,13 @@ export function summarizeExpenses(expenses: Expense[], now = new Date()): Expens
     hasData: true,
   };
 }
+
+export function vehicleCostInsight(summary: ExpenseSummary) {
+  return {
+    monthly: summary.currentMonth,
+    yearly: summary.yearlyTotal,
+    averageMonthly: summary.averageMonthly,
+    categories: summary.byCategory.map((row) => row.category),
+    hasData: summary.hasData,
+  };
+}

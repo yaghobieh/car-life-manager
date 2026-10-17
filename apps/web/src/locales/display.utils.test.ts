@@ -15,5 +15,7 @@ describe('display helpers', () => {
     expect(serviceStatusKey('official')).toBe('officialPublic');
     expect(serviceBadgeVariant('official')).toBe(BADGE_SUCCESS);
     expect(serviceBadgeVariant('not_supported')).toBe(BADGE_WARNING);
+    expect(serviceStatusKey('user_confirmed')).toBe('userConfirmed');
+    expect(serviceBadgeVariant('user_confirmed')).toBe(BADGE_SUCCESS);
   });
 });

@@ -16,6 +16,8 @@ model User {
   imageUrl        String?
   passwordHash    String?
   emailVerifiedAt DateTime?
+  notifyEmail     Boolean  @default(true)
+  notifySms       Boolean  @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   vehicles        Vehicle[]
@@ -23,6 +25,7 @@ model User {
   identities      AuthIdentity[]
   sessions        AuthSession[]
   connections     ProviderConnection[]
+  notifications   Notification[]
 }
 
 model Vehicle {
@@ -55,6 +58,7 @@ model Vehicle {
   maintenance                 MaintenanceRecord[]
   reminders                   Reminder[]
   lookups                     VehicleLookupCache[]
+  serviceConnections          ServiceConnection[]
 
   @@index([userId])
   @@index([registrationNumber])
@@ -174,6 +178,23 @@ model AuthSession {
   @@index([userId])
 }
 
+model ServiceConnection {
+  id                 String    @id @default(cuid())
+  vehicleId          String
+  vehicle            Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  providerId         String
+  status             String
+  source             String
+  confirmedByUserAt  DateTime?
+  providerVerifiedAt DateTime?
+  lastSyncedAt       DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@unique([vehicleId, providerId])
+  @@index([vehicleId])
+}
+
 model ProviderConnection {
   id            String   @id @default(cuid())
   userId        String
@@ -187,6 +208,26 @@ model ProviderConnection {
 
   @@unique([userId, providerId])
   @@index([userId])
+}
+
+model Notification {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicleId   String?
+  channel     String
+  title       String
+  body        String
+  status      String
+  scheduledAt DateTime
+  sentAt      DateTime?
+  sourceKey   String
+  error       String?
+  createdAt   DateTime  @default(now())
+
+  @@unique([userId, sourceKey, channel])
+  @@index([userId])
+  @@index([scheduledAt])
 }
 
 model AuditLog {

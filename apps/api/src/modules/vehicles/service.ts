@@ -1,10 +1,12 @@
 import {
+  buildTimeline,
   generateRecallTasks,
   generateVehicleTasks,
   isValidRegistrationNumber,
   normalizeRegistrationNumber,
   summarizeExpenses,
   type Expense,
+  type ServiceAnswer,
   type VehicleLookupResult,
   type VehicleRecall,
 } from "@clm/shared";
@@ -17,8 +19,19 @@ import { RECALL_CACHE_SOURCE } from "../../integrations/ministry-of-transport/mi
 import { developmentVehicle } from "../../integrations/ministry-of-transport/development-adapter";
 import { listReadyServices } from "../../integrations/providers";
 import {
+  CONNECTION_NOT_CONNECTED,
+  CONNECTION_UNKNOWN,
+  CONNECTION_USER_CONFIRMED,
+  SERVICE_ANSWER_NO,
+  SERVICE_ANSWER_UNSURE,
+  SERVICE_ANSWER_YES,
+  SERVICE_SOURCE_USER,
+} from "../../integrations/providers/providers.const";
+import { queueDueReminders } from "../../notifications/service";
+import {
   serializeDocument,
   serializeExpense,
+  serializeMaintenance,
   serializeReminder,
   serializeTask,
   serializeVehicle,
@@ -151,35 +164,120 @@ export async function getDashboard(userId: string, vehicleId: string) {
   const recalls = await recallsForPlate(vehicle.registrationNumber);
   await persistRecallTasks(vehicle.id, recalls);
 
-  const [tasks, expenses, reminders, documents, connections] = await Promise.all([
+  const [tasks, expenses, reminders, documents, maintenance, connections] = await Promise.all([
     prisma.task.findMany({ where: { vehicleId }, orderBy: { createdAt: "asc" } }),
     prisma.expense.findMany({ where: { vehicleId }, orderBy: { occurredAt: "desc" } }),
     prisma.reminder.findMany({ where: { vehicleId }, orderBy: { dueDate: "asc" } }),
     prisma.vehicleDocument.findMany({ where: { vehicleId }, orderBy: { createdAt: "desc" } }),
-    prisma.providerConnection.findMany({ where: { userId } }),
+    prisma.maintenanceRecord.findMany({ where: { vehicleId }, orderBy: { serviceDate: "desc" } }),
+    prisma.serviceConnection.findMany({ where: { vehicleId } }),
   ]);
 
-  return {
-    vehicle: serializeVehicle(vehicle),
-    tasks: tasks.map(serializeTask),
+  const serializedVehicle = serializeVehicle(vehicle);
+  const serializedTasks = tasks.map(serializeTask);
+  const serializedDocuments = documents.map(serializeDocument);
+  const serializedExpenses = expenses.map(serializeExpense);
+  const serializedMaintenance = maintenance.map(serializeMaintenance);
+  const serializedReminders = reminders.map(serializeReminder);
+  const services = await listReadyServices(
+    {
+      userId,
+      vehicleId: vehicle.id,
+      registrationNumber: vehicle.registrationNumber,
+    },
+    connections.map((row) => ({
+      providerId: row.providerId,
+      status: row.status,
+      note: null,
+      source: row.source,
+      confirmedByUserAt: row.confirmedByUserAt?.toISOString() ?? null,
+    })),
+  );
+
+  const payload = {
+    vehicle: serializedVehicle,
+    tasks: serializedTasks,
     recalls,
-    documents: documents.map(serializeDocument),
-    services: await listReadyServices(
-      {
-        userId,
-        vehicleId: vehicle.id,
-        registrationNumber: vehicle.registrationNumber,
-      },
-      connections.map((row) => ({ providerId: row.providerId, status: row.status, note: row.note })),
-    ),
-    expenses: expenses.map(serializeExpense),
-    expenseSummary: summarizeExpenses(expenses.map(serializeExpense)),
-    reminders: reminders.map(serializeReminder),
+    documents: serializedDocuments,
+    services,
+    expenses: serializedExpenses,
+    expenseSummary: summarizeExpenses(serializedExpenses),
+    reminders: serializedReminders,
+    maintenance: serializedMaintenance,
+    timeline: buildTimeline({
+      vehicle: serializedVehicle,
+      documents: serializedDocuments,
+      expenses: serializedExpenses,
+      maintenance: serializedMaintenance,
+      reminders: serializedReminders,
+      tasks: serializedTasks,
+      services,
+    }),
     identityVerification: {
       status: "unavailable" as const,
       note: "אין ספק אימות זהות מוגדר. לא מתבצע אימות על סמך מספר תעודת זהות בלבד.",
     },
   };
+  queueDueReminders(userId, vehicleId);
+  return payload;
+}
+
+export async function confirmService(userId: string, vehicleId: string, providerId: string, answer: ServiceAnswer) {
+  await getOwnedVehicle(userId, vehicleId);
+  const mapped = mapServiceAnswer(answer);
+  if (!mapped) {
+    throw Object.assign(new Error("Answer is invalid"), { status: 400, code: "invalid_answer" });
+  }
+  const now = new Date();
+  const row = await prisma.serviceConnection.upsert({
+    where: { vehicleId_providerId: { vehicleId, providerId } },
+    create: {
+      vehicleId,
+      providerId,
+      status: mapped.status,
+      source: SERVICE_SOURCE_USER,
+      confirmedByUserAt: now,
+    },
+    update: {
+      status: mapped.status,
+      source: SERVICE_SOURCE_USER,
+      confirmedByUserAt: now,
+    },
+  });
+  await audit({ userId, vehicleId, action: "service_confirmed", metadata: { providerId, answer } });
+  return row;
+}
+
+export async function addMaintenance(
+  userId: string,
+  vehicleId: string,
+  input: { serviceDate: string; serviceType: string; mileage?: number | null; garage?: string | null; cost?: number | null; notes?: string | null },
+) {
+  await getOwnedVehicle(userId, vehicleId);
+  const serviceType = input.serviceType.trim();
+  if (!input.serviceDate || !serviceType) {
+    throw Object.assign(new Error("Maintenance is incomplete"), { status: 400, code: "invalid_maintenance" });
+  }
+  const row = await prisma.maintenanceRecord.create({
+    data: {
+      vehicleId,
+      serviceDate: input.serviceDate,
+      serviceType,
+      mileage: input.mileage ?? null,
+      garage: input.garage?.trim() || null,
+      cost: input.cost ?? null,
+      notes: input.notes?.trim() || null,
+    },
+  });
+  await audit({ userId, vehicleId, action: "maintenance_created" });
+  return serializeMaintenance(row);
+}
+
+function mapServiceAnswer(answer: ServiceAnswer): { status: string } | null {
+  if (answer === SERVICE_ANSWER_YES) return { status: CONNECTION_USER_CONFIRMED };
+  if (answer === SERVICE_ANSWER_NO) return { status: CONNECTION_NOT_CONNECTED };
+  if (answer === SERVICE_ANSWER_UNSURE) return { status: CONNECTION_UNKNOWN };
+  return null;
 }
 
 export async function patchTask(userId: string, taskId: string, status: string) {
@@ -255,6 +353,7 @@ export async function addReminder(userId: string, vehicleId: string, input: { ti
     },
   });
   await audit({ userId, vehicleId, action: "reminder_created" });
+  queueDueReminders(userId, vehicleId);
   return serializeReminder(row);
 }
 

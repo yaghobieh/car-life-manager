@@ -1,9 +1,11 @@
 import type {
   Expense,
   ExpenseSummary,
+  MaintenanceRecord,
   Reminder,
   ServiceProviderInfo,
   Task,
+  TimelineEvent,
   Vehicle,
   VehicleDocument,
   VehicleRecall,
@@ -23,6 +25,8 @@ export interface DashboardPayload {
   reminders: Reminder[];
   documents: VehicleDocument[];
   recalls: VehicleRecall[];
+  maintenance: MaintenanceRecord[];
+  timeline: TimelineEvent[];
   identityVerification: { status: string; note: string };
 }
 
@@ -36,11 +40,26 @@ export interface AuthUser {
   name: string | null;
   phone: string | null;
   imageUrl: string | null;
+  notifyEmail: boolean;
+  notifySms: boolean;
+}
+
+export interface NotificationChannels {
+  email: boolean;
+  sms: boolean;
 }
 
 export interface AuthMePayload {
   user: AuthUser | null;
   googleEnabled: boolean;
+  notificationChannels: NotificationChannels;
+}
+
+export interface ProfileUpdateInput {
+  name: string;
+  phone: string;
+  notifyEmail: boolean;
+  notifySms: boolean;
 }
 
 export interface AuthUserPayload {

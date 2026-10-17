@@ -1,16 +1,20 @@
 import type { Request, Response } from "express";
-import { HTTP_CREATED, HTTP_OK } from "../constants/http.const";
 import { getUserId } from "../middlewares";
+import { CONTENT_TYPE_ICS, HTTP_CREATED, HTTP_OK, ICS_CONTENT_DISPOSITION } from "../constants/http.const";
 import {
   addDocument,
   addExpense,
+  addMaintenance,
   addReminder,
   addVehicle,
+  confirmService,
   getDashboard,
   listVehicles,
   lookupVehicle,
   removeVehicle,
 } from "../modules/vehicles/service";
+import { vehicleCalendarIcs } from "../modules/vehicles/calendar";
+import type { ServiceAnswer } from "@clm/shared";
 
 export async function lookupVehicleController(req: Request, res: Response): Promise<void> {
   const result = await lookupVehicle(String(req.params.registrationNumber));
@@ -91,4 +95,38 @@ export async function addDocumentController(req: Request, res: Response): Promis
     expiresAt: req.body?.expiresAt ?? null,
   });
   res.status(HTTP_CREATED).json({ document });
+}
+
+export async function confirmServiceController(req: Request, res: Response): Promise<void> {
+  await confirmService(
+    getUserId(req),
+    String(req.params.id),
+    String(req.params.providerId),
+    String(req.body?.answer ?? "") as ServiceAnswer,
+  );
+  res.json({ confirmed: true });
+}
+
+export async function addMaintenanceController(req: Request, res: Response): Promise<void> {
+  const record = await addMaintenance(getUserId(req), String(req.params.id), {
+    serviceDate: String(req.body?.serviceDate ?? ""),
+    serviceType: String(req.body?.serviceType ?? ""),
+    mileage: req.body?.mileage === undefined || req.body?.mileage === "" ? null : Number(req.body.mileage),
+    garage: req.body?.garage ?? null,
+    cost: req.body?.cost === undefined || req.body?.cost === "" ? null : Number(req.body.cost),
+    notes: req.body?.notes ?? null,
+  });
+  res.status(HTTP_CREATED).json({ maintenance: record });
+}
+
+export async function listVehicleMaintenanceController(req: Request, res: Response): Promise<void> {
+  const dashboard = await getDashboard(getUserId(req), String(req.params.id));
+  res.json({ maintenance: dashboard.maintenance });
+}
+
+export async function vehicleCalendarController(req: Request, res: Response): Promise<void> {
+  const ics = await vehicleCalendarIcs(getUserId(req), String(req.params.id));
+  res.setHeader("Content-Type", CONTENT_TYPE_ICS);
+  res.setHeader("Content-Disposition", ICS_CONTENT_DISPOSITION);
+  res.status(HTTP_OK).send(ics);
 }

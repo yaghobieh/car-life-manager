@@ -6,7 +6,7 @@ Israeli vehicle ownership platform.
 
 Hebrew, RTL-first dashboard for managing a vehicle after purchase: official lookup, tasks, documents, expenses, reminders, and service connections.
 
-Version **1.0.1**.
+Version **1.0.2**. Gmail setup: `docs/GMAIL.md`. Notifications and calendar: `docs/NOTIFICATIONS.md`. Vercel: `docs/VERCEL.md`.
 
 ## Stack
 

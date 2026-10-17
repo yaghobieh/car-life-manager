@@ -1,6 +1,6 @@
 {
   "name": "@clm/api",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "type": "module",
   "main": "./src/app.ts",
@@ -15,7 +15,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@clm/shared": "1.0.1",
+    "@clm/shared": "1.0.2",
     "@forgedevstack/harbor": "^1.6.4",
     "@prisma/client": "^6.7.0",
     "prisma": "^6.7.0",

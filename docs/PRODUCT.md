@@ -50,19 +50,17 @@ Official public sources in use today: Ministry of Transport vehicle registry and
 - Header search and editable profile
 - Harbor is the API layer; Bear `AppShell` is the UI shell
 
-## V2 product surface (tracked in Jira)
+## V2 product surface
 
-Remaining work is opened as Jira stories under the V2 epic. Do not pretend these are shipped:
+Shipped in this pass:
 
-- Dashboard “מה נשאר לעשות?” + vehicle hero
-- Manual service confirmation (`USER_CONFIRMED`)
-- Rule-driven task engine + task drawer
-- Vehicle page with tabs and timeline
-- Document vault with secure object storage (files not in the database)
-- Expense dashboard and “my car costs me…” based only on recorded expenses
-- Maintenance timeline
-- Actionable reminders and reports
-- Landing page and brand
-- Source badges on important fields
+- Dashboard greeting, source badge, What’s Next, and task drawer
+- Manual service confirmation (`user_confirmed`, never shown as Connected)
+- Task groups: Urgent / This week / Later / Completed
+- Vehicle file with tabs and a derived timeline
+- Expense insight from recorded expenses only
+- Maintenance records and reports from real data
+- Public landing page
+- Document metadata vault — extraction is not implemented; users enter details
 
-Partner APIs, document extraction, and notifications stay later. Extraction UI may show processing or a manual-entry fallback — never fake extracted fields.
+Still later: partner APIs, real object-storage uploads, OCR, notifications.

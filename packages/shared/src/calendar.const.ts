@@ -1,0 +1,14 @@
+export const ICS_BEGIN_CALENDAR = "BEGIN:VCALENDAR";
+export const ICS_END_CALENDAR = "END:VCALENDAR";
+export const ICS_BEGIN_EVENT = "BEGIN:VEVENT";
+export const ICS_END_EVENT = "END:VEVENT";
+export const ICS_VERSION_LINE = "VERSION:2.0";
+export const ICS_PRODID = "PRODID:-//Car Life Manager//Reminders//EN";
+export const ICS_CALSCALE = "CALSCALE:GREGORIAN";
+export const ICS_METHOD = "METHOD:PUBLISH";
+export const ICS_DATE_VALUE = "VALUE=DATE";
+export const GOOGLE_CALENDAR_RENDER_URL = "https://calendar.google.com/calendar/render";
+export const GOOGLE_CALENDAR_ACTION = "TEMPLATE";
+export const ISO_DATE_LENGTH = 10;
+export const ICS_DAY_STEP = 1;
+export const ICS_CRLF = "\r\n";

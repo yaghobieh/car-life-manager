@@ -4,17 +4,21 @@ import { asyncRoute, rateLimit } from "../middlewares";
 import {
   addDocumentController,
   addExpenseController,
+  addMaintenanceController,
   addReminderController,
   addVehicleController,
+  confirmServiceController,
   getDashboardController,
   listVehicleDocumentsController,
   listVehicleExpensesController,
+  listVehicleMaintenanceController,
   listVehicleRemindersController,
   listVehicleServicesController,
   listVehicleTasksController,
   listVehiclesController,
   lookupVehicleController,
   removeVehicleController,
+  vehicleCalendarController,
 } from "../controllers/vehicles.controller";
 
 export function registerVehicleRoutes(router: Router): void {
@@ -35,4 +39,8 @@ export function registerVehicleRoutes(router: Router): void {
   router.post("/vehicles/:id/reminders", asyncRoute(addReminderController));
   router.get("/vehicles/:id/documents", asyncRoute(listVehicleDocumentsController));
   router.post("/vehicles/:id/documents", asyncRoute(addDocumentController));
+  router.post("/vehicles/:id/services/:providerId/confirm", asyncRoute(confirmServiceController));
+  router.get("/vehicles/:id/maintenance", asyncRoute(listVehicleMaintenanceController));
+  router.post("/vehicles/:id/maintenance", asyncRoute(addMaintenanceController));
+  router.get("/vehicles/:id/calendar.ics", asyncRoute(vehicleCalendarController));
 }

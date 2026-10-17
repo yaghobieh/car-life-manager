@@ -13,7 +13,31 @@ export type ConnectionStatus =
   | "connection_required"
   | "unknown"
   | "not_supported"
-  | "official";
+  | "official"
+  | "user_confirmed";
+
+export type ServiceAnswer = "yes" | "no" | "unsure";
+
+export type ServiceSource = "official" | "user" | "provider" | "unknown" | "calculated" | "document";
+
+export type TaskGroupId = "urgent" | "this_week" | "later" | "completed";
+
+export type TimelineEventType =
+  | "vehicle_added"
+  | "document_added"
+  | "expense_added"
+  | "maintenance_added"
+  | "reminder_added"
+  | "service_confirmed"
+  | "task_completed";
+
+export interface TimelineEvent {
+  id: string;
+  type: TimelineEventType;
+  occurredAt: string;
+  source: ServiceSource;
+  detail: string | null;
+}
 
 export type TaskStatus =
   | "not_started"
@@ -125,6 +149,8 @@ export interface ServiceProviderInfo {
   status: ConnectionStatus;
   lastCheckedAt: string | null;
   note: string;
+  source: ServiceSource;
+  confirmedByUserAt: string | null;
 }
 
 export interface Expense {

@@ -1,9 +1,13 @@
 import { RECALL_TASK_SOURCE_PREFIX, type ServiceProviderInfo, type Task } from '@clm/shared';
 import {
+  BADGE_NEUTRAL,
   BADGE_SUCCESS,
   BADGE_WARNING,
   PROVIDER_STATUS_CONNECTED,
+  PROVIDER_STATUS_NOT_CONNECTED,
   PROVIDER_STATUS_OFFICIAL,
+  PROVIDER_STATUS_UNKNOWN,
+  PROVIDER_STATUS_USER_CONFIRMED,
 } from '@const';
 
 const HYPHEN = '-';
@@ -54,13 +58,17 @@ export function statusKindLabel(kind: string, t: (key: string) => string): strin
 export function serviceStatusKey(status: string): string {
   if (status === PROVIDER_STATUS_OFFICIAL) return 'officialPublic';
   if (status === PROVIDER_STATUS_CONNECTED) return 'connected';
+  if (status === PROVIDER_STATUS_USER_CONFIRMED) return 'userConfirmed';
+  if (status === PROVIDER_STATUS_NOT_CONNECTED) return 'userDeclined';
+  if (status === PROVIDER_STATUS_UNKNOWN) return 'notChecked';
   return 'notSupported';
 }
 
-export function serviceBadgeVariant(status: string): typeof BADGE_SUCCESS | typeof BADGE_WARNING {
-  if (status === PROVIDER_STATUS_OFFICIAL || status === PROVIDER_STATUS_CONNECTED) {
+export function serviceBadgeVariant(status: string): typeof BADGE_SUCCESS | typeof BADGE_WARNING | typeof BADGE_NEUTRAL {
+  if (status === PROVIDER_STATUS_OFFICIAL || status === PROVIDER_STATUS_CONNECTED || status === PROVIDER_STATUS_USER_CONFIRMED) {
     return BADGE_SUCCESS;
   }
+  if (status === PROVIDER_STATUS_NOT_CONNECTED) return BADGE_NEUTRAL;
   return BADGE_WARNING;
 }
 
